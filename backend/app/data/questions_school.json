@@ -1,0 +1,119 @@
+{
+  "track": "school",
+  "aptitude": [
+    {
+      "id": "apt_num_1",
+      "dimension": "numerical",
+      "prompt": "A shop gives a 20% discount on a bag priced at ₹1,500. What is the sale price?",
+      "options": ["₹1,200", "₹1,300", "₹1,250", "₹1,180"],
+      "answer": 0
+    },
+    {
+      "id": "apt_num_2",
+      "dimension": "numerical",
+      "prompt": "A train covers 240 km in 3 hours. At the same speed, how far will it travel in 5 hours?",
+      "options": ["360 km", "400 km", "420 km", "480 km"],
+      "answer": 1
+    },
+    {
+      "id": "apt_num_3",
+      "dimension": "numerical",
+      "prompt": "The average of four numbers is 15. Three of them are 12, 18 and 10. What is the fourth number?",
+      "options": ["15", "18", "20", "25"],
+      "answer": 2
+    },
+    {
+      "id": "apt_log_1",
+      "dimension": "logical",
+      "prompt": "What comes next in the series: 2, 6, 12, 20, 30, ?",
+      "options": ["40", "42", "44", "36"],
+      "answer": 1
+    },
+    {
+      "id": "apt_log_2",
+      "dimension": "logical",
+      "prompt": "If it rains, the match is cancelled. The match was not cancelled. What can you conclude?",
+      "options": ["It rained", "It did not rain", "The match was played indoors", "Nothing can be concluded"],
+      "answer": 1
+    },
+    {
+      "id": "apt_log_3",
+      "dimension": "logical",
+      "prompt": "In a code, CAT is written as DBU. How is DOG written in the same code?",
+      "options": ["EPH", "DPG", "FQI", "EOH"],
+      "answer": 0
+    },
+    {
+      "id": "apt_verb_1",
+      "dimension": "verbal",
+      "prompt": "Choose the word closest in meaning to 'abundant'.",
+      "options": ["Scarce", "Plentiful", "Ordinary", "Hidden"],
+      "answer": 1
+    },
+    {
+      "id": "apt_verb_2",
+      "dimension": "verbal",
+      "prompt": "Choose the word opposite in meaning to 'transparent'.",
+      "options": ["Opaque", "Clear", "Bright", "Thin"],
+      "answer": 0
+    },
+    {
+      "id": "apt_verb_3",
+      "dimension": "verbal",
+      "prompt": "Book is to reading as fork is to ___.",
+      "options": ["Drawing", "Eating", "Sleeping", "Writing"],
+      "answer": 1
+    },
+    {
+      "id": "apt_spa_1",
+      "dimension": "spatial",
+      "prompt": "A cube painted red on all faces is cut into 27 equal smaller cubes. How many small cubes have exactly two red faces?",
+      "options": ["8", "12", "6", "24"],
+      "answer": 1
+    },
+    {
+      "id": "apt_spa_2",
+      "dimension": "spatial",
+      "prompt": "You face north, turn 90° to your right, then turn 180°. Which direction are you facing now?",
+      "options": ["North", "East", "South", "West"],
+      "answer": 3
+    },
+    {
+      "id": "apt_spa_3",
+      "dimension": "spatial",
+      "prompt": "How many faces does a triangular prism have?",
+      "options": ["4", "6", "5", "9"],
+      "answer": 2
+    }
+  ],
+  "riasec": [
+    {"id": "ria_r_1", "dimension": "R", "prompt": "Fixing or assembling things, like a bicycle or a gadget"},
+    {"id": "ria_r_2", "dimension": "R", "prompt": "Working outdoors with tools, plants or machines"},
+    {"id": "ria_r_3", "dimension": "R", "prompt": "Building models or doing hands-on projects"},
+    {"id": "ria_i_1", "dimension": "I", "prompt": "Figuring out why something works the way it does"},
+    {"id": "ria_i_2", "dimension": "I", "prompt": "Solving puzzles or tricky maths problems"},
+    {"id": "ria_i_3", "dimension": "I", "prompt": "Doing science experiments to test an idea"},
+    {"id": "ria_a_1", "dimension": "A", "prompt": "Drawing, painting, designing or making music"},
+    {"id": "ria_a_2", "dimension": "A", "prompt": "Coming up with original ideas for a story, poster or video"},
+    {"id": "ria_a_3", "dimension": "A", "prompt": "Decorating or redesigning a room or space"},
+    {"id": "ria_s_1", "dimension": "S", "prompt": "Helping a friend understand a difficult topic"},
+    {"id": "ria_s_2", "dimension": "S", "prompt": "Volunteering to help people in my community"},
+    {"id": "ria_s_3", "dimension": "S", "prompt": "Listening to people and helping them with their problems"},
+    {"id": "ria_e_1", "dimension": "E", "prompt": "Leading a team or a school club"},
+    {"id": "ria_e_2", "dimension": "E", "prompt": "Convincing others to support my idea"},
+    {"id": "ria_e_3", "dimension": "E", "prompt": "Starting a small business or selling something"},
+    {"id": "ria_c_1", "dimension": "C", "prompt": "Keeping my notes and files neatly organised"},
+    {"id": "ria_c_2", "dimension": "C", "prompt": "Working carefully with numbers, records or lists"},
+    {"id": "ria_c_3", "dimension": "C", "prompt": "Following clear steps to finish a task accurately"}
+  ],
+  "workstyle": [
+    {"id": "ws_creative", "dimension": "creative", "prompt": "I like finding new ways to do things instead of the usual way."},
+    {"id": "ws_stability", "dimension": "stability_vs_excitement", "prompt": "I would choose a steady, predictable career over an exciting but uncertain one."},
+    {"id": "ws_teamwork", "dimension": "teamwork", "prompt": "I do my best work as part of a team."},
+    {"id": "ws_structure", "dimension": "structure", "prompt": "I prefer clear instructions and a fixed routine."}
+  ],
+  "free_text": [
+    {"id": "free_text_1", "prompt": "Something you made or did that you loved"},
+    {"id": "free_text_2", "prompt": "What do you want your work to look like in 10 years?"}
+  ]
+}

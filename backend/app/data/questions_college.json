@@ -1,0 +1,141 @@
+{
+  "track": "college",
+  "aptitude": [
+    {
+      "id": "apt_num_1",
+      "dimension": "numerical",
+      "prompt": "₹10,000 is invested at 10% a year, compounded annually. What is it worth after 2 years?",
+      "options": ["₹12,000", "₹12,100", "₹12,210", "₹11,000"],
+      "answer": 1
+    },
+    {
+      "id": "apt_num_2",
+      "dimension": "numerical",
+      "prompt": "A price rises by 25% and then falls by 20%. What is the overall change from the original price?",
+      "options": ["5% increase", "5% decrease", "No change", "2% decrease"],
+      "answer": 2
+    },
+    {
+      "id": "apt_num_3",
+      "dimension": "numerical",
+      "prompt": "Pipe A fills a tank in 6 hours and pipe B fills it in 3 hours. How long do they take together?",
+      "options": ["2 hours", "4.5 hours", "3 hours", "1.5 hours"],
+      "answer": 0
+    },
+    {
+      "id": "apt_log_1",
+      "dimension": "logical",
+      "prompt": "What comes next in the series: 3, 5, 9, 17, 33, ?",
+      "options": ["49", "64", "65", "66"],
+      "answer": 2
+    },
+    {
+      "id": "apt_log_2",
+      "dimension": "logical",
+      "prompt": "No managers are interns. All interns are students. Which statement must be true?",
+      "options": ["No students are managers", "Some students are not managers", "All students are interns", "Some managers are interns"],
+      "answer": 1
+    },
+    {
+      "id": "apt_log_3",
+      "dimension": "logical",
+      "prompt": "Five people sit in a row. A is somewhere to the left of B, D sits between A and B, C is somewhere to the right of B, and E sits at the far right. Who sits in the middle?",
+      "options": ["A", "B", "C", "D"],
+      "answer": 1
+    },
+    {
+      "id": "apt_verb_1",
+      "dimension": "verbal",
+      "prompt": "Choose the word closest in meaning to 'ubiquitous'.",
+      "options": ["Rare", "Omnipresent", "Ambiguous", "Ancient"],
+      "answer": 1
+    },
+    {
+      "id": "apt_verb_2",
+      "dimension": "verbal",
+      "prompt": "Which word is spelt correctly?",
+      "options": ["Accomodate", "Acommodate", "Accommodate", "Acomodate"],
+      "answer": 2
+    },
+    {
+      "id": "apt_verb_3",
+      "dimension": "verbal",
+      "prompt": "Choose the word that best completes the sentence: 'Despite the team's ____ effort, the project missed its deadline.'",
+      "options": ["strenuous", "half-hearted", "negligible", "careless"],
+      "answer": 0
+    },
+    {
+      "id": "apt_spa_1",
+      "dimension": "spatial",
+      "prompt": "A 4×4×4 cube painted on all faces is cut into 64 equal small cubes. How many small cubes have no paint at all?",
+      "options": ["4", "8", "16", "24"],
+      "answer": 1
+    },
+    {
+      "id": "apt_spa_2",
+      "dimension": "spatial",
+      "prompt": "A clock shows 3:15. What is the smaller angle between the hour hand and the minute hand?",
+      "options": ["0°", "15°", "7.5°", "22.5°"],
+      "answer": 2
+    },
+    {
+      "id": "apt_spa_3",
+      "dimension": "spatial",
+      "prompt": "You walk 3 km north and then 4 km east. How far are you from your starting point in a straight line?",
+      "options": ["7 km", "6 km", "1 km", "5 km"],
+      "answer": 3
+    }
+  ],
+  "riasec": [
+    {"id": "ria_r_1", "dimension": "R", "prompt": "Working with machines, tools or physical equipment"},
+    {"id": "ria_r_2", "dimension": "R", "prompt": "Doing hands-on technical work in a lab, site or workshop"},
+    {"id": "ria_r_3", "dimension": "R", "prompt": "Setting up or repairing hardware and devices"},
+    {"id": "ria_i_1", "dimension": "I", "prompt": "Analysing data to find patterns"},
+    {"id": "ria_i_2", "dimension": "I", "prompt": "Researching a question deeply until I understand it"},
+    {"id": "ria_i_3", "dimension": "I", "prompt": "Solving complex technical or mathematical problems"},
+    {"id": "ria_a_1", "dimension": "A", "prompt": "Designing products, visuals or experiences"},
+    {"id": "ria_a_2", "dimension": "A", "prompt": "Writing, creating content or performing"},
+    {"id": "ria_a_3", "dimension": "A", "prompt": "Working on projects that have no single right answer"},
+    {"id": "ria_s_1", "dimension": "S", "prompt": "Teaching, mentoring or coaching others"},
+    {"id": "ria_s_2", "dimension": "S", "prompt": "Working in a role that improves people's health or wellbeing"},
+    {"id": "ria_s_3", "dimension": "S", "prompt": "Supporting people through counselling or service"},
+    {"id": "ria_e_1", "dimension": "E", "prompt": "Leading projects and making decisions"},
+    {"id": "ria_e_2", "dimension": "E", "prompt": "Pitching ideas to clients or investors"},
+    {"id": "ria_e_3", "dimension": "E", "prompt": "Building or growing a business"},
+    {"id": "ria_c_1", "dimension": "C", "prompt": "Managing budgets, accounts or records"},
+    {"id": "ria_c_2", "dimension": "C", "prompt": "Checking work carefully for errors"},
+    {"id": "ria_c_3", "dimension": "C", "prompt": "Working with clear processes and procedures"}
+  ],
+  "workstyle": [
+    {"id": "ws_creative", "dimension": "creative", "prompt": "I like finding new ways to do things instead of the usual way."},
+    {"id": "ws_stability", "dimension": "stability_vs_excitement", "prompt": "I would choose a steady, predictable career over an exciting but uncertain one."},
+    {"id": "ws_teamwork", "dimension": "teamwork", "prompt": "I do my best work as part of a team."},
+    {"id": "ws_structure", "dimension": "structure", "prompt": "I prefer clear instructions and a fixed routine."}
+  ],
+  "free_text": [
+    {"id": "free_text_1", "prompt": "Something you made or did that you loved"},
+    {"id": "free_text_2", "prompt": "What do you want your work to look like in 10 years?"}
+  ],
+  "skills": [
+    "Python",
+    "Programming fundamentals",
+    "Databases and SQL",
+    "Mathematics",
+    "Statistics",
+    "Data analysis",
+    "Data visualisation",
+    "Spreadsheets",
+    "Research methods",
+    "Accounting",
+    "Financial analysis",
+    "Electronics",
+    "CAD drafting",
+    "Laboratory techniques",
+    "Visual design",
+    "Communication",
+    "Teamwork",
+    "Problem solving",
+    "Critical thinking",
+    "Project management"
+  ]
+}

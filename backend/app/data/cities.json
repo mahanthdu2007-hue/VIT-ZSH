@@ -1,0 +1,50 @@
+[
+  {
+    "id": "bengaluru",
+    "name": "Bengaluru",
+    "state": "Karnataka",
+    "top_sectors": ["Information technology", "Biotechnology", "Aerospace and defence", "Startups"]
+  },
+  {
+    "id": "mysuru",
+    "name": "Mysuru",
+    "state": "Karnataka",
+    "top_sectors": ["IT services", "Automotive and engineering manufacturing", "Tourism and hospitality", "Food technology research"]
+  },
+  {
+    "id": "chennai",
+    "name": "Chennai",
+    "state": "Tamil Nadu",
+    "top_sectors": ["Automobile manufacturing", "IT services", "Electronics manufacturing", "Healthcare"]
+  },
+  {
+    "id": "hyderabad",
+    "name": "Hyderabad",
+    "state": "Telangana",
+    "top_sectors": ["Information technology", "Pharmaceuticals", "Life sciences", "Aerospace and defence"]
+  },
+  {
+    "id": "pune",
+    "name": "Pune",
+    "state": "Maharashtra",
+    "top_sectors": ["Automotive", "Information technology", "Engineering manufacturing", "Education"]
+  },
+  {
+    "id": "delhi_ncr",
+    "name": "Delhi NCR",
+    "state": "Delhi (National Capital Region)",
+    "top_sectors": ["Government and public sector", "Consulting and finance", "IT services", "Media"]
+  },
+  {
+    "id": "mumbai",
+    "name": "Mumbai",
+    "state": "Maharashtra",
+    "top_sectors": ["Banking and finance", "Media and entertainment", "Trade and logistics", "Pharmaceuticals"]
+  },
+  {
+    "id": "coimbatore",
+    "name": "Coimbatore",
+    "state": "Tamil Nadu",
+    "top_sectors": ["Textiles", "Pumps and motors engineering", "Agriculture and agri-tech", "IT services"]
+  }
+]

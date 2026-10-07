@@ -1,0 +1,226 @@
+[
+  {
+    "id": "ioqm",
+    "name": "Indian Olympiad Qualifier in Mathematics (IOQM)",
+    "level": "school",
+    "domains": ["Finance & Maths", "Science"],
+    "typical_month": "September",
+    "source": "HBCSE Olympiad programme, olympiads.hbcse.tifr.res.in"
+  },
+  {
+    "id": "nse",
+    "name": "National Standard Examinations (NSEP, NSEC, NSEB, NSEA)",
+    "level": "school",
+    "domains": ["Science"],
+    "typical_month": "November",
+    "source": "Indian Association of Physics Teachers (IAPT), iapt.org.in"
+  },
+  {
+    "id": "ts_polycet",
+    "name": "Telangana Polytechnic Common Entrance Test (TS POLYCET)",
+    "level": "school",
+    "domains": ["Engineering", "Technology", "Hyper-local"],
+    "typical_month": "May",
+    "source": "State Board of Technical Education and Training, Telangana, polycet.sbtet.telangana.gov.in"
+  },
+  {
+    "id": "ap_polycet",
+    "name": "Andhra Pradesh Polytechnic Common Entrance Test (AP POLYCET)",
+    "level": "school",
+    "domains": ["Engineering", "Technology", "Hyper-local"],
+    "typical_month": "April",
+    "source": "State Board of Technical Education and Training, Andhra Pradesh, polycetap.nic.in"
+  },
+  {
+    "id": "jee_main",
+    "name": "Joint Entrance Examination Main (JEE Main)",
+    "level": "ug",
+    "domains": ["Engineering", "Technology", "Arts & Design", "Hyper-local"],
+    "typical_month": "January",
+    "source": "National Testing Agency, jeemain.nta.nic.in"
+  },
+  {
+    "id": "jee_advanced",
+    "name": "Joint Entrance Examination Advanced (JEE Advanced)",
+    "level": "ug",
+    "domains": ["Engineering", "Technology", "Science"],
+    "typical_month": "May",
+    "source": "Indian Institutes of Technology, jeeadv.ac.in"
+  },
+  {
+    "id": "kcet",
+    "name": "Karnataka Common Entrance Test (KCET)",
+    "level": "ug",
+    "domains": ["Engineering", "Technology", "Health", "Hyper-local"],
+    "typical_month": "April",
+    "source": "Karnataka Examinations Authority, cetonline.karnataka.gov.in/kea"
+  },
+  {
+    "id": "mht_cet",
+    "name": "Maharashtra Common Entrance Test (MHT CET)",
+    "level": "ug",
+    "domains": ["Engineering", "Technology", "Health", "Hyper-local"],
+    "typical_month": "April",
+    "source": "State Common Entrance Test Cell, Maharashtra, cetcell.mahacet.org"
+  },
+  {
+    "id": "ts_eapcet",
+    "name": "Telangana Engineering, Agriculture and Pharmacy Common Entrance Test (TS EAPCET)",
+    "level": "ug",
+    "domains": ["Engineering", "Technology", "Health", "Hyper-local"],
+    "typical_month": "May",
+    "source": "Telangana State Council of Higher Education, conducted by JNTU Hyderabad"
+  },
+  {
+    "id": "neet_ug",
+    "name": "National Eligibility cum Entrance Test (NEET UG)",
+    "level": "ug",
+    "domains": ["Health"],
+    "typical_month": "May",
+    "source": "National Testing Agency, neet.nta.nic.in"
+  },
+  {
+    "id": "cuet_ug",
+    "name": "Common University Entrance Test (CUET UG)",
+    "level": "ug",
+    "domains": ["Science", "Finance & Maths", "Arts & Design", "Technology", "Hyper-local"],
+    "typical_month": "May",
+    "source": "National Testing Agency, cuet.nta.nic.in"
+  },
+  {
+    "id": "nata",
+    "name": "National Aptitude Test in Architecture (NATA)",
+    "level": "ug",
+    "domains": ["Arts & Design", "Engineering"],
+    "typical_month": "April",
+    "source": "Council of Architecture, nata.in"
+  },
+  {
+    "id": "uceed",
+    "name": "Undergraduate Common Entrance Examination for Design (UCEED)",
+    "level": "ug",
+    "domains": ["Arts & Design"],
+    "typical_month": "January",
+    "source": "IIT Bombay, uceed.iitb.ac.in"
+  },
+  {
+    "id": "nid_dat_ug",
+    "name": "NID Design Aptitude Test for B.Des (NID DAT)",
+    "level": "ug",
+    "domains": ["Arts & Design"],
+    "typical_month": "December",
+    "source": "National Institute of Design, admissions.nid.edu"
+  },
+  {
+    "id": "nift_ug",
+    "name": "NIFT Entrance Examination for B.Des and B.FTech",
+    "level": "ug",
+    "domains": ["Arts & Design"],
+    "typical_month": "February",
+    "source": "National Institute of Fashion Technology, nift.ac.in"
+  },
+  {
+    "id": "ipmat_indore",
+    "name": "Integrated Programme in Management Aptitude Test (IPMAT Indore)",
+    "level": "ug",
+    "domains": ["Finance & Maths"],
+    "typical_month": "May",
+    "source": "IIM Indore, iimidr.ac.in"
+  },
+  {
+    "id": "isi_admission",
+    "name": "ISI Admission Test (B.Stat and B.Math)",
+    "level": "ug",
+    "domains": ["Finance & Maths", "Science"],
+    "typical_month": "May",
+    "source": "Indian Statistical Institute, isical.ac.in"
+  },
+  {
+    "id": "ca_foundation",
+    "name": "CA Foundation Examination",
+    "level": "ug",
+    "domains": ["Finance & Maths"],
+    "typical_month": "May",
+    "source": "Institute of Chartered Accountants of India, icai.org"
+  },
+  {
+    "id": "iiser_iat",
+    "name": "IISER Aptitude Test (IAT)",
+    "level": "ug",
+    "domains": ["Science"],
+    "typical_month": "June",
+    "source": "Indian Institutes of Science Education and Research, iiseradmission.in"
+  },
+  {
+    "id": "nest",
+    "name": "National Entrance Screening Test (NEST)",
+    "level": "ug",
+    "domains": ["Science"],
+    "typical_month": "June",
+    "source": "NISER Bhubaneswar and UM-DAE CEBS Mumbai, nestexam.in"
+  },
+  {
+    "id": "gate",
+    "name": "Graduate Aptitude Test in Engineering (GATE)",
+    "level": "pg",
+    "domains": ["Engineering", "Technology", "Science", "Hyper-local"],
+    "typical_month": "February",
+    "source": "IISc Bangalore and the IITs (organising institute rotates each year)"
+  },
+  {
+    "id": "iit_jam",
+    "name": "Joint Admission Test for Masters (IIT JAM)",
+    "level": "pg",
+    "domains": ["Science", "Finance & Maths"],
+    "typical_month": "February",
+    "source": "The IITs (organising institute rotates each year)"
+  },
+  {
+    "id": "cuet_pg",
+    "name": "Common University Entrance Test (CUET PG)",
+    "level": "pg",
+    "domains": ["Science", "Finance & Maths", "Arts & Design", "Technology"],
+    "typical_month": "March",
+    "source": "National Testing Agency, exams.nta.ac.in/CUET-PG"
+  },
+  {
+    "id": "nimcet",
+    "name": "NIT MCA Common Entrance Test (NIMCET)",
+    "level": "pg",
+    "domains": ["Technology"],
+    "typical_month": "June",
+    "source": "National Institutes of Technology (organising NIT rotates each year)"
+  },
+  {
+    "id": "cat",
+    "name": "Common Admission Test (CAT)",
+    "level": "pg",
+    "domains": ["Finance & Maths"],
+    "typical_month": "November",
+    "source": "Indian Institutes of Management, iimcat.ac.in"
+  },
+  {
+    "id": "ceed",
+    "name": "Common Entrance Examination for Design (CEED)",
+    "level": "pg",
+    "domains": ["Arts & Design"],
+    "typical_month": "January",
+    "source": "IIT Bombay, ceed.iitb.ac.in"
+  },
+  {
+    "id": "neet_pg",
+    "name": "National Eligibility cum Entrance Test (NEET PG)",
+    "level": "pg",
+    "domains": ["Health"],
+    "typical_month": "August",
+    "source": "National Board of Examinations in Medical Sciences, natboard.edu.in"
+  },
+  {
+    "id": "icar_aieea_pg",
+    "name": "ICAR All India Entrance Examination for Admission (AIEEA PG)",
+    "level": "pg",
+    "domains": ["Hyper-local", "Science"],
+    "typical_month": "July",
+    "source": "National Testing Agency for the Indian Council of Agricultural Research, exams.nta.ac.in/ICAR"
+  }
+]

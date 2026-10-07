@@ -2,8 +2,41 @@
 
 from typing import Final
 
+# ---------------------------------------------------------------- §5 Data model
+DOMAIN_MIN_CAREERS: Final[dict[str, int]] = {  # §5 minimum careers per domain
+    "Technology": 10,
+    "Engineering": 8,
+    "Science": 6,
+    "Health": 6,
+    "Arts & Design": 8,
+    "Finance & Maths": 6,
+    "Hyper-local": 6,
+}
+CAREERS_TOTAL_MIN: Final[int] = 55  # §5 55–60 careers in total
+CAREERS_TOTAL_MAX: Final[int] = 60  # §5
+PATHWAYS_PER_CAREER_MIN: Final[int] = 2  # §5 every career has 2–4 pathways
+PATHWAYS_PER_CAREER_MAX: Final[int] = 4  # §5
+SCHOLARSHIPS_MIN: Final[int] = 25  # §5 25–35 scholarships
+SCHOLARSHIPS_MAX: Final[int] = 35  # §5
+SKILL_VOCABULARY_MIN: Final[int] = 50  # §5 shared vocabulary of "about 60" skills
+SKILL_VOCABULARY_MAX: Final[int] = 70  # §5
+APTITUDE_ITEMS_TOTAL: Final[int] = 12  # §5 12 aptitude items, 3 per dimension
+RIASEC_ITEMS_PER_DIMENSION: Final[int] = 3  # §5 18 RIASEC items, 3 per letter
+WORKSTYLE_DIMENSIONS: Final[tuple[str, ...]] = (  # §5 4 workstyle Likert items
+    "creative", "stability_vs_excitement", "teamwork", "structure",
+)
+FREE_TEXT_IDS: Final[tuple[str, ...]] = ("free_text_1", "free_text_2")  # §5 / §6 2 prompts
+COLLEGE_SKILL_LIST_SIZE: Final[int] = 20  # §5 the 20 most common skills in the dataset
+
 # ---------------------------------------------------------------- §6 Inputs
 FREE_TEXT_MIN_WORDS: Final[int] = 15  # §6 free text counts toward completeness if ≥ 15 words
+SCHOOL_CLASS_MIN: Final[int] = 9  # §6 current class 9–12
+SCHOOL_CLASS_MAX: Final[int] = 12  # §6
+STREAM_FROM_CLASS: Final[int] = 11  # §6 stream required in Class 11–12
+COLLEGE_YEAR_MIN: Final[int] = 1  # §6 college year of study
+COLLEGE_YEAR_MAX: Final[int] = 5  # §6 longest common UG programme (e.g. B.Arch, MBBS)
+LIKERT_MAX: Final[int] = 5  # §6 / §7.2 Likert answers 1–5 (normalised by (x − 1)/4)
+MARKS_MAX: Final[float] = 100.0  # §6 marks in percent
 
 # ---------------------------------------------------------------- §7.2 Vectorize & Normalize
 STUDENT_DIMENSIONS: Final[tuple[str, ...]] = (  # §7.2 student vector S, 11 dims in order

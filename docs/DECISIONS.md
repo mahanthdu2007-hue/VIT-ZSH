@@ -11,3 +11,12 @@ date | decision | reason
 2026-10-08 | TypeScript pinned to 5.x | TypeScript 7 has no JavaScript compiler API, which `openapi-typescript` needs for `npm run gen:api`.
 2026-10-08 | Tailwind 3 with theme built from `src/theme/tokens.ts` | Lets `tailwind.config.ts` import tokens directly, so colours and type exist in one place (§15).
 2026-10-08 | Phase 0 page is `src/pages/HealthPage.tsx` | The five §4 pages belong to later phases; this is a temporary status page.
+2026-10-08 | Scholarships gain `restricted_to` (null = open to all) and nullable `income_max_inr` (null = no income limit) | Asked the user: most real schemes are limited by caste category, gender, state or institution, which the §5 format could not record. Engine cost maths will count only unrestricted schemes; restricted ones are shown as "you may qualify".
+2026-10-08 | Scholarship and pathway study levels use `school / diploma / ug / pg` | §5 does not list level values; these match exam levels plus diploma.
+2026-10-08 | `institution_type` ∈ `govt / private / online / diploma`; a lateral pathway is one with `entry = graduate` | §5 says "govt / private / online-or-diploma / lateral"; lateral describes entry, not institution.
+2026-10-08 | Added `data/skills_vocabulary.json` with `{name, category, aptitude}`; `aptitude` links a skill to numerical/logical/verbal/spatial | Phase 1A asks for the file; §8 needs the aptitude-to-skill mapping for school students.
+2026-10-08 | College skills list is a hand-picked 20 for now; the validator warns if it differs from the 20 most common career skills | §5 says "the 20 most common skills in the dataset", but there are no careers yet.
+2026-10-08 | Missing `graduate` pathway is a validator warning, not an error | §5 requires it only for "college-relevant" careers, which is not defined.
+2026-10-08 | Student fields marks, subjects, preferred cities, dream career and free text are optional; class/year, home city, relocation, higher studies and risk are required | §6 completeness counts answered fields, so some must be optional; the engine cannot run without the required ones.
+2026-10-08 | `stability_vs_excitement` item is worded so agreeing means preferring stability | Lets §7.6 compare it directly with the parent's stability value.
+2026-10-08 | Single-valued `typical_month` uses the first or main sitting for exams held several times a year (e.g. JEE Main → January) | §5 schema has one month per exam.
