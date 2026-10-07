@@ -1,0 +1,22 @@
+# Secrets
+.env
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+
+# Node
+node_modules/
+dist/
+
+# Data and caches
+*.db
+backend/chroma/
+backend/cache/
+.cache/

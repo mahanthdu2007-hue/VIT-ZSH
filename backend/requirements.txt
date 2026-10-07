@@ -1,0 +1,32 @@
+# Install CPU-only PyTorch first:
+#   pip install torch==2.14.1 --index-url https://download.pytorch.org/whl/cpu
+# then: pip install -r requirements.txt
+torch==2.14.1
+
+# API
+fastapi==0.142.2
+uvicorn[standard]==0.54.0
+pydantic==2.13.5
+pydantic-settings==2.15.0
+SQLAlchemy==2.1.4
+
+# Numbers
+numpy==2.4.6
+pandas==3.0.6
+scipy==1.17.1
+
+# System 1 (zero-shot classification)
+transformers==5.19.0
+sentencepiece==0.2.2
+protobuf==7.36.2
+
+# System 2 (retrieval + explanations)
+sentence-transformers==6.1.0
+chromadb==1.5.9
+groq==1.7.0
+google-genai==2.28.0
+
+# Tests
+httpx2==2.13.1
+pytest==9.1.1
+hypothesis==6.168.5

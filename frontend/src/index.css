@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-paper font-body text-base text-ink;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-heading font-semibold;
+  }
+
+  :focus-visible {
+    @apply outline outline-2 outline-offset-2 outline-studentFit;
+  }
+}

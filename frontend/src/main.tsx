@@ -1,0 +1,20 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "./index.css";
+import { HealthPage } from "./pages/HealthPage";
+
+const queryClient = new QueryClient();
+
+const root = document.getElementById("root");
+if (!root) {
+  throw new Error("Root element #root not found");
+}
+
+createRoot(root).render(
+  <StrictMode>
+    <QueryClientProvider client={queryClient}>
+      <HealthPage />
+    </QueryClientProvider>
+  </StrictMode>,
+);
