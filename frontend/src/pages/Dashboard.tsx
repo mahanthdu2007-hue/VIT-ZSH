@@ -1,13 +1,17 @@
 import { useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import type { AssessmentResult } from "../api/client";
-import { useAssessment, useCareers, useExplanations } from "../api/queries";
+import { useAssessment, useAssessmentInputs, useCareers, useExplanations } from "../api/queries";
 import { CareerDetailPanel } from "../components/dashboard/CareerDetailPanel";
+import { CareerDeepDive } from "../components/dashboard/CareerDeepDive";
 import { ConflictPanel } from "../components/dashboard/ConflictPanel";
 import { MiddlePathCard } from "../components/dashboard/MiddlePathCard";
 import { StretchOptions } from "../components/dashboard/StretchOptions";
+import { SwotGrid } from "../components/dashboard/SwotGrid";
 import { TopCareers } from "../components/dashboard/TopCareers";
+import { Button } from "../components/ui/Button";
 import { Card } from "../components/ui/Card";
+import { WhatIfDrawer } from "../components/whatif/WhatIfDrawer";
 
 export function Dashboard() {
   const { id = "" } = useParams();
@@ -41,7 +45,9 @@ const WIDE_LAYOUT = "(min-width: 1024px)";
 
 function DashboardView({ result }: { result: AssessmentResult }) {
   const careers = useCareers();
+  const inputs = useAssessmentInputs(result.id);
   const explanations = useExplanations(result);
+  const [whatIfOpen, setWhatIfOpen] = useState(false);
   const [selectedId, setSelectedId] = useState(result.ranking[0]?.career_id ?? null);
   const detailHeadingRef = useRef<HTMLHeadingElement>(null);
 
@@ -68,10 +74,23 @@ function DashboardView({ result }: { result: AssessmentResult }) {
             indicative estimates.
           </p>
         </div>
-        <Link to="/" className="rounded font-medium text-studentFit underline">
-          Start a new assessment
-        </Link>
+        <div className="flex flex-wrap items-center gap-4">
+          {inputs.data && <Button onClick={() => setWhatIfOpen(true)}>Try a what-if</Button>}
+          <Link to="/" className="rounded font-medium text-studentFit underline">
+            Start a new assessment
+          </Link>
+        </div>
       </header>
+
+      {inputs.data && (
+        <WhatIfDrawer
+          open={whatIfOpen}
+          onClose={() => setWhatIfOpen(false)}
+          assessmentId={result.id}
+          inputs={inputs.data}
+          ranking={result.ranking}
+        />
+      )}
 
       {result.ranking.length === 0 || !selected ? (
         <Card title="No affordable careers yet">
@@ -105,6 +124,16 @@ function DashboardView({ result }: { result: AssessmentResult }) {
           <MiddlePathCard middlePath={result.middle_path} careerName={careerName} onSelect={select} />
         </div>
       </section>
+
+      {selected ? (
+        <CareerDeepDive
+          detail={selected}
+          homeCity={inputs.data?.student.home_city}
+          swot={<SwotGrid swot={result.swot} topCareerName={result.ranking[0]?.name} />}
+        />
+      ) : (
+        <SwotGrid swot={result.swot} topCareerName={result.ranking[0]?.name} />
+      )}
 
       <StretchOptions options={result.stretch_options} details={result.details} careerName={careerName} />
     </div>

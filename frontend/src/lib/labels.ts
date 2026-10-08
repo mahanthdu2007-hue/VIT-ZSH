@@ -155,3 +155,28 @@ export function missingInputHints(missing: string[]): string[] {
   );
   return [...new Set(hints)];
 }
+
+/** §7.2 student dimensions, as the student would describe them. */
+export const DIMENSION_LABELS: Record<string, string> = {
+  numerical: "Working with numbers",
+  logical: "Logical reasoning",
+  verbal: "Words and language",
+  spatial: "Picturing shapes and spaces",
+  creative: "Creativity",
+  R: "Hands-on, practical work",
+  I: "Investigating and solving problems",
+  A: "Artistic, expressive work",
+  S: "Helping and teaching people",
+  E: "Leading and persuading",
+  C: "Organising and keeping order",
+};
+
+/** §7.8 Risk Radar axes: a short name and what a high value means. */
+export const RISK_AXES = [
+  { key: "financial", label: "Money stretch", meaning: "How far the course pushes past the family budget." },
+  { key: "skill_gap", label: "Skills to build", meaning: "How much the student still needs to learn." },
+  { key: "market", label: "Fewer jobs", meaning: "How weak hiring is where the student can work." },
+  { key: "location", label: "Distance from jobs", meaning: "How few jobs are near home if the student stays." },
+  { key: "education_cost", label: "Cost against income", meaning: "Course cost compared with family income." },
+  { key: "disruption", label: "Automation risk", meaning: "How much new technology may change this job." },
+] as const;

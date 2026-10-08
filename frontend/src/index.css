@@ -17,3 +17,10 @@
     @apply outline outline-2 outline-offset-2 outline-studentFit;
   }
 }
+
+@layer components {
+  /* Read-only pathway graph: connection dots carry no meaning, so hide them. */
+  .react-flow__handle {
+    @apply opacity-0;
+  }
+}

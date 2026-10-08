@@ -262,3 +262,25 @@
 - Ananya's confidence badge shows 100.0 with a hint about parent free text: the hint comes from the abstained
   parent_concerns decision (§7.8 missing_inputs).
 - The selected career's suggested route appears both above the breakdown and inside the template narrative.
+
+## Phase F2: Dashboard detail panels + What-If (2026-10-08)
+
+**Built**
+- Detail panels for the selected career, in §15 order: RiskRadar (Recharts, six plain-language axes), SkillGap (with the
+  order to learn things in), PathwayGraph (@xyflow/react, read-only, left to right), Timeline, CityDemand (best city
+  highlighted), SwotGrid (2×2, top career), RoiCard (25% assumption shown), exams and scholarships.
+- WhatIfDrawer: budget slider + typed input, loan, home city, relocation, both risk levels, higher studies, parent
+  priority; 250 ms debounce → POST /api/whatif; re-ranked list with rank arrows, point deltas, reasons, "Back to original".
+  One Framer Motion layout animation (rows + PrismBar segments), off under prefers-reduced-motion.
+
+**Checks**
+- `npm run typecheck`, `npm run build`: passed after each part (bundle-size warning only).
+- `pytest -q`: 184 passed.
+- Headless Edge, all three families at 1440 px and 375 px: 140 / 140 checks (every panel present, radar labels not
+  clipped, route visible, panels follow selection, What-If returns, no horizontal scroll, no console errors, motion off
+  with reduced motion). Ananya ₹5,00,000 → ₹3,00,000: about 300 ms from typing to screen (incl. 250 ms debounce), server 20–46 ms.
+
+**Known issues**
+- Ananya's ₹3L What-If keeps the same top 5; the scores drop by 1.9 (Financial Fit −1.7) and rows 6/7 swap. Reasons
+  appear mostly for careers ranked below 10.
+- The JS bundle is about 780 kB (Vite warning); not split yet.

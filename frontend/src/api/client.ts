@@ -29,6 +29,14 @@ export type ConflictResult = Schemas["ConflictResult"];
 export type ConflictDimension = Schemas["ConflictDimension"];
 export type MiddlePath = Schemas["MiddlePath"];
 export type StretchOption = Schemas["StretchOption"];
+export type RiskRadar = Schemas["RiskRadar"];
+export type SkillPlan = Schemas["SkillPlan"];
+export type Swot = Schemas["Swot"];
+export type SwotItem = Schemas["SwotItem"];
+export type WhatIfOverrides = Schemas["WhatIfOverrides"];
+export type WhatIfRequest = Schemas["WhatIfRequest"];
+export type WhatIfResult = Schemas["WhatIfResult"];
+export type CareerChange = Schemas["CareerChange"];
 
 export class ApiError extends Error {
   constructor(
@@ -72,5 +80,14 @@ export function postAssess(body: AssessRequest): Promise<AssessmentResult> {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
+  });
+}
+
+export function postWhatIf(body: WhatIfRequest, signal?: AbortSignal): Promise<WhatIfResult> {
+  return request<WhatIfResult>("/api/whatif", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+    signal,
   });
 }

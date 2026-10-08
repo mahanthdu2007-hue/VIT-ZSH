@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { useState } from "react";
 import { formatPoints } from "../../lib/format";
 import { COMPONENTS, type ComponentKey } from "../../lib/labels";
@@ -8,10 +9,12 @@ type PrismBarProps = {
   score: number;
   /** Large bars have focusable segments; small ones sit inside a clickable row and are hidden from screen readers. */
   size?: "sm" | "lg";
+  /** What-If only (§15's one motion moment): segments re-flow with a layout animation when points change. */
+  animated?: boolean;
 };
 
 /** §15 signature component: one career's score as five coloured segments sized by the points each part earned. */
-export function PrismBar({ points, score, size = "lg" }: PrismBarProps) {
+export function PrismBar({ points, score, size = "lg", animated = false }: PrismBarProps) {
   const [active, setActive] = useState<ComponentKey | null>(null);
   const interactive = size === "lg";
   let offset = 0;
@@ -33,11 +36,14 @@ export function PrismBar({ points, score, size = "lg" }: PrismBarProps) {
     >
       <div className={`flex w-full overflow-hidden rounded-full bg-line ${size === "lg" ? "h-6" : "h-2"}`}>
         {segments.map((s) => (
-          <span
+          <motion.span
             key={s.key}
+            layout={animated}
             tabIndex={interactive ? 0 : undefined}
             role={interactive ? "img" : undefined}
-            aria-label={interactive ? `${s.label}: ${formatPoints(s.earned)} of ${s.max} points. ${s.meaning}` : undefined}
+            aria-label={
+              interactive ? `${s.label}: ${formatPoints(s.earned)} of ${s.max} points. ${s.meaning}` : undefined
+            }
             className="h-full border-r border-surface last:border-r-0 focus-visible:outline-offset-0"
             style={{ width: `${s.earned}%`, backgroundColor: componentColors[s.key] }}
             onMouseEnter={() => setActive(s.key)}

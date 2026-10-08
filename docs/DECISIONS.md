@@ -97,3 +97,6 @@ date | decision | reason
 2026-10-08 | College skill self-rating uses five levels mapped to 0 / 25 / 50 / 75 / 100 | §6 asks for 0–100; five named levels are easier for students and stay within that range.
 2026-10-08 | Aptitude, interests, work style, skills and the required preference/about fields block "Next"; marks, favourite subjects, dream career, preferred cities and free text are optional with hints | §6 completeness already rewards optional answers through confidence; required fields are the ones the API needs.
 2026-10-08 | Frontend shows component maximums 30/20/20/15/15 from §7.8 in lib/labels.ts | The API returns points and values but not the maximums.
+2026-10-08 | The SWOT grid shows the #1 career even when another career is selected | §9 defines SWOT for the top career only; every other F2 panel follows the selection
+2026-10-08 | What-If starts from the assessment answers kept in memory next to the result | the API returns no original inputs; keeps the API contract unchanged
+2026-10-08 | Layout animation is switched off with useReducedMotion() instead of MotionConfig reducedMotion="user" | the Framer setting still moved layout projections when reduced motion was set
