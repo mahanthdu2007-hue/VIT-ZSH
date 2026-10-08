@@ -22,9 +22,7 @@ export function CareerDeepDive({ detail, homeCity, swot }: CareerDeepDiveProps) 
     <section id="closer" aria-labelledby="deep-dive-heading" className="flex scroll-mt-32 flex-col gap-6">
       <SectionHeading
         id="deep-dive-heading"
-        eyebrow="A closer look"
-        title={detail.career.name}
-        description="Risks, skills, the route year by year, where the jobs are and whether the cost pays back."
+        title={`A closer look at ${detail.career.name}`}
       />
       <div className="grid gap-4 lg:grid-cols-2">
         <RiskRadar risk={detail.risk} />
