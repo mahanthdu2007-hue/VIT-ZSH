@@ -74,7 +74,6 @@ export const CareerDetailPanel = forwardRef<HTMLHeadingElement, CareerDetailPane
                   <div className="flex flex-col gap-6">
                     <div className="pt-2">
                       <PrismBar points={score.points} score={score.score} />
-                      <p className="mt-2 text-sm text-ink/50">Point at, tap or tab to a colour to see what it means.</p>
                     </div>
                     <p className="flex flex-wrap items-center gap-2 rounded-xl bg-paper p-4">
                       <span>
