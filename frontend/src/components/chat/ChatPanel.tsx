@@ -4,6 +4,7 @@ import { useChatHistory, useHealth, useSendChat } from "../../api/queries";
 import { LLM_PROVIDER_NAMES } from "../../lib/labels";
 import { SourceLinks } from "../dashboard/SourceLinks";
 import { Button } from "../ui/Button";
+import { ReplyVisual } from "./ReplyVisual";
 
 type AskingAs = "student" | "parent";
 
@@ -127,12 +128,13 @@ export function ChatPanel({ open, onClose, result, careerName, dreamCareerId }: 
               >
                 {m.text}
               </div>
-              {m.reply && m.reply.sources.length > 0 && <SourceLinks citations={m.reply.sources} />}
+              {m.reply && <ReplyVisual reply={m.reply} result={result} />}
               {m.reply?.whatif && (
-                <p className="mt-1 text-sm text-ink/70">
+                <p className="mt-1 text-sm text-ink/60">
                   Worked out by the What-If engine. Use "Try a what-if" on the dashboard to change more answers.
                 </p>
               )}
+              {m.reply && m.reply.sources.length > 0 && <SourceLinks citations={m.reply.sources} />}
             </li>
           ))}
         </ol>

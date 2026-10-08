@@ -3,7 +3,9 @@ import type { CareerDetail, Explanations } from "../../api/client";
 import { formatInr, formatPoints } from "../../lib/format";
 import { Badge, IndicativeTag } from "../ui/Badge";
 import { Card } from "../ui/Card";
+import { Tabs } from "../ui/Tabs";
 import { ConfidenceBadge } from "./ConfidenceBadge";
+import { ExamsAndScholarships } from "./ExamsAndScholarships";
 import { PrismBar } from "./PrismBar";
 import { ScoreBreakdown } from "./ScoreBreakdown";
 import { WhyWhyNot } from "./WhyWhyNot";
@@ -45,26 +47,42 @@ export const CareerDetailPanel = forwardRef<HTMLHeadingElement, CareerDetailPane
         </p>
       )}
 
-      <div className="mt-8">
-        <PrismBar points={score.points} score={score.score} />
-        <p className="mt-2 text-sm text-ink/70">Point at, tap or tab to a colour to see what it means.</p>
-      </div>
-
-      <p className="mt-4 flex flex-wrap items-center gap-2 rounded-lg bg-paper p-3">
-        <span>
-          Suggested route: <span className="font-medium">{pathway.label}</span>, about {pathway.duration_years} years
-          {pathwayCost !== undefined && `, around ${formatInr(pathwayCost)} after expected scholarships`}.
-        </span>
-        <IndicativeTag />
-      </p>
-
-      <div className="mt-6 grid gap-6 xl:grid-cols-2">
-        <ScoreBreakdown detail={detail} />
-        <ConfidenceBadge confidence={detail.confidence} />
-      </div>
-
-      <div className="mt-6 border-t border-line pt-6">
-        <WhyWhyNot explanations={explanations} careerId={career.id} isRefreshing={explanationsRefreshing} />
+      <div className="mt-6">
+        <Tabs
+          label={`About ${career.name}`}
+          tabs={[
+            {
+              id: "overview",
+              label: "Overview",
+              content: (
+                <div className="flex flex-col gap-6">
+                  <div>
+                    <PrismBar points={score.points} score={score.score} />
+                    <p className="mt-2 text-sm text-ink/60">Point at, tap or tab to a colour to see what it means.</p>
+                  </div>
+                  <p className="flex flex-wrap items-center gap-2 rounded-lg bg-paper p-4">
+                    <span>
+                      Suggested route: <span className="font-medium">{pathway.label}</span>, about{" "}
+                      {pathway.duration_years} years
+                      {pathwayCost !== undefined && `, around ${formatInr(pathwayCost)} after expected scholarships`}.
+                    </span>
+                    <IndicativeTag />
+                  </p>
+                  <ScoreBreakdown detail={detail} />
+                  <ConfidenceBadge confidence={detail.confidence} />
+                </div>
+              ),
+            },
+            {
+              id: "why",
+              label: "Why it fits",
+              content: (
+                <WhyWhyNot explanations={explanations} careerId={career.id} isRefreshing={explanationsRefreshing} />
+              ),
+            },
+            { id: "aid", label: "Scholarships and exams", content: <ExamsAndScholarships detail={detail} /> },
+          ]}
+        />
       </div>
     </Card>
   );

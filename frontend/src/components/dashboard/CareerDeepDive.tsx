@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
 import type { CareerDetail, CityId } from "../../api/client";
 import { CityDemand } from "./CityDemand";
-import { ExamsAndScholarships } from "./ExamsAndScholarships";
 import { PathwayGraph } from "./PathwayGraph";
 import { RiskRadar } from "./RiskRadar";
 import { RoiCard } from "./RoiCard";
@@ -39,10 +38,7 @@ export function CareerDeepDive({ detail, homeCity, swot }: CareerDeepDiveProps) 
         <CityDemand detail={detail} homeCity={homeCity} />
         {swot}
       </div>
-      <div className="grid items-stretch gap-6 lg:grid-cols-2">
-        <RoiCard detail={detail} />
-        <ExamsAndScholarships detail={detail} />
-      </div>
+      <RoiCard detail={detail} />
     </section>
   );
 }

@@ -8,56 +8,57 @@ type WhyWhyNotProps = {
   isRefreshing: boolean;
 };
 
+function ReasonTile({ title, lines, tone }: { title: string; lines: string[]; tone: "good" | "watch" }) {
+  const marker = tone === "good" ? "✓" : "!";
+  const colours =
+    tone === "good" ? "bg-financialFit/15 text-financialFit" : "bg-marketDemand/15 text-marketDemand";
+  return (
+    <div className="flex h-full flex-col rounded-lg border border-line p-4">
+      <h4 className="font-medium">{title}</h4>
+      <ul className="mt-3 flex flex-col gap-3">
+        {lines.map((line) => (
+          <li key={line} className="flex gap-3 leading-snug">
+            <span
+              aria-hidden="true"
+              className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-sm ${colours}`}
+            >
+              {marker}
+            </span>
+            {line}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 /** §12 why / why-not for one career; covers the top 5 careers and the middle path. */
 export function WhyWhyNot({ explanations, careerId, isRefreshing }: WhyWhyNotProps) {
   const item: CareerExplanation | undefined = explanations.items.find((e) => e.career_id === careerId);
+  if (!item) {
+    return (
+      <p className="rounded-lg bg-paper p-4 text-ink/80">
+        Written reasons are prepared for the top 5 careers and the middle path. The Overview tab shows how this career
+        was scored.
+      </p>
+    );
+  }
   return (
-    <section aria-labelledby="why-heading" aria-busy={isRefreshing}>
-      <h3 id="why-heading" className="text-lg">
-        Why it fits, and what to watch
-      </h3>
-      {item ? (
-        <>
-          <div className="mt-3 grid gap-4 sm:grid-cols-2">
-            <div>
-              <h4 className="font-medium">Why it fits</h4>
-              <ul className="mt-2 flex flex-col gap-2">
-                {item.why.map((line) => (
-                  <li key={line} className="flex gap-2">
-                    <span aria-hidden="true" className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-financialFit/15 text-sm text-financialFit">
-                      ✓
-                    </span>
-                    {line}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-medium">What to watch</h4>
-              <ul className="mt-2 flex flex-col gap-2">
-                {item.why_not.map((line) => (
-                  <li key={line} className="flex gap-2">
-                    <span aria-hidden="true" className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-marketDemand/15 text-sm text-marketDemand">
-                      !
-                    </span>
-                    {line}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-          <p className="mt-4 rounded-lg bg-paper p-3">{item.roadmap_narrative}</p>
-          <p className="mt-2 text-sm text-ink/60" role="status">
-            {sourceNote(explanations, item)}
-          </p>
-          <SourceLinks citations={item.citations} />
-        </>
-      ) : (
-        <p className="mt-2 text-ink/80">
-          Written reasons are prepared for the top 5 careers and the middle path. The score breakdown above shows how
-          this career was scored.
+    <section aria-label="Why it fits, and what to watch" aria-busy={isRefreshing} className="flex flex-col gap-4">
+      <div className="grid items-stretch gap-4 md:grid-cols-2">
+        <ReasonTile title="Why it fits" lines={item.why} tone="good" />
+        <ReasonTile title="What to watch" lines={item.why_not} tone="watch" />
+      </div>
+      <div className="rounded-lg bg-paper p-4">
+        <h4 className="font-medium">The route in words</h4>
+        <p className="mt-2 leading-relaxed">{item.roadmap_narrative}</p>
+      </div>
+      <div className="flex flex-col gap-1">
+        <p className="text-sm text-ink/60" role="status">
+          {sourceNote(explanations, item)}
         </p>
-      )}
+        <SourceLinks citations={item.citations} />
+      </div>
     </section>
   );
 }
