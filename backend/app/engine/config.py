@@ -126,8 +126,15 @@ PA_WEIGHTS: Final[dict[str, float]] = {  # §7.6 PA weighted mean (equal weights
     "priority": 0.2,
     "financial_fit": 0.2,
 }
+NASH_CANDIDATES_SHOWN: Final[int] = 5  # §7.6 trace: best Nash candidates reported
 PARENT_CONCERN_THRESHOLD: Final[float] = 0.5  # §7.6 concern counts if probability > 0.5
 PARENT_CONCERN_BOOST: Final[float] = 0.1  # §7.6 +0.1 weight to matching PA dimension
+PA_PRIORITY_SOURCE: Final[dict[str, str]] = {  # §7.6 priority fit: parent priority → career value
+    "stability": "stability",
+    "salary": "entry_salary",
+    "prestige": "prestige",
+    "happiness": "student_fit",
+}
 PARENT_CONCERN_DIMENSION: Final[dict[str, str]] = {  # §7.6 concern → PA dimension (DECISIONS.md)
     "financial burden": "financial_fit",
     "job security": "risk",
@@ -172,6 +179,10 @@ CONFIDENCE_BAND_MEDIUM: Final[float] = 55.0  # §7.8 Medium 55–74, Low < 55
 
 RISK_LOCATION_DEMAND_THRESHOLD: Final[float] = 0.4  # §7.8 location risk = 1 if demand < 0.4
 RISK_EDUCATION_COST_INCOME_YEARS: Final[float] = 4.0  # §7.8 clip(effective_cost/income/4, 0, 1)
+DECISION_SOURCE_FIELDS: Final[dict[str, tuple[str, ...]]] = {  # §7.8 missing_inputs for abstained decisions
+    "student_domain_affinity": ("free_text_1", "free_text_2"),
+    "parent_concerns": ("parent.free_text",),
+}
 
 # ---------------------------------------------------------------- §7.9 Ranking
 TOP_CAREERS_LIMIT: Final[int] = 10  # §7.9 top 10
@@ -180,6 +191,13 @@ STRETCH_SF_QUANTILE: Final[float] = 0.75  # §7.9 stretch options: SF in the top
 # ---------------------------------------------------------------- §8 Skill gap
 SKILL_RATING_SCALE: Final[float] = 100.0  # §8 college self-rating / 100
 SCHOOL_SKILL_BASELINE: Final[float] = 0.2  # §8 school baseline for unmapped skills
+SCHOOL_FINAL_CLASS: Final[int] = 12  # §8 timeline: after_class_12 pathways start after Class 12
+SCHOOL_CLASS_10: Final[int] = 10  # §8 timeline: after_class_10 pathways start after Class 10
+COLLEGE_UG_YEARS: Final[int] = 3  # §8 timeline: typical UG length before a graduate pathway starts
+MONTHS: Final[tuple[str, ...]] = (  # §9 "next exams" ordered from the current month
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December",
+)
 
 # ---------------------------------------------------------------- §9 SWOT
 SWOT_ITEMS_PER_QUADRANT: Final[int] = 3  # §9 top 3 strengths / gaps / opportunities

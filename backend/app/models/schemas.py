@@ -371,6 +371,191 @@ class StudentFit(BaseModel):
     student_fit: float
 
 
+# ---------------------------------------------------------------- §7.3 System 1 decisions
+class TypedDecision(BaseModel):
+    question_id: str
+    choice: str | None  # None when abstained
+    probabilities: dict[str, float]
+    confidence: float  # top probability
+    margin: float  # top1 - top2
+    abstained: bool
+    backend: str
+
+
+# ---------------------------------------------------------------- §7.6 engine: conflict
+class ConflictDimension(BaseModel):
+    name: str
+    weight: float
+    student_value: float | None
+    parent_value: float | None
+    mismatch: float
+    points: float  # 100 · weight · mismatch
+
+
+class ConflictResult(BaseModel):
+    index: float
+    dimensions: list[ConflictDimension]
+    hotspots: list[str]
+    student_top_domains: list[str]
+
+
+class ParentAlignment(BaseModel):
+    career_id: str
+    components: dict[str, float]
+    weights: dict[str, float]
+    parent_alignment: float
+
+
+class NashCandidate(BaseModel):
+    career_id: str
+    u_s: float
+    u_p: float
+    product: float
+
+
+class MiddlePath(BaseModel):
+    career_id: str
+    method: Literal["nash", "max_min"]
+    disagreement_s: float
+    disagreement_p: float
+    u_s: float
+    u_p: float
+    student_top_career_id: str
+    student_change: float  # U_s(middle) − U_s(student's own top choice)
+    parent_top_career_id: str
+    parent_change: float  # U_p(middle) − U_p(parent's own top choice)
+    student_gain: float  # U_s(middle) − d_s
+    parent_gain: float  # U_p(middle) − d_p
+    candidates: list[NashCandidate]  # best five by Nash product
+
+
+# ---------------------------------------------------------------- §7.7–§7.9 engine: market, scoring
+class MarketDemand(BaseModel):
+    career_id: str
+    local_demand: float
+    best_city: str
+    market_demand: float
+
+
+class Growth(BaseModel):
+    career_id: str
+    trajectory: float
+    mobility_uplift: float
+    growth: float
+
+
+class PrismScore(BaseModel):
+    career_id: str
+    score: float
+    values: dict[str, float]  # each component in [0, 1]
+    points: dict[str, float]  # points earned per component; they sum to score
+
+
+class Confidence(BaseModel):
+    score: float
+    band: Literal["High", "Medium", "Low"]
+    completeness: float
+    system1_confidence: float
+    data_completeness: float
+    missing_inputs: list[str]
+
+
+class RiskRadar(BaseModel):
+    career_id: str
+    financial: float
+    skill_gap: float
+    market: float
+    location: float
+    education_cost: float
+    disruption: float
+
+
+# ---------------------------------------------------------------- §8 engine: skills
+class SkillGap(BaseModel):
+    skill: str
+    importance: float
+    level_required: float
+    current: float
+    gap: float
+
+
+class RoadmapStep(BaseModel):
+    kind: Literal["pathway", "learning"]
+    text: str
+    skill: str | None = None
+
+
+class TimelineYear(BaseModel):
+    year: int
+    steps: list[str]
+
+
+class SkillPlan(BaseModel):
+    career_id: str
+    gaps: list[SkillGap]
+    mean_gap: float
+    roadmap: list[RoadmapStep]
+    timeline: list[TimelineYear]
+
+
+# ---------------------------------------------------------------- §9 engine: SWOT
+class SwotItem(BaseModel):
+    kind: str
+    label: str
+    value: float | None = None
+
+
+class Swot(BaseModel):
+    strengths: list[SwotItem]
+    weaknesses: list[SwotItem]
+    opportunities: list[SwotItem]
+    threats: list[SwotItem]
+
+
+# ---------------------------------------------------------------- §10 engine: ROI and alternatives
+class Roi(BaseModel):
+    career_id: str
+    effective_cost: int
+    entry_mid_inr: int
+    salary_share: float
+    break_even_years: float
+
+
+class RankedAlternative(BaseModel):
+    career_id: str
+    score: float
+    status: CareerStatus
+
+
+class DreamAlternatives(BaseModel):
+    dream_career_id: str
+    reason: Literal["needs_aid", "outside_top"]
+    alternatives: list[RankedAlternative]
+
+
+class AidScholarship(BaseModel):
+    scholarship_id: str
+    name: str
+    amount_inr_per_year: int
+    restricted_to: str | None
+
+
+class CheaperPathway(BaseModel):
+    pathway_id: str
+    effective_cost: int
+    funding_gap: int
+
+
+class StretchOption(BaseModel):
+    career_id: str
+    student_fit: float
+    funding_gap: int
+    cheapest_pathway_id: str
+    scholarships: list[AidScholarship]
+    cheaper_pathways: list[CheaperPathway]
+    adjacent_feasible: list[str]
+
+
 # ---------------------------------------------------------------- loaded dataset
 class Dataset(BaseModel):
     careers: list[Career]

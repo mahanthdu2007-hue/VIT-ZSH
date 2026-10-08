@@ -5,6 +5,7 @@ from typing import Any
 from app.engine import config
 from app.models.schemas import (
     Career,
+    CareerFinance,
     CollegeStudentInput,
     ParentInput,
     Pathway,
@@ -22,15 +23,21 @@ def pathway(
     quality: float = 0.8,
     duration: float = 4,
     institution: str = "govt",
+    exams: list[str] | None = None,
 ) -> Pathway:
     return Pathway.model_validate({
         "id": pathway_id, "label": pathway_id, "entry": entry, "steps": ["step"],
         "duration_years": duration, "cost_inr": {"min": cost[0], "max": cost[1]},
-        "institution_type": institution, "entrance_exams": [], "quality": quality,
+        "institution_type": institution, "entrance_exams": exams or [], "quality": quality,
     })
 
 
-def career(pathways: list[Pathway], domain: str = "Technology", **requirements: float) -> Career:
+def career(
+    pathways: list[Pathway],
+    domain: str = "Technology",
+    fields: dict[str, Any] | None = None,
+    **requirements: float,
+) -> Career:
     vector = {d: 0.5 for d in config.STUDENT_DIMENSIONS} | requirements
     if not any(p.entry == "after_class_12" for p in pathways):
         pathways = [*pathways, pathway("unused_after_12", cost=(9_000_000, 9_000_000))]
@@ -44,7 +51,21 @@ def career(pathways: list[Pathway], domain: str = "Technology", **requirements: 
         "risk_level": 0.5, "prestige": 0.5, "higher_studies_typical": False,
         "city_demand": {c: 0.5 for c in config.CITIES}, "adjacent_careers": [],
         "sources": ["test"], "data_note": "test",
-    })
+    } | (fields or {}))
+
+
+def finance(
+    career_id: str,
+    status: str = "feasible",
+    financial_fit: float = 1.0,
+    effective_cost: int | None = 300000,
+    funding_gap: int = 0,
+    chosen: str | None = "govt",
+) -> CareerFinance:
+    return CareerFinance(
+        career_id=career_id, status=status, chosen_pathway_id=chosen, effective_cost=effective_cost,  # type: ignore[arg-type]
+        financial_fit=financial_fit, funding_gap=funding_gap, budget=500000, capacity=750000, pathways=[],
+    )
 
 
 def scholarship(

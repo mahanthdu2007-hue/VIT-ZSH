@@ -37,18 +37,23 @@ def study_level(pathway: Pathway) -> str:
 
 
 def eligible_scholarships(
-    pathway: Pathway, career: Career, income: int, scholarships: list[Scholarship]
+    pathway: Pathway,
+    career: Career,
+    income: int,
+    scholarships: list[Scholarship],
+    include_restricted: bool = False,
 ) -> list[Scholarship]:
     """§7.4 eligible when income ≤ income_max, level matches and domain matches.
 
-    Only schemes open to everyone count; restricted schemes are shown as aid options later.
+    The cost maths counts only schemes open to everyone; restricted schemes are included when
+    listing aid a student may qualify for (stretch options, SWOT).
     """
     if pathway.institution_type in config.NO_SCHOLARSHIP_INSTITUTIONS:
         return []
     level = study_level(pathway)
     return [
         s for s in scholarships
-        if s.restricted_to is None
+        if (include_restricted or s.restricted_to is None)
         and (s.income_max_inr is None or income <= s.income_max_inr)
         and level in s.levels
         and career.domain in s.domains

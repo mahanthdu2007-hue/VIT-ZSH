@@ -126,3 +126,24 @@
 
 **Known issues**
 - None new.
+
+## Phase 2B: Engine part 2 (2026-10-08)
+
+**Built**
+- `engine/conflict.py` (§7.6): Conflict Index with breakdown and top 2 hotspots, per-career Parent
+  Alignment, concern weighting, Nash middle path with max-min fallback.
+- `engine/market.py` (§7.7), `engine/scoring.py` (§7.8–§7.9: Growth, PRISM score with exact component
+  points, per-career confidence with missing inputs, risk radar, top-10 ranking).
+- `engine/skills.py` (§8), `engine/swot.py` (§9), `engine/roi.py` (§10), `engine/alternatives.py`
+  (§10 dream alternatives, §7.9 stretch options with aid).
+- `TypedDecision` and result models in `schemas.py`; constants in `config.py`.
+
+**Checks**
+- `pytest -q`: 112 passed (new: conflict incl. identical → 0 and fully opposed → 94, market, scoring,
+  skills, SWOT, ROI, alternatives).
+- `python scripts/validate_data.py`: 0 errors. `npm run typecheck`, `npm run build`: passed.
+- Meera end-to-end with a stand-in domain affinity: CI 39.2 (hotspots domain, location); Nash middle
+  path = Architect, Biomedical Engineer second, matching §14.
+
+**Known issues**
+- The Meera example uses a hand-set domain affinity until System 1 exists (Phase 3).
