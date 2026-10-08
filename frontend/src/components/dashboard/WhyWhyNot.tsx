@@ -21,9 +21,12 @@ export function WhyWhyNot({ explanations, careerId, isRefreshing }: WhyWhyNotPro
           <div className="mt-3 grid gap-4 sm:grid-cols-2">
             <div>
               <h4 className="font-medium">Why it fits</h4>
-              <ul className="mt-1 list-disc pl-5">
+              <ul className="mt-2 flex flex-col gap-2">
                 {item.why.map((line) => (
-                  <li key={line} className="mt-1">
+                  <li key={line} className="flex gap-2">
+                    <span aria-hidden="true" className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-financialFit/15 text-sm text-financialFit">
+                      ✓
+                    </span>
                     {line}
                   </li>
                 ))}
@@ -31,9 +34,12 @@ export function WhyWhyNot({ explanations, careerId, isRefreshing }: WhyWhyNotPro
             </div>
             <div>
               <h4 className="font-medium">What to watch</h4>
-              <ul className="mt-1 list-disc pl-5">
+              <ul className="mt-2 flex flex-col gap-2">
                 {item.why_not.map((line) => (
-                  <li key={line} className="mt-1">
+                  <li key={line} className="flex gap-2">
+                    <span aria-hidden="true" className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-marketDemand/15 text-sm text-marketDemand">
+                      !
+                    </span>
                     {line}
                   </li>
                 ))}

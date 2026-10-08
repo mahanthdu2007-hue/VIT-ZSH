@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import type { AssessmentResult } from "../api/client";
 import { useAssessment, useAssessmentInputs, useCareers, useExplanations } from "../api/queries";
 import { ChatPanel } from "../components/chat/ChatPanel";
+import { AtAGlance } from "../components/dashboard/AtAGlance";
 import { CareerDetailPanel } from "../components/dashboard/CareerDetailPanel";
 import { CareerDeepDive } from "../components/dashboard/CareerDeepDive";
 import { ConflictPanel } from "../components/dashboard/ConflictPanel";
@@ -102,6 +103,8 @@ function DashboardView({ result }: { result: AssessmentResult }) {
         careerName={careerName}
         dreamCareerId={inputs.data?.student.dream_career_id}
       />
+
+      <AtAGlance result={result} />
 
       {result.ranking.length === 0 || !selected ? (
         <Card title="No affordable careers yet">
