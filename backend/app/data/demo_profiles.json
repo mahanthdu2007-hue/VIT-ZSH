@@ -53,9 +53,9 @@
       "risk_tolerance": "low",
       "dream_career_id": "data_analyst",
       "self_rated_skills": {
-        "Communication": 60, "Quality control": 25, "Mathematics": 60, "Python": 15, "Chemistry": 15,
+        "Communication": 60, "Quality control": 25, "Mathematics": 60, "Python": 15, "Spreadsheets": 70,
         "Data analysis": 45, "Problem solving": 55, "Programming fundamentals": 15, "Research methods": 35,
-        "Biology": 10
+        "Statistics": 55
       },
       "free_text_1": "In my first year I made an Excel dashboard for my uncle's small textile shop that tracked daily sales and stock. He started using it every evening to decide what to reorder. I enjoyed finding patterns in the numbers and explaining them to him in simple words.",
       "free_text_2": "In ten years I see myself working as a data or business analyst in a good company in Chennai, helping managers make decisions with data. I want a steady job that pays well enough to support my family, and I want to keep learning tools like SQL and Python."
