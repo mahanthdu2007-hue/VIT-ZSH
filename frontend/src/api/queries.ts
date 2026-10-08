@@ -5,12 +5,16 @@ import {
   type AssessRequest,
   type Track,
   type WhatIfOverrides,
+  type ChatHistory,
+  type ChatRequest,
   fetchCareers,
+  fetchChatHistory,
   fetchDemoProfiles,
   fetchExplanations,
   fetchHealth,
   fetchQuestions,
   postAssess,
+  postChat,
   postWhatIf,
 } from "./client";
 
@@ -24,6 +28,7 @@ export const queryKeys = {
   assessment: (id: string) => ["assessment", id] as const,
   assessmentInputs: (id: string) => ["assessment-inputs", id] as const,
   explanations: (id: string) => ["explanations", id] as const,
+  chat: (id: string) => ["chat", id] as const,
   whatIf: (id: string, overrides: WhatIfOverrides) => ["whatif", id, overrides] as const,
 };
 
@@ -102,5 +107,28 @@ export function useWhatIf(assessmentId: string, overrides: WhatIfOverrides) {
     enabled: Object.keys(overrides).length > 0,
     placeholderData: keepPreviousData,
     ...STATIC_DATA,
+  });
+}
+
+/** §17 Ask PRISM history, saved on the server per assessment. */
+export function useChatHistory(assessmentId: string) {
+  return useQuery({ queryKey: queryKeys.chat(assessmentId), queryFn: () => fetchChatHistory(assessmentId) });
+}
+
+/** §17 send one question; the saved history is updated with the question and the reply. */
+export function useSendChat(assessmentId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (body: ChatRequest) => postChat(body),
+    onSuccess: (reply, body) => {
+      queryClient.setQueryData<ChatHistory>(queryKeys.chat(assessmentId), (old) => ({
+        assessment_id: assessmentId,
+        messages: [
+          ...(old?.messages ?? []),
+          { who: "user", text: body.message, asking_as: body.asking_as ?? "student", reply: null },
+          { who: "assistant", text: reply.answer, asking_as: body.asking_as ?? "student", reply },
+        ],
+      }));
+    },
   });
 }

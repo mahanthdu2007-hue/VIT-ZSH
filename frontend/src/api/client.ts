@@ -38,6 +38,10 @@ export type WhatIfOverrides = Schemas["WhatIfOverrides"];
 export type WhatIfRequest = Schemas["WhatIfRequest"];
 export type WhatIfResult = Schemas["WhatIfResult"];
 export type CareerChange = Schemas["CareerChange"];
+export type ChatRequest = Schemas["ChatRequest"];
+export type ChatReply = Schemas["ChatReply"];
+export type ChatHistory = Schemas["ChatHistory"];
+export type ChatMessage = Schemas["ChatMessage"];
 
 export class ApiError extends Error {
   constructor(
@@ -91,4 +95,16 @@ export function postWhatIf(body: WhatIfRequest, signal?: AbortSignal): Promise<W
     body: JSON.stringify(body),
     signal,
   });
+}
+
+export function postChat(body: ChatRequest): Promise<ChatReply> {
+  return request<ChatReply>("/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+}
+
+export function fetchChatHistory(assessmentId: string): Promise<ChatHistory> {
+  return request<ChatHistory>(`/api/chat/${encodeURIComponent(assessmentId)}`);
 }

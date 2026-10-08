@@ -302,3 +302,10 @@ GEMINI_THINKING_LEVEL: Final[str] = "minimal"  # §3 Gemini: thinking ate the ou
 NVIDIA_EXTRA_BODY: Final[dict[str, object]] = {  # §3 Nemotron: skip hidden reasoning; System 2 only rewords results
     "chat_template_kwargs": {"enable_thinking": False},
 }
+
+# ---------------------------------------------------------------- §17 Ask PRISM chat
+CHAT_HISTORY_TURNS: Final[int] = 8  # §17 last 8 chat turns go into CONTEXT
+CHAT_MAX_WORDS: Final[int] = 120  # §17 answer length limit
+CHAT_FREE_TEXT_CHARS: Final[int] = 300  # §17 free text longer than this is cut in CONTEXT
+CHAT_TIMEOUT_S: Final[float] = 30.0  # §17 the answer must arrive while the family waits
+CARE_HELPLINE: Final[str] = "Tele-MANAS 14416"  # §17 India's free mental-health helpline

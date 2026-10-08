@@ -12,12 +12,17 @@ from app.models.schemas import (
     AssessmentInputs,
     AssessmentResult,
     AssessRequest,
+    ChatHistory,
+    ChatMessage,
+    ChatReply,
+    ChatRequest,
     DemoCacheEntry,
     Explanations,
     PipelineResult,
     WhatIfRequest,
     WhatIfResult,
 )
+from app.rag import chat
 from app.rag.explain import llm_explanations
 from app.rag.llm import get_llm
 from app.rag.templates import template_explanations
@@ -95,3 +100,24 @@ def whatif(request: WhatIfRequest) -> WhatIfResult | None:
                                   decisions=run_decisions(get_decision_model(), student, parent))
     return run_whatif(inputs.student, inputs.parent, inputs.decisions, request.overrides, get_dataset(),
                       inputs.as_of, request.assessment_id)
+
+
+def chat_message(request: ChatRequest) -> ChatReply | None:
+    """§17 one Ask PRISM message on a saved assessment; the question and reply are saved to its history."""
+    result, inputs = storage.load_result(request.assessment_id), storage.load_inputs(request.assessment_id)
+    if result is None or inputs is None:
+        return None
+    history = storage.load_chat_messages(request.assessment_id)
+    current = explanations(request.assessment_id) or result.explanations
+    reply = chat.answer(request, result, inputs, current, history, get_dataset(), get_llm())
+    storage.save_chat_messages(request.assessment_id, [
+        ChatMessage(who="user", text=request.message, asking_as=request.asking_as, reply=None),
+        ChatMessage(who="assistant", text=reply.answer, asking_as=request.asking_as, reply=reply),
+    ], datetime.now())
+    return reply
+
+
+def chat_history(assessment_id: str) -> ChatHistory | None:
+    if storage.load_inputs(assessment_id) is None:
+        return None
+    return ChatHistory(assessment_id=assessment_id, messages=storage.load_chat_messages(assessment_id))

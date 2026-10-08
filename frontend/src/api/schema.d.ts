@@ -140,6 +140,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/chat": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Chat */
+        post: operations["chat_api_chat_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/chat/{assessment_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Chat History */
+        get: operations["chat_history_api_chat__assessment_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -369,6 +403,69 @@ export interface components {
             steam: string[];
             /** Summary */
             summary: string;
+        };
+        /** ChatHistory */
+        ChatHistory: {
+            /** Assessment Id */
+            assessment_id: string;
+            /** Messages */
+            messages: components["schemas"]["ChatMessage"][];
+        };
+        /** ChatMessage */
+        ChatMessage: {
+            /**
+             * Who
+             * @enum {string}
+             */
+            who: "user" | "assistant";
+            /** Text */
+            text: string;
+            /**
+             * Asking As
+             * @enum {string}
+             */
+            asking_as: "student" | "parent";
+            reply: components["schemas"]["ChatReply"] | null;
+        };
+        /** ChatReply */
+        ChatReply: {
+            /** Answer */
+            answer: string;
+            /**
+             * Intent
+             * @enum {string}
+             */
+            intent: "explain" | "compare" | "whatif" | "scholarships" | "plan" | "other" | "care";
+            /** Sources */
+            sources: components["schemas"]["Citation"][];
+            whatif: components["schemas"]["ChatWhatIf"] | null;
+            /** Guardrail Hits */
+            guardrail_hits: components["schemas"]["GuardrailHit"][];
+            /** Provider */
+            provider: string;
+        };
+        /** ChatRequest */
+        ChatRequest: {
+            /** Assessment Id */
+            assessment_id: string;
+            /** Message */
+            message: string;
+            /**
+             * Asking As
+             * @default student
+             * @enum {string}
+             */
+            asking_as: "student" | "parent";
+            /** Selected Career Id */
+            selected_career_id?: string | null;
+        };
+        /**
+         * ChatWhatIf
+         * @description §17 a What-If asked in chat: exactly what /api/whatif returns for these overrides.
+         */
+        ChatWhatIf: {
+            overrides: components["schemas"]["WhatIfOverrides"];
+            result: components["schemas"]["WhatIfResult"];
         };
         /** CheaperPathway */
         CheaperPathway: {
@@ -1658,6 +1755,70 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Career"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    chat_api_chat_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChatRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ChatReply"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    chat_history_api_chat__assessment_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                assessment_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ChatHistory"];
                 };
             };
             /** @description Validation Error */

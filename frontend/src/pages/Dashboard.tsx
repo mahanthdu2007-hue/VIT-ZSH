@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import type { AssessmentResult } from "../api/client";
 import { useAssessment, useAssessmentInputs, useCareers, useExplanations } from "../api/queries";
+import { ChatPanel } from "../components/chat/ChatPanel";
 import { CareerDetailPanel } from "../components/dashboard/CareerDetailPanel";
 import { CareerDeepDive } from "../components/dashboard/CareerDeepDive";
 import { ConflictPanel } from "../components/dashboard/ConflictPanel";
@@ -48,6 +49,7 @@ function DashboardView({ result }: { result: AssessmentResult }) {
   const inputs = useAssessmentInputs(result.id);
   const explanations = useExplanations(result);
   const [whatIfOpen, setWhatIfOpen] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
   const [selectedId, setSelectedId] = useState(result.ranking[0]?.career_id ?? null);
   const detailHeadingRef = useRef<HTMLHeadingElement>(null);
 
@@ -75,6 +77,7 @@ function DashboardView({ result }: { result: AssessmentResult }) {
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-4">
+          <Button onClick={() => setChatOpen(true)}>Ask PRISM</Button>
           {inputs.data && <Button onClick={() => setWhatIfOpen(true)}>Try a what-if</Button>}
           <Link to="/" className="rounded font-medium text-studentFit underline">
             Start a new assessment
@@ -91,6 +94,14 @@ function DashboardView({ result }: { result: AssessmentResult }) {
           ranking={result.ranking}
         />
       )}
+
+      <ChatPanel
+        open={chatOpen}
+        onClose={() => setChatOpen(false)}
+        result={result}
+        careerName={careerName}
+        dreamCareerId={inputs.data?.student.dream_career_id}
+      />
 
       {result.ranking.length === 0 || !selected ? (
         <Card title="No affordable careers yet">

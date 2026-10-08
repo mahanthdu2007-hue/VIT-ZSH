@@ -263,6 +263,83 @@
           }
         }
       }
+    },
+    "/api/chat": {
+      "post": {
+        "summary": "Chat",
+        "operationId": "chat_api_chat_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatReply"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chat/{assessment_id}": {
+      "get": {
+        "summary": "Chat History",
+        "operationId": "chat_history_api_chat__assessment_id__get",
+        "parameters": [
+          {
+            "name": "assessment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Assessment Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatHistory"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1038,6 +1115,186 @@
           "summary"
         ],
         "title": "CareerSummary"
+      },
+      "ChatHistory": {
+        "properties": {
+          "assessment_id": {
+            "type": "string",
+            "title": "Assessment Id"
+          },
+          "messages": {
+            "items": {
+              "$ref": "#/components/schemas/ChatMessage"
+            },
+            "type": "array",
+            "title": "Messages"
+          }
+        },
+        "type": "object",
+        "required": [
+          "assessment_id",
+          "messages"
+        ],
+        "title": "ChatHistory"
+      },
+      "ChatMessage": {
+        "properties": {
+          "who": {
+            "type": "string",
+            "enum": [
+              "user",
+              "assistant"
+            ],
+            "title": "Who"
+          },
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "asking_as": {
+            "type": "string",
+            "enum": [
+              "student",
+              "parent"
+            ],
+            "title": "Asking As"
+          },
+          "reply": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ChatReply"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "who",
+          "text",
+          "asking_as",
+          "reply"
+        ],
+        "title": "ChatMessage"
+      },
+      "ChatReply": {
+        "properties": {
+          "answer": {
+            "type": "string",
+            "title": "Answer"
+          },
+          "intent": {
+            "type": "string",
+            "enum": [
+              "explain",
+              "compare",
+              "whatif",
+              "scholarships",
+              "plan",
+              "other",
+              "care"
+            ],
+            "title": "Intent"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/Citation"
+            },
+            "type": "array",
+            "title": "Sources"
+          },
+          "whatif": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ChatWhatIf"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "guardrail_hits": {
+            "items": {
+              "$ref": "#/components/schemas/GuardrailHit"
+            },
+            "type": "array",
+            "title": "Guardrail Hits"
+          },
+          "provider": {
+            "type": "string",
+            "title": "Provider"
+          }
+        },
+        "type": "object",
+        "required": [
+          "answer",
+          "intent",
+          "sources",
+          "whatif",
+          "guardrail_hits",
+          "provider"
+        ],
+        "title": "ChatReply"
+      },
+      "ChatRequest": {
+        "properties": {
+          "assessment_id": {
+            "type": "string",
+            "title": "Assessment Id"
+          },
+          "message": {
+            "type": "string",
+            "maxLength": 1000,
+            "minLength": 1,
+            "title": "Message"
+          },
+          "asking_as": {
+            "type": "string",
+            "enum": [
+              "student",
+              "parent"
+            ],
+            "title": "Asking As",
+            "default": "student"
+          },
+          "selected_career_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Selected Career Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "assessment_id",
+          "message"
+        ],
+        "title": "ChatRequest"
+      },
+      "ChatWhatIf": {
+        "properties": {
+          "overrides": {
+            "$ref": "#/components/schemas/WhatIfOverrides"
+          },
+          "result": {
+            "$ref": "#/components/schemas/WhatIfResult"
+          }
+        },
+        "type": "object",
+        "required": [
+          "overrides",
+          "result"
+        ],
+        "title": "ChatWhatIf",
+        "description": "\u00a717 a What-If asked in chat: exactly what /api/whatif returns for these overrides."
       },
       "CheaperPathway": {
         "properties": {

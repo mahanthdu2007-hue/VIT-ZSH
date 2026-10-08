@@ -8,6 +8,9 @@ from app.models.schemas import (
     AssessRequest,
     Career,
     CareerSummary,
+    ChatHistory,
+    ChatReply,
+    ChatRequest,
     DatasetCounts,
     DemoProfile,
     Explanations,
@@ -88,3 +91,19 @@ def career(career_id: str) -> Career:
     if found is None:
         raise HTTPException(status_code=404, detail=f"career {career_id} not found")
     return found
+
+
+@router.post("/chat", response_model=ChatReply)
+def chat(request: ChatRequest) -> ChatReply:
+    reply = services.chat_message(request)
+    if reply is None:
+        raise HTTPException(status_code=404, detail=f"assessment {request.assessment_id} not found")
+    return reply
+
+
+@router.get("/chat/{assessment_id}", response_model=ChatHistory)
+def chat_history(assessment_id: str) -> ChatHistory:
+    history = services.chat_history(assessment_id)
+    if history is None:
+        raise HTTPException(status_code=404, detail=f"assessment {assessment_id} not found")
+    return history

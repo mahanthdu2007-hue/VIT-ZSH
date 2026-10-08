@@ -113,3 +113,5 @@ date | decision | reason
 2026-10-08 | Source links carry the indexed text of each cited row (Citation.text) and open it in a dialog | Shows the data row without adding an endpoint; pathway ids repeat across careers so citations also carry career_id
 2026-10-08 | Guardrail hits are kept in Explanations.trace (System2Trace), not in PipelineTrace | Explanations are written after the pipeline result is saved (lazy, §13)
 2026-10-08 | Gemini requests use thinking_level=minimal; LLM_MAX_TOKENS raised to 8192 | Gemini 3.5 Flash's thinking used up the 4096-token budget and cut the JSON off after 472 characters
+2026-10-08 | Chat routing uses the rule-based router every time; the LLM only words the answer (one call per message) | Time pressure before submission, Gemini's 20-requests-a-day limit and NVIDIA latency; §17 allows the rule router as the fallback
+2026-10-08 | Chat 'Show on dashboard' button not built; what-if replies point to the 'Try a what-if' button | WhatIfDrawer has no way to start from given values yet; built under time pressure

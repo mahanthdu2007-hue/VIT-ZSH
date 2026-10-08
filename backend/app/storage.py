@@ -8,10 +8,10 @@ LLM explanations (§12) are written later by a background task, into their own t
 from datetime import datetime
 from functools import lru_cache
 
-from sqlalchemy import DateTime, Engine, String, Text, create_engine, select
+from sqlalchemy import DateTime, Engine, Integer, String, Text, create_engine, select
 from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column
 
-from app.models.schemas import AssessmentInputs, AssessmentResult, Explanations
+from app.models.schemas import AssessmentInputs, AssessmentResult, ChatMessage, Explanations
 from app.settings import get_settings
 
 
@@ -33,6 +33,16 @@ class ExplanationRow(Base):
 
     assessment_id: Mapped[str] = mapped_column(String(36), primary_key=True)
     explanations_json: Mapped[str] = mapped_column(Text)
+
+
+class ChatRow(Base):
+    """§17 chat history per assessment, kept on the server and never in browser storage."""
+    __tablename__ = "chat_messages"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    assessment_id: Mapped[str] = mapped_column(String(36), index=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime)
+    message_json: Mapped[str] = mapped_column(Text)
 
 
 @lru_cache
@@ -78,3 +88,17 @@ def load_explanations(assessment_id: str) -> Explanations | None:
         raw = session.scalar(select(ExplanationRow.explanations_json)
                              .where(ExplanationRow.assessment_id == assessment_id))
     return None if raw is None else Explanations.model_validate_json(raw)
+
+
+def save_chat_messages(assessment_id: str, messages: list[ChatMessage], created_at: datetime) -> None:
+    with Session(get_engine()) as session:
+        session.add_all(ChatRow(assessment_id=assessment_id, created_at=created_at, message_json=m.model_dump_json())
+                        for m in messages)
+        session.commit()
+
+
+def load_chat_messages(assessment_id: str) -> list[ChatMessage]:
+    with Session(get_engine()) as session:
+        rows = session.scalars(select(ChatRow.message_json).where(ChatRow.assessment_id == assessment_id)
+                               .order_by(ChatRow.id)).all()
+    return [ChatMessage.model_validate_json(r) for r in rows]

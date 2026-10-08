@@ -845,3 +845,48 @@ class WhatIfResult(BaseModel):
     ranking: list[RankedCareer]
     changes: list[CareerChange]  # every career: new ranking first, then the rest in data order
     elapsed_ms: float
+
+
+# ---------------------------------------------------------------- §17 Ask PRISM chat
+ChatIntent = Literal["explain", "compare", "whatif", "scholarships", "plan", "other", "care"]
+
+
+class ChatRequest(StrictModel):
+    assessment_id: str
+    message: str = Field(min_length=1, max_length=1000)
+    asking_as: Literal["student", "parent"] = "student"
+    selected_career_id: str | None = None
+
+
+class ChatRoute(BaseModel):
+    """§17 step 2 the router's output; overrides use the §11 fields."""
+    intent: ChatIntent
+    career_ids: list[str]
+    overrides: WhatIfOverrides
+
+
+class ChatWhatIf(BaseModel):
+    """§17 a What-If asked in chat: exactly what /api/whatif returns for these overrides."""
+    overrides: WhatIfOverrides
+    result: WhatIfResult
+
+
+class ChatReply(BaseModel):
+    answer: str
+    intent: ChatIntent
+    sources: list[Citation]
+    whatif: ChatWhatIf | None
+    guardrail_hits: list[GuardrailHit]
+    provider: str
+
+
+class ChatMessage(BaseModel):
+    who: Literal["user", "assistant"]
+    text: str
+    asking_as: Literal["student", "parent"]
+    reply: ChatReply | None  # set on assistant messages
+
+
+class ChatHistory(BaseModel):
+    assessment_id: str
+    messages: list[ChatMessage]
