@@ -104,21 +104,25 @@ function DashboardView({ result }: { result: AssessmentResult }) {
 
   return (
     <div className="flex flex-col gap-8 sm:gap-12">
-      <header className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="text-2xl leading-tight sm:text-3xl">Your family's career map</h1>
-          <p className="mt-2 text-ink/60">Money values are indicative estimates.</p>
-          <Link to="/" className="mt-2 inline-block text-sm text-ink/60 underline-offset-4 hover:underline">
-            Start a new assessment
-          </Link>
+      <header className="flex flex-col gap-6">
+        <div className="max-w-3xl">
+          <p className="text-sm font-medium text-studentFit">Your results</p>
+          <h1 className="mt-2 text-2xl leading-tight sm:text-3xl">Your family's career map</h1>
+          <p className="mt-3 text-lg leading-relaxed text-ink/60">
+            Every score is worked out from your answers, the family budget and job-market data. Money values are
+            indicative estimates.
+          </p>
         </div>
-        <div className="flex flex-wrap items-center gap-3 md:hidden">
+        <div className="flex flex-wrap items-center gap-3">
           <Button onClick={() => setChatOpen(true)}>Ask PRISM</Button>
           {inputs.data && (
             <Button variant="secondary" onClick={() => setWhatIfOpen(true)}>
               Try a what-if
             </Button>
           )}
+          <Link to="/" className="rounded px-2 font-medium text-studentFit hover:underline">
+            Start a new assessment
+          </Link>
         </div>
       </header>
 
@@ -150,7 +154,9 @@ function DashboardView({ result }: { result: AssessmentResult }) {
       <section id="careers" aria-labelledby="careers-heading" className="flex scroll-mt-32 flex-col gap-6">
         <SectionHeading
           id="careers-heading"
+          eyebrow="Ranked for your family"
           title="Your careers, one by one"
+          description="Choose a career to see how its score adds up, why it fits, and the scholarships and exams on its route."
         />
         {result.ranking.length === 0 || !selected ? (
           <Card title="No affordable careers yet">
@@ -179,7 +185,7 @@ function DashboardView({ result }: { result: AssessmentResult }) {
 
       <Page id="family" page={page} onNext={openPage}>
       <section id="family" aria-labelledby="family-heading" className="flex scroll-mt-32 flex-col gap-6">
-        <SectionHeading id="family-heading" title="Where you differ, and a path you can share" />
+        <SectionHeading id="family-heading" eyebrow="Family alignment" title="Where you differ, and a path you can share" />
         <div className="grid gap-4 lg:grid-cols-2">
           <ConflictPanel conflict={result.conflict} />
           <MiddlePathCard middlePath={result.middle_path} careerName={careerName} onSelect={select} />
@@ -205,7 +211,9 @@ function DashboardView({ result }: { result: AssessmentResult }) {
       <section id="stretch" aria-labelledby="stretch-heading" className="flex scroll-mt-32 flex-col gap-6">
         <SectionHeading
           id="stretch-heading"
+          eyebrow="Never a dead end"
           title="Stretch options with aid"
+          description="Careers that suit the student well but cost more than the budget and loan plan allow. They are not ruled out."
         />
         <StretchOptions options={result.stretch_options} details={result.details} careerName={careerName} />
       </section>

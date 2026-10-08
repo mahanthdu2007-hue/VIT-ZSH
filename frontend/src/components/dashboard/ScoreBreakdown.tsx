@@ -28,6 +28,7 @@ export function ScoreBreakdown({ detail }: { detail: CareerDetail }) {
                 </span>
               </div>
               <Meter value={earned / c.max} color={componentColors[c.key]} />
+              <p className="text-sm leading-snug text-ink/60">{c.meaning}</p>
             </li>
           );
         })}

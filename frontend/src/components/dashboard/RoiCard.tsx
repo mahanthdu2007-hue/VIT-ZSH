@@ -33,7 +33,10 @@ export function RoiCard({ detail }: { detail: CareerDetail }) {
           </dd>
         </div>
       </dl>
-      <p className="mt-4 text-sm text-ink/60">Assumes {sharePercent}% of starting pay goes to paying back the course.</p>
+      <p className="mt-4 text-sm text-ink/60">
+        This assumes {sharePercent}% of a typical starting pay of {formatInr(roi.entry_mid_inr)} a year goes towards
+        paying back the course cost. Real savings vary from family to family.
+      </p>
     </Card>
   );
 }

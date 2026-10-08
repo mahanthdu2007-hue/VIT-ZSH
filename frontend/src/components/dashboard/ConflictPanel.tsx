@@ -1,4 +1,5 @@
 import type { ConflictDimension, ConflictResult } from "../../api/client";
+import { formatPoints } from "../../lib/format";
 import { CONFLICT_DIMENSIONS } from "../../lib/labels";
 import { colors } from "../../theme/tokens";
 import { Card } from "../ui/Card";
@@ -16,6 +17,7 @@ export function ConflictPanel({ conflict }: { conflict: ConflictResult }) {
   return (
     <Card
       title="Where student and parents differ"
+      description="The Parent-Student Conflict Index compares the two sets of answers. 0 means full agreement."
     >
       <div
         role="meter"
@@ -58,6 +60,23 @@ export function ConflictPanel({ conflict }: { conflict: ConflictResult }) {
         ) : (
           <p className="mt-3">Student and parents agree on everything we compare.</p>
         )}
+      </div>
+
+      <div className="mt-8">
+        <h3 className="text-base">Every area we compare</h3>
+        <ul className="mt-3 grid gap-x-8 gap-y-4 sm:grid-cols-2">
+          {conflict.dimensions.map((d) => (
+            <li key={d.name} className="flex flex-col gap-1.5">
+              <div className="flex justify-between text-sm">
+                <span>{dimensionLabel(d.name)}</span>
+                <span className="tabular-nums text-ink/60">
+                  {formatPoints(d.points)} of {formatPoints(d.weight * 100)}
+                </span>
+              </div>
+              <Meter value={d.mismatch} color={colors.ink} height="h-1.5" />
+            </li>
+          ))}
+        </ul>
       </div>
     </Card>
   );

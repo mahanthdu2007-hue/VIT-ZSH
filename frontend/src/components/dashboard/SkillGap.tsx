@@ -14,6 +14,7 @@ export function SkillGap({ plan }: { plan: SkillPlan }) {
   return (
     <Card
       title="Skills to build"
+      description="Each gap is how far the current level is below what the career needs, weighted by how much the skill matters."
     >
       {gaps.length === 0 ? (
         <p>Your current level already meets every skill this career needs. Keep practising to stay there.</p>

@@ -4,7 +4,7 @@ import { Card } from "../ui/Card";
 /** §8 timeline: the roadmap placed on calendar years, one tile per year in a row that swipes sideways on small screens. */
 export function Timeline({ plan }: { plan: SkillPlan }) {
   return (
-    <Card title="Year by year">
+    <Card title="Year by year" description="When each step could happen, starting this year. Swipe or scroll sideways for later years.">
       <ol className="no-scrollbar -mx-6 grid snap-x snap-mandatory auto-cols-[minmax(theme(spacing.56),1fr)] grid-flow-col gap-3 overflow-x-auto px-6 pb-1 sm:-mx-8 sm:px-8">
         {plan.timeline.map((year, index) => (
           <li

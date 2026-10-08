@@ -1,13 +1,21 @@
+import type { ReactNode } from "react";
+
 type SectionHeadingProps = {
   id: string;
-  title: string;
+  eyebrow: string;
+  title: ReactNode;
+  description?: ReactNode;
 };
 
-/** A large, plain section title. */
-export function SectionHeading({ id, title }: SectionHeadingProps) {
+/** A large section title with a small label above it, in the style of a product page. */
+export function SectionHeading({ id, eyebrow, title, description }: SectionHeadingProps) {
   return (
-    <h2 id={id} className="text-xl leading-tight sm:text-2xl">
-      {title}
-    </h2>
+    <div className="max-w-3xl">
+      <p className="text-sm font-medium text-studentFit">{eyebrow}</p>
+      <h2 id={id} className="mt-1 text-xl leading-tight sm:text-2xl">
+        {title}
+      </h2>
+      {description && <p className="mt-2 text-ink/60">{description}</p>}
+    </div>
   );
 }

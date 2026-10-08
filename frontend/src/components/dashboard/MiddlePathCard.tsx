@@ -58,6 +58,11 @@ export function MiddlePathCard({ middlePath, careerName, onSelect }: MiddlePathC
   return (
     <Card
       title="A middle path for the family"
+      description={
+        middlePath.method === "nash"
+          ? "Of the affordable careers, this one gives the student and the parents the best gain together over a typical career."
+          : "No career did better than typical for both sides, so this is the one where the less happy side is happiest."
+      }
     >
       <p className="text-xl font-semibold leading-tight tracking-tight sm:text-2xl">{name}</p>
       <div className="mt-6 grid flex-1 gap-3 sm:grid-cols-2">
