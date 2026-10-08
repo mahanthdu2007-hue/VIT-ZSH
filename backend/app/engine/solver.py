@@ -17,7 +17,6 @@ from app.models.schemas import (
 )
 
 MILP_OPTIMAL = 0
-MILP_INFEASIBLE = 2
 
 
 def capacity(parent: ParentInput) -> int:
@@ -101,43 +100,51 @@ def financial_fit(cost: int, budget: int, cap: int) -> float:
     return config.FF_WITHIN_BUDGET - config.FF_STRETCH_PENALTY * (cost - budget) / (cap - budget)
 
 
-def _choose_with_milp(evaluations: list[PathwayEvaluation], cap: int) -> int | None:
-    """Binary x_p, maximise Σ x_p·objective_p, s.t. Σ x_p = 1 and effective_cost_p·x_p ≤ capacity.
+def _choose_with_milp(groups: list[list[PathwayEvaluation]], cap: int) -> list[int | None]:
+    """One MILP for every career at once: binary x_p, maximise Σ x_p·objective_p, subject to
+    Σ x_p = 1 within each career and effective_cost_p·x_p ≤ capacity. The objective is a sum over
+    careers, so this gives each career the same choice as solving it alone, in one solver call.
 
+    A career with no pathway within capacity is infeasible on its own (None) and is left out.
     Ties at the optimum are broken deterministically: higher quality, then lower effective cost,
     then data order, so identical input always picks the same pathway.
     """
-    n = len(evaluations)
-    gains = np.array([e.objective if e.objective is not None else 0.0 for e in evaluations])
-    costs = np.array([float(e.effective_cost) for e in evaluations])
+    solvable = [g for g, group in enumerate(groups) if any(e.effective_cost <= cap for e in group)]
+    choices: list[int | None] = [None] * len(groups)
+    if not solvable:
+        return choices
+    flat = [(g, i, e) for g in solvable for i, e in enumerate(groups[g])]
+    n = len(flat)
+    gains = np.array([e.objective if e.objective is not None else 0.0 for _, _, e in flat])
+    costs = np.array([float(e.effective_cost) for _, _, e in flat])
+    one_per_career = np.array([[1.0 if fg == g else 0.0 for fg, _, _ in flat] for g in solvable])
     result = milp(
         c=-gains,
         constraints=[
-            LinearConstraint(np.ones((1, n)), lb=1, ub=1),
+            LinearConstraint(one_per_career, lb=1, ub=1),
             LinearConstraint(np.diag(costs), lb=-np.inf, ub=cap),
         ],
         integrality=np.ones(n),
         bounds=Bounds(0, 1),
+        options={"mip_rel_gap": 0},
     )
-    if result.status == MILP_INFEASIBLE:
-        return None
     if result.status != MILP_OPTIMAL:
         raise RuntimeError(f"MILP solver failed: {result.message}")
-    best = gains[int(np.argmax(result.x))]
-    tied = [
-        i for i, e in enumerate(evaluations)
-        if e.feasible and gains[i] >= best - config.OBJECTIVE_TIE_TOLERANCE
-    ]
-    return min(tied, key=lambda i: (-evaluations[i].quality, evaluations[i].effective_cost, i))
+    for g in solvable:
+        rows = [k for k, (fg, _, _) in enumerate(flat) if fg == g]
+        best = gains[max(rows, key=lambda k: result.x[k])]
+        tied = [k for k in rows if flat[k][2].feasible and gains[k] >= best - config.OBJECTIVE_TIE_TOLERANCE]
+        chosen = min(tied, key=lambda k: (-flat[k][2].quality, flat[k][2].effective_cost, flat[k][1]))
+        choices[g] = flat[chosen][1]
+    return choices
 
 
-def solve_career(
+def evaluate_pathways(
     career: Career, student: StudentInput, parent: ParentInput, scholarships: list[Scholarship]
-) -> CareerFinance:
-    budget = parent.education_budget_inr
+) -> list[PathwayEvaluation]:
+    """§7.4 cost, scholarship, effective cost, feasibility and objective for every pathway."""
     cap = capacity(parent)
     entries = candidate_entries(student)
-
     evaluations: list[PathwayEvaluation] = []
     for pathway in career.pathways:
         stage_fit = pathway.entry in entries
@@ -161,28 +168,45 @@ def solve_career(
             feasible=stage_fit and effective <= cap,
             objective=objective(pathway.quality, effective, cap) if stage_fit else None,
         ))
+    return evaluations
 
+
+def _career_finance(
+    career_id: str, evaluations: list[PathwayEvaluation], index: int | None, parent: ParentInput
+) -> CareerFinance:
+    budget = parent.education_budget_inr
+    cap = capacity(parent)
     candidates = [e for e in evaluations if e.stage_fit]
-    common = {"career_id": career.id, "budget": budget, "capacity": cap, "pathways": evaluations}
+    common = {"career_id": career_id, "budget": budget, "capacity": cap, "pathways": evaluations}
     if not candidates:
         return CareerFinance(status="no_pathway", chosen_pathway_id=None, effective_cost=None,
                              financial_fit=config.FF_NEEDS_AID, funding_gap=0, **common)
 
-    index = _choose_with_milp(candidates, cap)
+    cheapest = min(candidates, key=lambda e: e.effective_cost)
     if index is None:
-        cheapest = min(candidates, key=lambda e: e.effective_cost)
         return CareerFinance(status="needs_aid", chosen_pathway_id=cheapest.pathway_id,
                              effective_cost=cheapest.effective_cost, financial_fit=config.FF_NEEDS_AID,
                              funding_gap=cheapest.effective_cost - cap, **common)
 
     chosen = candidates[index]
+    # FF uses the cheapest route the student can take, so a lower budget never raises it (§16).
     return CareerFinance(status="feasible", chosen_pathway_id=chosen.pathway_id,
                          effective_cost=chosen.effective_cost,
-                         financial_fit=financial_fit(chosen.effective_cost, budget, cap),
+                         financial_fit=financial_fit(cheapest.effective_cost, budget, cap),
                          funding_gap=0, **common)
 
 
 def solve_all(
     careers: list[Career], student: StudentInput, parent: ParentInput, scholarships: list[Scholarship]
 ) -> list[CareerFinance]:
-    return [solve_career(c, student, parent, scholarships) for c in careers]
+    evaluations = [evaluate_pathways(c, student, parent, scholarships) for c in careers]
+    candidates = [[e for e in group if e.stage_fit] for group in evaluations]
+    choices = _choose_with_milp(candidates, capacity(parent))
+    return [_career_finance(c.id, group, index, parent)
+            for c, group, index in zip(careers, evaluations, choices, strict=True)]
+
+
+def solve_career(
+    career: Career, student: StudentInput, parent: ParentInput, scholarships: list[Scholarship]
+) -> CareerFinance:
+    return solve_all([career], student, parent, scholarships)[0]

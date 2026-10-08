@@ -1,0 +1,1050 @@
+{
+  "note": "Constraints only, never stored scores. Each scenario starts from a demo profile and applies field overrides. domain_affinity and parent_concerns stand in for System 1 output until Phase 3. 'tracked' holds §14 persona-story checks that are reported but not counted until persona tuning after Phase 4.",
+  "scenarios": [
+    {
+      "id": "ananya_story",
+      "description": "Ananya (§14): AI/ML Engineer in her top 5",
+      "profile": {
+        "demo": "ananya"
+      },
+      "domain_affinity": {
+        "Technology": 0.9,
+        "Engineering": 0.4,
+        "Science": 0.2,
+        "Health": 0.05,
+        "Arts & Design": 0.05,
+        "Finance & Maths": 0.05,
+        "Hyper-local": 0.05
+      },
+      "constraints": [
+        {
+          "check": "career_in_top",
+          "career": "ai_ml_engineer",
+          "n": 5
+        },
+        {
+          "check": "domain_in_top",
+          "domains": [
+            "Technology"
+          ],
+          "n": 3,
+          "at_least": 2
+        },
+        {
+          "check": "hotspot_includes",
+          "dimension": "location"
+        },
+        {
+          "check": "no_feasible_exceeds_capacity"
+        },
+        {
+          "check": "scores_valid"
+        }
+      ]
+    },
+    {
+      "id": "ananya_whatif_budget_3l",
+      "description": "Ananya What-If: budget ₹5L → ₹3L re-ranks and no Financial Fit rises",
+      "profile": {
+        "demo": "ananya"
+      },
+      "domain_affinity": {
+        "Technology": 0.9,
+        "Engineering": 0.4,
+        "Science": 0.2,
+        "Health": 0.05,
+        "Arts & Design": 0.05,
+        "Finance & Maths": 0.05,
+        "Hyper-local": 0.05
+      },
+      "whatif": {
+        "budget": 300000
+      },
+      "constraints": [
+        {
+          "check": "whatif_ff_not_higher"
+        },
+        {
+          "check": "whatif_rank_changes",
+          "min": 1
+        },
+        {
+          "check": "whatif_feasible_not_more"
+        }
+      ]
+    },
+    {
+      "id": "ananya_middle_path",
+      "description": "Ananya: middle path is a feasible Technology or Engineering route",
+      "profile": {
+        "demo": "ananya"
+      },
+      "domain_affinity": {
+        "Technology": 0.9,
+        "Engineering": 0.4,
+        "Science": 0.2,
+        "Health": 0.05,
+        "Arts & Design": 0.05,
+        "Finance & Maths": 0.05,
+        "Hyper-local": 0.05
+      },
+      "constraints": [
+        {
+          "check": "middle_path",
+          "domains": [
+            "Technology",
+            "Engineering"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ananya_dream_in_top",
+      "description": "Dream career already in the top 5, so no alternatives are needed",
+      "profile": {
+        "demo": "ananya"
+      },
+      "domain_affinity": {
+        "Technology": 0.9,
+        "Engineering": 0.4,
+        "Science": 0.2,
+        "Health": 0.05,
+        "Arts & Design": 0.05,
+        "Finance & Maths": 0.05,
+        "Hyper-local": 0.05
+      },
+      "constraints": [
+        {
+          "check": "dream_alternatives",
+          "reason": null
+        }
+      ]
+    },
+    {
+      "id": "dream_needs_aid",
+      "description": "Dream of MBBS on a ₹40,000 budget: closest realistic routes are shown",
+      "profile": {
+        "demo": "ananya",
+        "student": {
+          "dream_career_id": "doctor_mbbs"
+        },
+        "parent": {
+          "education_budget_inr": 40000,
+          "loan_willingness": "none"
+        }
+      },
+      "domain_affinity": {
+        "Technology": 0.9,
+        "Engineering": 0.4,
+        "Science": 0.2,
+        "Health": 0.05,
+        "Arts & Design": 0.05,
+        "Finance & Maths": 0.05,
+        "Hyper-local": 0.05
+      },
+      "constraints": [
+        {
+          "check": "status_is",
+          "career": "doctor_mbbs",
+          "status": "needs_aid"
+        },
+        {
+          "check": "dream_alternatives",
+          "reason": "needs_aid"
+        },
+        {
+          "check": "no_feasible_exceeds_capacity"
+        }
+      ]
+    },
+    {
+      "id": "dream_outside_top",
+      "description": "Dream far from the student's profile: adjacent routes are ranked",
+      "profile": {
+        "demo": "ananya",
+        "student": {
+          "dream_career_id": "music_technologist"
+        },
+        "parent": {
+          "education_budget_inr": 2000000
+        }
+      },
+      "domain_affinity": {
+        "Technology": 0.9,
+        "Engineering": 0.4,
+        "Science": 0.2,
+        "Health": 0.05,
+        "Arts & Design": 0.05,
+        "Finance & Maths": 0.05,
+        "Hyper-local": 0.05
+      },
+      "constraints": [
+        {
+          "check": "dream_alternatives",
+          "reason": "outside_top"
+        }
+      ]
+    },
+    {
+      "id": "no_loan_ff_binary",
+      "description": "No loan: capacity equals budget, so every feasible career has FF 1.0",
+      "profile": {
+        "demo": "ananya",
+        "parent": {
+          "loan_willingness": "none"
+        }
+      },
+      "domain_affinity": {
+        "Technology": 0.9,
+        "Engineering": 0.4,
+        "Science": 0.2,
+        "Health": 0.05,
+        "Arts & Design": 0.05,
+        "Finance & Maths": 0.05,
+        "Hyper-local": 0.05
+      },
+      "constraints": [
+        {
+          "check": "all_feasible_ff_equal",
+          "value": 1.0
+        },
+        {
+          "check": "no_feasible_exceeds_capacity"
+        }
+      ]
+    },
+    {
+      "id": "whatif_remove_loan",
+      "description": "What-If: removing the loan never adds feasible careers or raises FF",
+      "profile": {
+        "demo": "ananya"
+      },
+      "domain_affinity": {
+        "Technology": 0.9,
+        "Engineering": 0.4,
+        "Science": 0.2,
+        "Health": 0.05,
+        "Arts & Design": 0.05,
+        "Finance & Maths": 0.05,
+        "Hyper-local": 0.05
+      },
+      "whatif": {
+        "loan_willingness": "none"
+      },
+      "constraints": [
+        {
+          "check": "whatif_feasible_not_more"
+        },
+        {
+          "check": "whatif_ff_not_higher"
+        }
+      ]
+    },
+    {
+      "id": "zero_budget",
+      "description": "Zero budget, no loan: nothing paid is feasible, and stretch options with aid exist",
+      "profile": {
+        "demo": "ananya",
+        "parent": {
+          "education_budget_inr": 0,
+          "loan_willingness": "none"
+        }
+      },
+      "domain_affinity": {
+        "Technology": 0.9,
+        "Engineering": 0.4,
+        "Science": 0.2,
+        "Health": 0.05,
+        "Arts & Design": 0.05,
+        "Finance & Maths": 0.05,
+        "Hyper-local": 0.05
+      },
+      "constraints": [
+        {
+          "check": "feasible_count",
+          "max": 0
+        },
+        {
+          "check": "stretch_options_valid",
+          "min": 1
+        },
+        {
+          "check": "no_feasible_exceeds_capacity"
+        },
+        {
+          "check": "scores_valid"
+        }
+      ]
+    },
+    {
+      "id": "large_budget",
+      "description": "₹1 crore budget: every career is feasible and there are no stretch options",
+      "profile": {
+        "demo": "ananya",
+        "parent": {
+          "education_budget_inr": 10000000,
+          "loan_willingness": "high"
+        }
+      },
+      "domain_affinity": {
+        "Technology": 0.9,
+        "Engineering": 0.4,
+        "Science": 0.2,
+        "Health": 0.05,
+        "Arts & Design": 0.05,
+        "Finance & Maths": 0.05,
+        "Hyper-local": 0.05
+      },
+      "constraints": [
+        {
+          "check": "feasible_count",
+          "min": 55
+        },
+        {
+          "check": "stretch_options_valid",
+          "max": 0
+        },
+        {
+          "check": "no_feasible_exceeds_capacity"
+        }
+      ]
+    },
+    {
+      "id": "low_income_scholarships",
+      "description": "Family income ₹1,00,000: open scholarships lower some pathway costs, never above the 60% cap",
+      "profile": {
+        "demo": "ananya",
+        "parent": {
+          "annual_income_inr": 100000,
+          "education_budget_inr": 200000
+        }
+      },
+      "domain_affinity": {
+        "Technology": 0.9,
+        "Engineering": 0.4,
+        "Science": 0.2,
+        "Health": 0.05,
+        "Arts & Design": 0.05,
+        "Finance & Maths": 0.05,
+        "Hyper-local": 0.05
+      },
+      "constraints": [
+        {
+          "check": "scholarship_applied",
+          "min": 1
+        },
+        {
+          "check": "scholarship_cap_respected"
+        },
+        {
+          "check": "no_feasible_exceeds_capacity"
+        }
+      ]
+    },
+    {
+      "id": "whatif_risk_appetite",
+      "description": "What-If parent risk appetite: only Parent Alignment can change",
+      "profile": {
+        "demo": "ananya"
+      },
+      "domain_affinity": {
+        "Technology": 0.9,
+        "Engineering": 0.4,
+        "Science": 0.2,
+        "Health": 0.05,
+        "Arts & Design": 0.05,
+        "Finance & Maths": 0.05,
+        "Hyper-local": 0.05
+      },
+      "whatif": {
+        "risk_appetite": "high"
+      },
+      "constraints": [
+        {
+          "check": "whatif_component_unchanged",
+          "component": "student_fit"
+        },
+        {
+          "check": "whatif_component_unchanged",
+          "component": "financial_fit"
+        },
+        {
+          "check": "whatif_component_unchanged",
+          "component": "market_demand"
+        },
+        {
+          "check": "whatif_component_unchanged",
+          "component": "growth"
+        }
+      ]
+    },
+    {
+      "id": "whatif_relocate",
+      "description": "What-If willing to relocate: Market Demand never falls",
+      "profile": {
+        "demo": "ananya",
+        "student": {
+          "willing_to_relocate": false,
+          "preferred_cities": []
+        }
+      },
+      "domain_affinity": {
+        "Technology": 0.9,
+        "Engineering": 0.4,
+        "Science": 0.2,
+        "Health": 0.05,
+        "Arts & Design": 0.05,
+        "Finance & Maths": 0.05,
+        "Hyper-local": 0.05
+      },
+      "whatif": {
+        "willing_to_relocate": true
+      },
+      "constraints": [
+        {
+          "check": "whatif_component_not_lower",
+          "component": "market_demand"
+        }
+      ]
+    },
+    {
+      "id": "whatif_priority_salary",
+      "description": "What-If parent priority to salary: Student Fit and Financial Fit unchanged",
+      "profile": {
+        "demo": "ananya"
+      },
+      "domain_affinity": {
+        "Technology": 0.9,
+        "Engineering": 0.4,
+        "Science": 0.2,
+        "Health": 0.05,
+        "Arts & Design": 0.05,
+        "Finance & Maths": 0.05,
+        "Hyper-local": 0.05
+      },
+      "whatif": {
+        "top_priority": "salary"
+      },
+      "constraints": [
+        {
+          "check": "whatif_component_unchanged",
+          "component": "student_fit"
+        },
+        {
+          "check": "whatif_component_unchanged",
+          "component": "financial_fit"
+        }
+      ]
+    },
+    {
+      "id": "whatif_student_risk_tolerance",
+      "description": "What-If student risk tolerance: changes the Conflict Index only, no score component",
+      "profile": {
+        "demo": "ananya"
+      },
+      "domain_affinity": {
+        "Technology": 0.9,
+        "Engineering": 0.4,
+        "Science": 0.2,
+        "Health": 0.05,
+        "Arts & Design": 0.05,
+        "Finance & Maths": 0.05,
+        "Hyper-local": 0.05
+      },
+      "whatif": {
+        "risk_tolerance": "low"
+      },
+      "constraints": [
+        {
+          "check": "whatif_component_unchanged",
+          "component": "student_fit"
+        },
+        {
+          "check": "whatif_component_unchanged",
+          "component": "financial_fit"
+        },
+        {
+          "check": "whatif_component_unchanged",
+          "component": "market_demand"
+        },
+        {
+          "check": "whatif_component_unchanged",
+          "component": "growth"
+        },
+        {
+          "check": "whatif_component_unchanged",
+          "component": "parent_alignment"
+        }
+      ]
+    },
+    {
+      "id": "whatif_no_overrides_ananya",
+      "description": "What-If with no overrides gives zero deltas (Ananya)",
+      "profile": {
+        "demo": "ananya"
+      },
+      "domain_affinity": {
+        "Technology": 0.9,
+        "Engineering": 0.4,
+        "Science": 0.2,
+        "Health": 0.05,
+        "Arts & Design": 0.05,
+        "Finance & Maths": 0.05,
+        "Hyper-local": 0.05
+      },
+      "whatif": {},
+      "constraints": [
+        {
+          "check": "whatif_zero_deltas"
+        }
+      ]
+    },
+    {
+      "id": "rahul_story",
+      "description": "Rahul (§14): data/finance-analytics careers via graduate pathways",
+      "profile": {
+        "demo": "rahul"
+      },
+      "domain_affinity": {
+        "Finance & Maths": 0.8,
+        "Technology": 0.6,
+        "Engineering": 0.05,
+        "Science": 0.05,
+        "Health": 0.05,
+        "Arts & Design": 0.05,
+        "Hyper-local": 0.05
+      },
+      "constraints": [
+        {
+          "check": "top_career_domain_in",
+          "domains": [
+            "Finance & Maths",
+            "Technology"
+          ]
+        },
+        {
+          "check": "domain_in_top",
+          "domains": [
+            "Finance & Maths"
+          ],
+          "n": 5,
+          "at_least": 1
+        },
+        {
+          "check": "top_chosen_entry_in",
+          "entries": [
+            "graduate"
+          ],
+          "n": 10
+        },
+        {
+          "check": "no_feasible_exceeds_capacity"
+        },
+        {
+          "check": "scores_valid"
+        }
+      ]
+    },
+    {
+      "id": "rahul_whatif_budget_down",
+      "description": "Rahul What-If: budget ₹1.5L → ₹50,000 never raises FF or adds feasible careers",
+      "profile": {
+        "demo": "rahul"
+      },
+      "domain_affinity": {
+        "Finance & Maths": 0.8,
+        "Technology": 0.6,
+        "Engineering": 0.05,
+        "Science": 0.05,
+        "Health": 0.05,
+        "Arts & Design": 0.05,
+        "Hyper-local": 0.05
+      },
+      "whatif": {
+        "budget": 50000
+      },
+      "constraints": [
+        {
+          "check": "whatif_ff_not_higher"
+        },
+        {
+          "check": "whatif_feasible_not_more"
+        }
+      ]
+    },
+    {
+      "id": "college_first_year",
+      "description": "College year 1: every top career uses a graduate (lateral) pathway",
+      "profile": {
+        "demo": "rahul",
+        "student": {
+          "year": 1
+        }
+      },
+      "domain_affinity": {
+        "Finance & Maths": 0.8,
+        "Technology": 0.6,
+        "Engineering": 0.05,
+        "Science": 0.05,
+        "Health": 0.05,
+        "Arts & Design": 0.05,
+        "Hyper-local": 0.05
+      },
+      "constraints": [
+        {
+          "check": "top_chosen_entry_in",
+          "entries": [
+            "graduate"
+          ],
+          "n": 10
+        },
+        {
+          "check": "no_feasible_exceeds_capacity"
+        }
+      ]
+    },
+    {
+      "id": "college_no_self_ratings",
+      "description": "College student with no self-ratings and weak aptitude: unrated skills fall back low, so the roadmap has learning steps",
+      "profile": {
+        "demo": "rahul",
+        "student": {
+          "self_rated_skills": {},
+          "aptitude_answers": {}
+        }
+      },
+      "domain_affinity": {
+        "Finance & Maths": 0.8,
+        "Technology": 0.6,
+        "Engineering": 0.05,
+        "Science": 0.05,
+        "Health": 0.05,
+        "Arts & Design": 0.05,
+        "Hyper-local": 0.05
+      },
+      "constraints": [
+        {
+          "check": "roadmap_learning_steps",
+          "min": 3
+        },
+        {
+          "check": "scores_valid"
+        }
+      ]
+    },
+    {
+      "id": "meera_story",
+      "description": "Meera (§14): Arts & Design in her top 5 and high conflict on domain",
+      "profile": {
+        "demo": "meera"
+      },
+      "domain_affinity": {
+        "Arts & Design": 0.85,
+        "Engineering": 0.35,
+        "Technology": 0.2,
+        "Science": 0.1,
+        "Health": 0.05,
+        "Finance & Maths": 0.05,
+        "Hyper-local": 0.05
+      },
+      "constraints": [
+        {
+          "check": "domain_in_top",
+          "domains": [
+            "Arts & Design"
+          ],
+          "n": 5,
+          "at_least": 1
+        },
+        {
+          "check": "conflict_between",
+          "min": 30
+        },
+        {
+          "check": "hotspot_includes",
+          "dimension": "domain"
+        },
+        {
+          "check": "no_feasible_exceeds_capacity"
+        },
+        {
+          "check": "scores_valid"
+        }
+      ]
+    },
+    {
+      "id": "meera_middle_path",
+      "description": "Meera: Nash middle path with gains for both sides",
+      "profile": {
+        "demo": "meera"
+      },
+      "domain_affinity": {
+        "Arts & Design": 0.85,
+        "Engineering": 0.35,
+        "Technology": 0.2,
+        "Science": 0.1,
+        "Health": 0.05,
+        "Finance & Maths": 0.05,
+        "Hyper-local": 0.05
+      },
+      "constraints": [
+        {
+          "check": "middle_path",
+          "method": "nash",
+          "both_gain": true
+        }
+      ]
+    },
+    {
+      "id": "class_10_entries",
+      "description": "Class 10: chosen pathways start after Class 10 or Class 12 only",
+      "profile": {
+        "demo": "meera"
+      },
+      "domain_affinity": {
+        "Arts & Design": 0.85,
+        "Engineering": 0.35,
+        "Technology": 0.2,
+        "Science": 0.1,
+        "Health": 0.05,
+        "Finance & Maths": 0.05,
+        "Hyper-local": 0.05
+      },
+      "constraints": [
+        {
+          "check": "top_chosen_entry_in",
+          "entries": [
+            "after_class_10",
+            "after_class_12"
+          ],
+          "n": 10
+        }
+      ]
+    },
+    {
+      "id": "whatif_no_overrides_meera",
+      "description": "What-If with no overrides gives zero deltas (Meera)",
+      "profile": {
+        "demo": "meera"
+      },
+      "domain_affinity": {
+        "Arts & Design": 0.85,
+        "Engineering": 0.35,
+        "Technology": 0.2,
+        "Science": 0.1,
+        "Health": 0.05,
+        "Finance & Maths": 0.05,
+        "Hyper-local": 0.05
+      },
+      "whatif": {},
+      "constraints": [
+        {
+          "check": "whatif_zero_deltas"
+        }
+      ]
+    },
+    {
+      "id": "low_budget_stretch",
+      "description": "₹50,000 budget, no loan: needs-aid careers become stretch options with aid",
+      "profile": {
+        "demo": "meera",
+        "parent": {
+          "education_budget_inr": 50000,
+          "loan_willingness": "none"
+        }
+      },
+      "domain_affinity": {
+        "Arts & Design": 0.85,
+        "Engineering": 0.35,
+        "Technology": 0.2,
+        "Science": 0.1,
+        "Health": 0.05,
+        "Finance & Maths": 0.05,
+        "Hyper-local": 0.05
+      },
+      "constraints": [
+        {
+          "check": "stretch_options_valid",
+          "min": 1
+        },
+        {
+          "check": "no_feasible_exceeds_capacity"
+        }
+      ]
+    },
+    {
+      "id": "aligned_family",
+      "description": "Student and parent fully agree: Conflict Index 0",
+      "profile": {
+        "demo": "ananya",
+        "student": {
+          "risk_tolerance": "medium",
+          "willing_to_relocate": false,
+          "wants_higher_studies": true,
+          "workstyle_answers": {
+            "ws_creative": 4,
+            "ws_stability": 5,
+            "ws_teamwork": 3,
+            "ws_structure": 3
+          }
+        },
+        "parent": {
+          "preferred_domains": [
+            "Technology",
+            "Engineering",
+            "Science"
+          ],
+          "risk_appetite": "medium",
+          "location_preference": "near_home",
+          "supports_higher_studies": true,
+          "top_priority": "stability",
+          "education_budget_inr": 2000000
+        }
+      },
+      "domain_affinity": {
+        "Technology": 0.9,
+        "Engineering": 0.6,
+        "Science": 0.4,
+        "Health": 0.0,
+        "Arts & Design": 0.0,
+        "Finance & Maths": 0.0,
+        "Hyper-local": 0.0
+      },
+      "constraints": [
+        {
+          "check": "conflict_between",
+          "max": 0
+        }
+      ]
+    },
+    {
+      "id": "opposed_family",
+      "description": "Student and parent disagree on everything: Conflict Index at least 90",
+      "profile": {
+        "demo": "ananya",
+        "student": {
+          "risk_tolerance": "high",
+          "willing_to_relocate": true,
+          "wants_higher_studies": true,
+          "workstyle_answers": {
+            "ws_creative": 4,
+            "ws_stability": 1,
+            "ws_teamwork": 3,
+            "ws_structure": 3
+          }
+        },
+        "parent": {
+          "preferred_domains": [
+            "Health"
+          ],
+          "risk_appetite": "low",
+          "location_preference": "near_home",
+          "supports_higher_studies": false,
+          "top_priority": "stability",
+          "education_budget_inr": 20000,
+          "loan_willingness": "none"
+        }
+      },
+      "domain_affinity": {
+        "Technology": 0.9,
+        "Engineering": 0.4,
+        "Science": 0.2,
+        "Health": 0.05,
+        "Arts & Design": 0.05,
+        "Finance & Maths": 0.05,
+        "Hyper-local": 0.05
+      },
+      "constraints": [
+        {
+          "check": "conflict_between",
+          "min": 90
+        }
+      ]
+    },
+    {
+      "id": "hyperlocal_coimbatore",
+      "description": "Coimbatore, ₹1L budget, Hyper-local interest: a Hyper-local STEAM career in the top 5",
+      "profile": {
+        "demo": "ananya",
+        "student": {
+          "home_city": "coimbatore",
+          "willing_to_relocate": false,
+          "preferred_cities": []
+        },
+        "parent": {
+          "education_budget_inr": 100000,
+          "loan_willingness": "none",
+          "preferred_domains": [
+            "Hyper-local"
+          ]
+        }
+      },
+      "domain_affinity": {
+        "Hyper-local": 0.9,
+        "Engineering": 0.4,
+        "Technology": 0.2,
+        "Science": 0.05,
+        "Health": 0.05,
+        "Arts & Design": 0.05,
+        "Finance & Maths": 0.05
+      },
+      "constraints": [
+        {
+          "check": "domain_in_top",
+          "domains": [
+            "Hyper-local"
+          ],
+          "n": 5,
+          "at_least": 1
+        },
+        {
+          "check": "no_feasible_exceeds_capacity"
+        }
+      ]
+    },
+    {
+      "id": "arts_low_budget",
+      "description": "Arts interest on a ₹1.5L budget: an affordable Arts & Design route in the top 10",
+      "profile": {
+        "demo": "meera",
+        "parent": {
+          "education_budget_inr": 150000,
+          "loan_willingness": "none"
+        }
+      },
+      "domain_affinity": {
+        "Arts & Design": 0.85,
+        "Engineering": 0.35,
+        "Technology": 0.2,
+        "Science": 0.1,
+        "Health": 0.05,
+        "Finance & Maths": 0.05,
+        "Hyper-local": 0.05
+      },
+      "constraints": [
+        {
+          "check": "domain_in_top",
+          "domains": [
+            "Arts & Design"
+          ],
+          "n": 10,
+          "at_least": 1
+        },
+        {
+          "check": "no_feasible_exceeds_capacity"
+        }
+      ]
+    },
+    {
+      "id": "health_family",
+      "description": "Health interest and Health-preferring parents: a Health career in the top 5",
+      "profile": {
+        "demo": "ananya",
+        "student": {
+          "stream": "PCB"
+        },
+        "parent": {
+          "preferred_domains": [
+            "Health"
+          ],
+          "education_budget_inr": 2000000
+        }
+      },
+      "domain_affinity": {
+        "Health": 0.9,
+        "Science": 0.4,
+        "Technology": 0.1,
+        "Engineering": 0.1,
+        "Arts & Design": 0.05,
+        "Finance & Maths": 0.05,
+        "Hyper-local": 0.05
+      },
+      "constraints": [
+        {
+          "check": "domain_in_top",
+          "domains": [
+            "Health"
+          ],
+          "n": 5,
+          "at_least": 1
+        },
+        {
+          "check": "no_feasible_exceeds_capacity"
+        }
+      ]
+    }
+  ],
+  "tracked": [
+    {
+      "id": "ananya_hotspots",
+      "description": "Ananya (§14): conflict hotspots are location and risk (§14 story; tuned after Phase 4)",
+      "profile": {
+        "demo": "ananya"
+      },
+      "domain_affinity": {
+        "Technology": 0.9,
+        "Engineering": 0.4,
+        "Science": 0.2,
+        "Health": 0.05,
+        "Arts & Design": 0.05,
+        "Finance & Maths": 0.05,
+        "Hyper-local": 0.05
+      },
+      "constraints": [
+        {
+          "check": "hotspot_includes",
+          "dimension": "location"
+        },
+        {
+          "check": "hotspot_includes",
+          "dimension": "risk"
+        }
+      ]
+    },
+    {
+      "id": "rahul_roadmap",
+      "description": "Rahul: the skill-gap roadmap has at least 3 learning steps (§14 story; tuned after Phase 4)",
+      "profile": {
+        "demo": "rahul"
+      },
+      "domain_affinity": {
+        "Finance & Maths": 0.8,
+        "Technology": 0.6,
+        "Engineering": 0.05,
+        "Science": 0.05,
+        "Health": 0.05,
+        "Arts & Design": 0.05,
+        "Hyper-local": 0.05
+      },
+      "constraints": [
+        {
+          "check": "roadmap_learning_steps",
+          "min": 3
+        }
+      ]
+    },
+    {
+      "id": "rahul_scholarships",
+      "description": "Rahul: at least one eligible scholarship appears in SWOT opportunities (§14 story; tuned after Phase 4)",
+      "profile": {
+        "demo": "rahul"
+      },
+      "domain_affinity": {
+        "Finance & Maths": 0.8,
+        "Technology": 0.6,
+        "Engineering": 0.05,
+        "Science": 0.05,
+        "Health": 0.05,
+        "Arts & Design": 0.05,
+        "Hyper-local": 0.05
+      },
+      "constraints": [
+        {
+          "check": "swot_items",
+          "kind": "scholarship",
+          "min": 1
+        }
+      ]
+    }
+  ]
+}

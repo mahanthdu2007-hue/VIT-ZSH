@@ -147,3 +147,30 @@
 
 **Known issues**
 - The Meera example uses a hand-set domain affinity until System 1 exists (Phase 3).
+
+## Phase 2C: Proof (2026-10-08)
+
+**Built**
+- `tests/test_properties.py`: all 7 §16 properties with hypothesis (1,000 examples each, seed 20261008),
+  on random valid profiles built from the input models and the real question sets (`tests/strategies.py`).
+- `tests/engine_chain.py`: runs engine stages 2 and 4–9 in order (stand-in until pipeline.py / whatif.py exist).
+- `tests/benchmark_scenarios.json`: 30 constraint-only scenarios plus 3 tracked §14 persona checks.
+- `scripts/benchmark.py`: runs scenarios and properties, writes `docs/BENCHMARK.md` with counted results.
+
+**Bugs found by the properties and fixed**
+- Lowering the budget could raise Financial Fit, because the solver switched to a cheaper pathway. FF now uses
+  the cheapest stage-fit pathway (user decision). New hand test in `test_solver.py`.
+- Speed: all careers are now solved in one MILP. One engine run went from about 50 ms to about 8 ms. A test
+  checks that the combined solve matches solving each career alone.
+
+**Checks**
+- `pytest -q`: 121 passed (incl. 7 properties × 1,000 profiles; about 2 minutes).
+- `python scripts/benchmark.py`: 30 / 30 scenarios (70 / 70 constraints), 7 / 7 properties, 7,000 random profiles.
+- `python scripts/validate_data.py`: 0 errors. `npm run typecheck`, `npm run build`: passed.
+
+**Known issues**
+- Tracked §14 stories, to be handled in the post-Phase-4 persona tuning:
+  - Ananya's second hotspot is domain, not risk.
+  - Rahul's roadmap has 1 learning step: his strong numerical aptitude covers skills he did not rate.
+  - Rahul's #1 pathway is an online certificate, so SWOT shows no scholarships for it.
+- When one component changes, rounding can move 0.1 point between the others. Phase 5 What-If reasons should use component values.

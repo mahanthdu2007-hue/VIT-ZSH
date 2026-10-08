@@ -1,11 +1,13 @@
 import pytest
 from factories import career, college_student, parent, pathway, scholarship, school_student
 
+from app.engine.loader import get_dataset
 from app.engine.solver import (
     candidate_entries,
     capacity,
     expected_scholarship,
     financial_fit,
+    solve_all,
     solve_career,
 )
 
@@ -112,6 +114,18 @@ def test_exact_objective_tie_prefers_higher_quality_in_any_order() -> None:
         assert result.chosen_pathway_id == "govt"
 
 
+def test_financial_fit_uses_the_cheapest_candidate_pathway() -> None:
+    # Budget 3,00,000, capacity 4,50,000. The solver picks govt (3,50,000), but the online
+    # route costs 2,75,000 ≤ budget, so FF = 1.0 (govt alone would give 1 − 0.5 × 0.5/1.5 = 0.833).
+    govt = pathway("govt", cost=(200000, 500000), quality=0.8)
+    online = pathway("online", cost=(150000, 400000), quality=0.7, institution="online")
+    result = solve_career(career([govt, online]), school_student(12), parent(700000, 300000, "moderate"), [])
+    assert (result.chosen_pathway_id, result.effective_cost, result.financial_fit) == ("govt", 350000, 1.0)
+    # Budget 2,00,000, capacity 3,00,000: only online fits → FF = 1 − 0.5 × 75,000 / 1,00,000 = 0.625.
+    lower = solve_career(career([govt, online]), school_student(12), parent(700000, 200000, "moderate"), [])
+    assert (lower.chosen_pathway_id, lower.financial_fit) == ("online", pytest.approx(0.625))
+
+
 def test_zero_budget_is_needs_aid_with_full_gap() -> None:
     result = solve_career(CAREER, school_student(12), parent(700000, 0, "high"), SCHOLARSHIPS)
     assert result.capacity == 0
@@ -171,3 +185,13 @@ def test_career_without_a_pathway_for_the_stage() -> None:
     clinical = career([GOVT, PRIVATE])  # no graduate pathway
     result = solve_career(clinical, college_student(), parent(700000, 5000000), SCHOLARSHIPS)
     assert (result.status, result.chosen_pathway_id, result.financial_fit) == ("no_pathway", None, 0.0)
+
+
+def test_one_combined_milp_matches_solving_each_career_alone() -> None:
+    data = get_dataset()
+    for profile in data.demo_profiles:
+        for budget in (0, 150000, 300000, 500000, 1000000):
+            family = profile.parent.model_copy(update={"education_budget_inr": budget})
+            together = solve_all(data.careers, profile.student, family, data.scholarships)
+            alone = [solve_career(c, profile.student, family, data.scholarships) for c in data.careers]
+            assert together == alone
