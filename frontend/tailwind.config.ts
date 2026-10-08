@@ -1,5 +1,5 @@
 import type { Config } from "tailwindcss";
-import { colors, fontSizes, fontWeights, fonts, radii, shadows, spacing } from "./src/theme/tokens";
+import { colors, fontSizes, fontWeights, fonts, layout, radii, shadows, spacing } from "./src/theme/tokens";
 
 export default {
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
@@ -18,6 +18,9 @@ export default {
     spacing,
     borderRadius: radii,
     boxShadow: shadows,
+    extend: {
+      minHeight: { "career-row": layout.careerRowMinHeight },
+    },
   },
   plugins: [],
 } satisfies Config;

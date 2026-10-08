@@ -13,18 +13,15 @@ type StretchOptionsProps = {
 /** §7.9 careers that suit the student but cost more than the family can cover, with ways to make them possible. */
 export function StretchOptions({ options, details, careerName }: StretchOptionsProps) {
   return (
-    <Card
-      title="Stretch options with aid"
-      description="Careers that suit the student well but cost more than the budget and loan plan allow. They are not ruled out."
-    >
+    <Card aria-label="Stretch options with aid">
       {options.length === 0 ? (
         <p>Every career that suits the student well fits within the budget and loan plan, so nothing needs extra aid.</p>
       ) : (
         <ul className="flex flex-col gap-4">
           {options.map((option) => (
-            <li key={option.career_id} className="rounded-lg border border-line p-3 sm:p-4">
+            <li key={option.career_id} className="rounded-xl bg-paper p-5 sm:p-6">
               <div className="flex flex-wrap items-baseline justify-between gap-2">
-                <h4 className="font-heading text-lg font-semibold">{careerName(option.career_id)}</h4>
+                <h3 className="text-lg">{careerName(option.career_id)}</h3>
                 <span className="flex flex-wrap items-center gap-2">
                   <span>
                     Funding gap <span className="font-medium">{formatInr(option.funding_gap)}</span>

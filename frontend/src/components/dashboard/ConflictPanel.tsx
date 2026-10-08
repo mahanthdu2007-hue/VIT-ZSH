@@ -1,7 +1,10 @@
 import type { ConflictDimension, ConflictResult } from "../../api/client";
 import { formatPoints } from "../../lib/format";
 import { CONFLICT_DIMENSIONS } from "../../lib/labels";
+import { colors } from "../../theme/tokens";
 import { Card } from "../ui/Card";
+import { CountUp } from "../ui/CountUp";
+import { Meter } from "../ui/Meter";
 
 const dimensionLabel = (name: string) => CONFLICT_DIMENSIONS[name]?.label ?? name;
 
@@ -16,33 +19,37 @@ export function ConflictPanel({ conflict }: { conflict: ConflictResult }) {
       title="Where student and parents differ"
       description="The Parent-Student Conflict Index compares the two sets of answers. 0 means full agreement."
     >
-      <div>
+      <div
+        role="meter"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={Math.round(conflict.index)}
+        aria-label="Parent-Student Conflict Index"
+      >
         <p className="flex items-baseline justify-between">
           <span className="font-medium">Conflict index</span>
-          <span>
-            <span className="font-heading text-xl font-semibold">{Math.round(conflict.index)}</span> of 100
+          <span className="text-ink/60">
+            <CountUp
+              value={conflict.index}
+              format={(v) => String(Math.round(v))}
+              className="text-2xl font-semibold tracking-tight text-ink"
+            />{" "}
+            of 100
           </span>
         </p>
-        <div
-          className="mt-2 h-3 overflow-hidden rounded-full bg-line"
-          role="meter"
-          aria-valuemin={0}
-          aria-valuemax={100}
-          aria-valuenow={Math.round(conflict.index)}
-          aria-label="Parent-Student Conflict Index"
-        >
-          <div className="h-full rounded-full bg-ink" style={{ width: `${conflict.index}%` }} />
+        <div className="mt-2">
+          <Meter value={conflict.index / 100} color={colors.ink} height="h-3" />
         </div>
       </div>
 
-      <div className="mt-6">
+      <div className="mt-8">
         <h3 className="text-base">Biggest differences</h3>
         {hotspots.length > 0 ? (
-          <ul className="mt-2 flex flex-col gap-2">
+          <ul className="mt-3 grid gap-3 sm:grid-cols-2">
             {hotspots.map((d) => (
-              <li key={d.name} className="rounded-lg border border-ink/20 bg-paper px-3 py-2">
+              <li key={d.name} className="rounded-xl bg-paper p-4">
                 <span className="font-medium">{dimensionLabel(d.name)}</span>
-                <span className="block text-sm">
+                <span className="mt-1 block text-sm leading-snug text-ink/70">
                   {CONFLICT_DIMENSIONS[d.name]?.hotspot(d)}
                   {d.name === "domain" && conflict.student_top_domains.length > 0 &&
                     ` The student leans towards ${conflict.student_top_domains.join(", ")}.`}
@@ -51,29 +58,24 @@ export function ConflictPanel({ conflict }: { conflict: ConflictResult }) {
             ))}
           </ul>
         ) : (
-          <p className="mt-2">Student and parents agree on everything we compare.</p>
+          <p className="mt-3">Student and parents agree on everything we compare.</p>
         )}
       </div>
 
-      <div className="mt-6">
+      <div className="mt-8">
         <h3 className="text-base">Every area we compare</h3>
-        <ul className="mt-2 flex flex-col gap-3">
-          {conflict.dimensions.map((d) => {
-            const max = d.weight * 100;
-            return (
-              <li key={d.name}>
-                <div className="flex justify-between text-sm">
-                  <span>{dimensionLabel(d.name)}</span>
-                  <span>
-                    {formatPoints(d.points)} of {formatPoints(max)}
-                  </span>
-                </div>
-                <div className="mt-1 h-2 overflow-hidden rounded-full bg-line" aria-hidden="true">
-                  <div className="h-full rounded-full bg-ink" style={{ width: `${d.mismatch * 100}%` }} />
-                </div>
-              </li>
-            );
-          })}
+        <ul className="mt-3 grid gap-x-8 gap-y-4 sm:grid-cols-2">
+          {conflict.dimensions.map((d) => (
+            <li key={d.name} className="flex flex-col gap-1.5">
+              <div className="flex justify-between text-sm">
+                <span>{dimensionLabel(d.name)}</span>
+                <span className="tabular-nums text-ink/60">
+                  {formatPoints(d.points)} of {formatPoints(d.weight * 100)}
+                </span>
+              </div>
+              <Meter value={d.mismatch} color={colors.ink} height="h-1.5" />
+            </li>
+          ))}
         </ul>
       </div>
     </Card>
