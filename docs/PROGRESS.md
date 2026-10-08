@@ -68,3 +68,22 @@
 - All costs and salaries are indicative.
 - College skills list (questions_college.json) still to be matched to the 20 most common skills once
   every batch is written.
+
+## Phase 1C: Careers batch 2 (2026-10-08)
+
+**Built**
+- `data/careers/health.json` (8), `arts_design.json` (8), `finance_math.json` (8), `hyperlocal.json` (7).
+  Dataset now has 55 careers; every domain meets its §5 minimum.
+- Arts & Design and Hyper-local careers each have at least one low-cost route (government art school,
+  polytechnic diploma, government tool room, ITI, RSETI, online course).
+- `questions_college.json` skills list now matches the 20 most common career skills.
+- Added `nift_pg` exam and "Audio production and sound design" skill.
+
+**Checks**
+- `python scripts/validate_data.py`: 0 errors, 6 warnings (licensed professions with no lateral route,
+  by design). Ran after each file: 0 errors each time.
+- `pytest -q`: 10 passed. `npm run typecheck`, `npm run build`: passed.
+- Requirement vectors across all 55 careers: max centred cosine 0.92, mean 0.20, smallest spread 0.35.
+
+**Known issues**
+- All costs and salaries are indicative.

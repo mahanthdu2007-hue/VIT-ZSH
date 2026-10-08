@@ -120,6 +120,14 @@
     "source": "National Institute of Fashion Technology, nift.ac.in"
   },
   {
+    "id": "nift_pg",
+    "name": "NIFT Entrance Examination for M.Des, MFM and MFTech",
+    "level": "pg",
+    "domains": ["Arts & Design"],
+    "typical_month": "February",
+    "source": "National Institute of Fashion Technology, nift.ac.in"
+  },
+  {
     "id": "ipmat_indore",
     "name": "Integrated Programme in Management Aptitude Test (IPMAT Indore)",
     "level": "ug",

@@ -47,6 +47,7 @@
   {"name": "Architectural design", "category": "Arts and design", "aptitude": "spatial"},
   {"name": "Video editing", "category": "Arts and design", "aptitude": "spatial"},
   {"name": "Creative writing", "category": "Arts and design", "aptitude": "verbal"},
+  {"name": "Audio production and sound design", "category": "Arts and design", "aptitude": null},
 
   {"name": "Accounting", "category": "Finance and business", "aptitude": "numerical"},
   {"name": "Taxation", "category": "Finance and business", "aptitude": "numerical"},

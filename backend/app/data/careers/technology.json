@@ -192,8 +192,8 @@
     "domain": "Technology",
     "steam": ["M", "T"],
     "summary": "Turns business data into reports, dashboards and clear recommendations.",
-    "requirement_vector": {"numerical": 0.8, "logical": 0.7, "verbal": 0.65, "spatial": 0.3, "creative": 0.3,
-      "R": 0.1, "I": 0.65, "A": 0.2, "S": 0.4, "E": 0.5, "C": 0.8},
+    "requirement_vector": {"numerical": 0.8, "logical": 0.7, "verbal": 0.65, "spatial": 0.55, "creative": 0.45,
+      "R": 0.1, "I": 0.65, "A": 0.3, "S": 0.45, "E": 0.45, "C": 0.7},
     "skills": [
       {"name": "Spreadsheets", "importance": 0.9, "level_required": 0.75},
       {"name": "Databases and SQL", "importance": 0.85, "level_required": 0.7},
