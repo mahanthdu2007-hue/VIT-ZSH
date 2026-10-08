@@ -104,12 +104,43 @@ def test_validator_enforces_total_once_every_domain_has_careers(tmp_path: Path) 
     assert "careers: 7 total, expected 55–60" in result.stdout
 
 
+def test_validator_catches_incomplete_demo_profile(tmp_path: Path) -> None:
+    data_dir = tmp_path / "data"
+    shutil.copytree(DATA_DIR, data_dir)
+    profiles_path = data_dir / "demo_profiles.json"
+    profiles = json.loads(profiles_path.read_text(encoding="utf-8"))
+    del profiles[0]["student"]["riasec_answers"]["ria_i_1"]
+    profiles[0]["student"]["dream_career_id"] = "astronaut"
+    profiles[0]["parent"]["free_text"] = "Too short."
+    profiles_path.write_text(json.dumps(profiles), encoding="utf-8")
+
+    result = run_validator(data_dir)
+    assert result.returncode == 1
+    for expected in ("riasec answers missing ['ria_i_1']", "unknown dream career 'astronaut'",
+                     "parent.free_text has 2 words"):
+        assert expected in result.stdout
+
+
+def test_validator_catches_salary_that_falls(tmp_path: Path) -> None:
+    data_dir = tmp_path / "data"
+    shutil.copytree(DATA_DIR, data_dir)
+    path = data_dir / "careers" / "technology.json"
+    careers = json.loads(path.read_text(encoding="utf-8"))
+    careers[0]["salary_inr_lpa"]["mid"] = [5, 10]
+    path.write_text(json.dumps(careers), encoding="utf-8")
+
+    result = run_validator(data_dir)
+    assert result.returncode == 1
+    assert "salaries must increase entry → mid → senior" in result.stdout
+
+
 def test_loader_reads_every_file() -> None:
     dataset = load_dataset()
     assert len(dataset.cities) == len(config.CITIES)
     assert config.SCHOLARSHIPS_MIN <= len(dataset.scholarships) <= config.SCHOLARSHIPS_MAX
     assert dataset.questions_college.skills is not None
     assert dataset.questions_school.skills is None
+    assert [p.id for p in dataset.demo_profiles] == ["ananya", "rahul", "meera"]
 
 
 def test_schema_literals_match_config() -> None:

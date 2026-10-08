@@ -10,6 +10,7 @@ from app.models.schemas import (
     Career,
     City,
     Dataset,
+    DemoProfile,
     Exam,
     QuestionSet,
     Scholarship,
@@ -54,6 +55,7 @@ def load_dataset(data_dir: Path = DATA_DIR) -> Dataset:
         skills=load_file(data_dir / "skills_vocabulary.json", list[SkillVocabularyEntry]),
         questions_school=load_file(data_dir / "questions_school.json", QuestionSet),
         questions_college=load_file(data_dir / "questions_college.json", QuestionSet),
+        demo_profiles=load_file(data_dir / "demo_profiles.json", list[DemoProfile]),
     )
 
 

@@ -1,0 +1,147 @@
+[
+  {
+    "id": "ananya",
+    "name": "Ananya",
+    "summary": "Class 12 PCM student in Mysuru, strong in maths and logic, loves building with code. Parents want a stable job close to home.",
+    "student": {
+      "track": "school",
+      "current_class": 12,
+      "stream": "PCM",
+      "aptitude_answers": {
+        "apt_num_1": 0, "apt_num_2": 1, "apt_num_3": 2,
+        "apt_log_1": 1, "apt_log_2": 1, "apt_log_3": 0,
+        "apt_verb_1": 1, "apt_verb_2": 0, "apt_verb_3": 3,
+        "apt_spa_1": 1, "apt_spa_2": 3, "apt_spa_3": 1
+      },
+      "riasec_answers": {
+        "ria_r_1": 3, "ria_r_2": 3, "ria_r_3": 4,
+        "ria_i_1": 5, "ria_i_2": 5, "ria_i_3": 5,
+        "ria_a_1": 2, "ria_a_2": 3, "ria_a_3": 2,
+        "ria_s_1": 3, "ria_s_2": 2, "ria_s_3": 2,
+        "ria_e_1": 3, "ria_e_2": 3, "ria_e_3": 2,
+        "ria_c_1": 4, "ria_c_2": 4, "ria_c_3": 3
+      },
+      "workstyle_answers": {"ws_creative": 4, "ws_stability": 4, "ws_teamwork": 3, "ws_structure": 3},
+      "marks_percent": 92,
+      "favourite_subjects": ["Mathematics", "Computer Science", "Physics"],
+      "home_city": "mysuru",
+      "preferred_cities": ["bengaluru", "hyderabad"],
+      "willing_to_relocate": true,
+      "wants_higher_studies": true,
+      "risk_tolerance": "high",
+      "dream_career_id": "ai_ml_engineer",
+      "free_text_1": "Last year I built a small chatbot in Python that answers my classmates' doubts about physics formulas. I trained it on our textbook notes and kept fixing it whenever it gave a wrong answer. Seeing my friends actually use it before exams made me really happy and proud.",
+      "free_text_2": "In ten years I want to be building AI systems that help people, maybe in healthcare or education. I would like to work with a smart team on hard problems, keep learning new things and lead my own projects. I am okay moving to Bengaluru or Hyderabad for the right job."
+    },
+    "parent": {
+      "annual_income_inr": 700000,
+      "education_budget_inr": 500000,
+      "loan_willingness": "moderate",
+      "risk_appetite": "medium",
+      "preferred_domains": ["Technology", "Engineering"],
+      "location_preference": "near_home",
+      "supports_higher_studies": true,
+      "top_priority": "stability",
+      "free_text": "We want Ananya to have a stable job and stay close to home in Mysuru if possible. Engineering in computers seems good, but we worry about private college fees and taking a big loan. We also hear that AI jobs change very fast, so we want something secure for her."
+    }
+  },
+  {
+    "id": "rahul",
+    "name": "Rahul",
+    "summary": "Second-year B.Com student in Chennai, interested in data analytics, on a tight family budget with no loan.",
+    "student": {
+      "track": "college",
+      "degree": "B.Com",
+      "year": 2,
+      "aptitude_answers": {
+        "apt_num_1": 1, "apt_num_2": 2, "apt_num_3": 0,
+        "apt_log_1": 2, "apt_log_2": 1, "apt_log_3": 3,
+        "apt_verb_1": 1, "apt_verb_2": 0, "apt_verb_3": 0,
+        "apt_spa_1": 1, "apt_spa_2": 1, "apt_spa_3": 0
+      },
+      "riasec_answers": {
+        "ria_r_1": 1, "ria_r_2": 2, "ria_r_3": 1,
+        "ria_i_1": 5, "ria_i_2": 4, "ria_i_3": 3,
+        "ria_a_1": 2, "ria_a_2": 2, "ria_a_3": 1,
+        "ria_s_1": 3, "ria_s_2": 2, "ria_s_3": 3,
+        "ria_e_1": 3, "ria_e_2": 3, "ria_e_3": 3,
+        "ria_c_1": 5, "ria_c_2": 5, "ria_c_3": 4
+      },
+      "workstyle_answers": {"ws_creative": 2, "ws_stability": 5, "ws_teamwork": 3, "ws_structure": 4},
+      "marks_percent": 78,
+      "favourite_subjects": ["Accountancy", "Business Statistics", "Economics"],
+      "home_city": "chennai",
+      "preferred_cities": ["chennai"],
+      "willing_to_relocate": false,
+      "wants_higher_studies": false,
+      "risk_tolerance": "low",
+      "dream_career_id": "data_analyst",
+      "self_rated_skills": {
+        "Communication": 60, "Quality control": 25, "Mathematics": 60, "Chemistry": 15,
+        "Data analysis": 45, "Python": 15, "Problem solving": 55, "Programming fundamentals": 15,
+        "Biology": 10, "Research methods": 35, "Mechanical design": 5, "Electronics": 10,
+        "Statistics": 55, "Manufacturing processes": 10, "CAD drafting": 5,
+        "Human anatomy and physiology": 5, "Patient care": 10, "Physics": 15,
+        "Spreadsheets": 70, "Visual design": 20
+      },
+      "free_text_1": "In my first year I made an Excel dashboard for my uncle's small textile shop that tracked daily sales and stock. He started using it every evening to decide what to reorder. I enjoyed finding patterns in the numbers and explaining them to him in simple words.",
+      "free_text_2": "In ten years I see myself working as a data or business analyst in a good company in Chennai, helping managers make decisions with data. I want a steady job that pays well enough to support my family, and I want to keep learning tools like SQL and Python."
+    },
+    "parent": {
+      "annual_income_inr": 400000,
+      "education_budget_inr": 150000,
+      "loan_willingness": "none",
+      "risk_appetite": "low",
+      "preferred_domains": ["Finance & Maths"],
+      "location_preference": "near_home",
+      "supports_higher_studies": false,
+      "top_priority": "stability",
+      "free_text": "Rahul is our only son and we cannot spend much more on his studies. We want him to finish B.Com and get a safe job in a bank or a company here in Chennai. Computer courses sound costly and uncertain, so we worry about spending money without a clear job at the end."
+    }
+  },
+  {
+    "id": "meera",
+    "name": "Meera",
+    "summary": "Class 10 student in Bengaluru who loves drawing and building models. Parents hope she will study medicine.",
+    "student": {
+      "track": "school",
+      "current_class": 10,
+      "aptitude_answers": {
+        "apt_num_1": 0, "apt_num_2": 1, "apt_num_3": 1,
+        "apt_log_1": 0, "apt_log_2": 1, "apt_log_3": 0,
+        "apt_verb_1": 2, "apt_verb_2": 0, "apt_verb_3": 1,
+        "apt_spa_1": 1, "apt_spa_2": 3, "apt_spa_3": 2
+      },
+      "riasec_answers": {
+        "ria_r_1": 3, "ria_r_2": 4, "ria_r_3": 4,
+        "ria_i_1": 3, "ria_i_2": 3, "ria_i_3": 3,
+        "ria_a_1": 5, "ria_a_2": 5, "ria_a_3": 5,
+        "ria_s_1": 3, "ria_s_2": 2, "ria_s_3": 3,
+        "ria_e_1": 2, "ria_e_2": 3, "ria_e_3": 2,
+        "ria_c_1": 2, "ria_c_2": 2, "ria_c_3": 1
+      },
+      "workstyle_answers": {"ws_creative": 5, "ws_stability": 2, "ws_teamwork": 4, "ws_structure": 2},
+      "marks_percent": 88,
+      "favourite_subjects": ["Art", "Mathematics", "Science"],
+      "home_city": "bengaluru",
+      "preferred_cities": ["bengaluru", "pune", "mumbai"],
+      "willing_to_relocate": true,
+      "wants_higher_studies": true,
+      "risk_tolerance": "medium",
+      "dream_career_id": "architect",
+      "free_text_1": "I designed and built a cardboard model of my dream house for a school exhibition, with a rooftop garden and a reading corner full of light. I sketched every room first, then worked out how to make the stairs fit. People kept stopping to ask how I made it.",
+      "free_text_2": "In ten years I want to design spaces or products that make people's lives better, maybe as an architect or a designer. I imagine working in a studio, sketching ideas, building models and seeing my designs become real buildings or things that people use every day."
+    },
+    "parent": {
+      "annual_income_inr": 1800000,
+      "education_budget_inr": 1000000,
+      "loan_willingness": "high",
+      "risk_appetite": "medium",
+      "preferred_domains": ["Health"],
+      "location_preference": "anywhere_india",
+      "supports_higher_studies": true,
+      "top_priority": "prestige",
+      "free_text": "We would like Meera to become a doctor because it is a respected and secure profession, and we can afford medical college with a loan. She loves drawing, but we are not sure art or design leads to a stable career. We want her to be happy and also well settled."
+    }
+  }
+]

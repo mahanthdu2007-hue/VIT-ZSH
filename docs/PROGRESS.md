@@ -87,3 +87,22 @@
 
 **Known issues**
 - All costs and salaries are indicative.
+
+## Phase 1D: Demo profiles and data audit (2026-10-08)
+
+**Built**
+- `DemoProfile` model, loaded with the dataset; `data/demo_profiles.json` with Ananya, Rahul and Meera,
+  every field filled. Hand-computed §7.2 vectors match §14: Ananya numerical/logical/I = 1.0;
+  Rahul numerical 1.0, C 0.92; Meera spatial/A/creative = 1.0. Free text 46–53 words each.
+- Dataset audit: no duplicate ids or names, no cost min > max, all salaries rise entry → mid → senior,
+  closest requirement-vector pair 0.92 centred cosine. Nothing needed fixing.
+- Validator: new permanent checks for the audit items and for demo profiles (with tests).
+
+**Checks**
+- `python scripts/validate_data.py`: 0 errors, 6 warnings (licensed professions, by design).
+- `pytest -q`: 12 passed. `npm run typecheck`, `npm run build`: passed.
+
+**Known issues**
+- Ananya's §14 story expects hotspots "location and risk". With parent preferences Technology +
+  Engineering, the domain mismatch (≥ 1/3 × 0.25) can outrank risk (0.3 × 0.15) depending on System 1
+  output. Check after Phase 4 and tune persona answers only, as §14 allows.

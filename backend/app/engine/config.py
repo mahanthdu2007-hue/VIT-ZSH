@@ -27,6 +27,10 @@ WORKSTYLE_DIMENSIONS: Final[tuple[str, ...]] = (  # §5 4 workstyle Likert items
 )
 FREE_TEXT_IDS: Final[tuple[str, ...]] = ("free_text_1", "free_text_2")  # §5 / §6 2 prompts
 COLLEGE_SKILL_LIST_SIZE: Final[int] = 20  # §5 the 20 most common skills in the dataset
+REQUIREMENT_COSINE_MAX: Final[float] = 0.98  # §5 / §7.5 audit: centred cosine above this = near-identical
+DEMO_PROFILE_COUNT: Final[int] = 3  # §5 / §14 three demo personas
+DEMO_FREE_TEXT_MIN_WORDS: Final[int] = 30  # §14 demo free text is 30–60 words
+DEMO_FREE_TEXT_MAX_WORDS: Final[int] = 60  # §14
 
 # ---------------------------------------------------------------- §6 Inputs
 FREE_TEXT_MIN_WORDS: Final[int] = 15  # §6 free text counts toward completeness if ≥ 15 words

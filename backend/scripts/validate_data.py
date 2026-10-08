@@ -5,6 +5,7 @@ Exits with code 1 if any error is found. Warnings do not fail the check.
 """
 
 import argparse
+import math
 import sys
 from collections import Counter
 from collections.abc import Iterable
@@ -20,6 +21,8 @@ from app.engine.loader import DATA_DIR, DataFileError, career_files, load_file  
 from app.models.schemas import (  # noqa: E402
     Career,
     City,
+    CollegeStudentInput,
+    DemoProfile,
     Exam,
     QuestionSet,
     Scholarship,
@@ -53,6 +56,33 @@ def _check_unique(report: Report, label: str, ids: Iterable[str]) -> None:
         report.errors.append(f"{label}: duplicate ids {duplicates}")
 
 
+def _centred_cosine(a: list[float], b: list[float]) -> float:
+    """§7.5 matching measure: cosine of (vector − 0.5)."""
+    ca = [x - config.MATCH_CENTRE for x in a]
+    cb = [x - config.MATCH_CENTRE for x in b]
+    norm = math.sqrt(sum(x * x for x in ca)) * math.sqrt(sum(x * x for x in cb))
+    return sum(x * y for x, y in zip(ca, cb)) / norm if norm else 1.0
+
+
+def _check_requirement_vectors(report: Report, careers: list[Career]) -> None:
+    vectors = [
+        [c.requirement_vector.model_dump()[d] for d in config.STUDENT_DIMENSIONS] for c in careers
+    ]
+    closest = 0.0
+    for i in range(len(careers)):
+        for j in range(i + 1, len(careers)):
+            similarity = _centred_cosine(vectors[i], vectors[j])
+            closest = max(closest, similarity)
+            if similarity > config.REQUIREMENT_COSINE_MAX:
+                report.errors.append(
+                    f"careers {careers[i].id} and {careers[j].id}: near-identical requirement vectors "
+                    f"(centred cosine {similarity:.3f})"
+                )
+    if len(careers) > 1:
+        status = OK if closest <= config.REQUIREMENT_COSINE_MAX else FAIL
+        report.row("  closest vector pair", f"{closest:.2f}", f"≤ {config.REQUIREMENT_COSINE_MAX}", status)
+
+
 def _check_careers(
     report: Report, careers: list[Career], exam_ids: set[str], skill_names: set[str]
 ) -> None:
@@ -72,12 +102,18 @@ def _check_careers(
             for exam in pathway.entrance_exams:
                 if exam not in exam_ids:
                     report.errors.append(f"{where}, pathway {pathway.id}: unknown exam '{exam}'")
-        bands = career.salary_inr_lpa
-        mids = [sum(r) / 2 for r in (bands.entry, bands.mid, bands.senior)]
-        if not mids[0] <= mids[1] <= mids[2]:
-            report.errors.append(f"{where}: salary midpoints must rise entry ≤ mid ≤ senior")
+        bands = (career.salary_inr_lpa.entry, career.salary_inr_lpa.mid, career.salary_inr_lpa.senior)
+        mids = [sum(r) / 2 for r in bands]
+        lows_rise = bands[0][0] <= bands[1][0] <= bands[2][0]
+        highs_rise = bands[0][1] <= bands[1][1] <= bands[2][1]
+        if not (mids[0] < mids[1] < mids[2] and lows_rise and highs_rise):
+            report.errors.append(f"{where}: salaries must increase entry → mid → senior")
         if not any(p.entry == "graduate" for p in career.pathways):
             report.warnings.append(f"{where}: no graduate (lateral) pathway")
+
+    names = Counter(c.name.casefold() for c in careers)
+    for name in sorted(n for n, k in names.items() if k > 1):
+        report.errors.append(f"careers: duplicate career name '{name}'")
 
     # Careers are written in batches: a domain with no careers yet is a warning, but any
     # domain that has careers must meet its minimum, and the total is enforced once all exist.
@@ -103,6 +139,72 @@ def _check_careers(
         else:
             status = OK
         report.row(f"  {domain}", count, f"≥ {minimum}", status)
+    _check_requirement_vectors(report, careers)
+
+
+def _word_count(text: str) -> int:
+    return len(text.split())
+
+
+def _check_demo_profiles(
+    report: Report,
+    profiles: list[DemoProfile],
+    questions: dict[str, QuestionSet | None],
+    career_ids: set[str],
+) -> None:
+    _check_unique(report, "demo profiles", (p.id for p in profiles))
+    for profile in profiles:
+        where = f"demo profile {profile.id}"
+        student = profile.student
+        question_set = questions[student.track]
+        if question_set is not None:
+            answers = {
+                "aptitude": (student.aptitude_answers, question_set.aptitude),
+                "riasec": (student.riasec_answers, question_set.riasec),
+                "workstyle": (student.workstyle_answers, question_set.workstyle),
+            }
+            for section, (given, items) in answers.items():
+                expected = {i.id for i in items}
+                if set(given) != expected:
+                    missing, extra = sorted(expected - set(given)), sorted(set(given) - expected)
+                    report.errors.append(f"{where}: {section} answers missing {missing}, unknown {extra}")
+            for item in question_set.aptitude:
+                choice = student.aptitude_answers.get(item.id)
+                if choice is not None and choice >= len(item.options):
+                    report.errors.append(f"{where}: {item.id} answer {choice} is out of range")
+            if isinstance(student, CollegeStudentInput) and set(student.self_rated_skills) != set(
+                question_set.skills or []
+            ):
+                report.errors.append(f"{where}: self_rated_skills must rate exactly the college skills list")
+        if student.dream_career_id is not None and student.dream_career_id not in career_ids:
+            report.errors.append(f"{where}: unknown dream career '{student.dream_career_id}'")
+        unfilled = [
+            name for name, value in (
+                ("marks_percent", student.marks_percent),
+                ("favourite_subjects", student.favourite_subjects),
+                ("preferred_cities", student.preferred_cities),
+                ("dream_career_id", student.dream_career_id),
+                ("parent.preferred_domains", profile.parent.preferred_domains),
+            ) if not value
+        ]
+        if unfilled:
+            report.errors.append(f"{where}: demo profiles must fill every field, missing {unfilled}")
+        texts = {
+            "free_text_1": student.free_text_1,
+            "free_text_2": student.free_text_2,
+            "parent.free_text": profile.parent.free_text,
+        }
+        for name, text in texts.items():
+            words = _word_count(text)
+            if not config.DEMO_FREE_TEXT_MIN_WORDS <= words <= config.DEMO_FREE_TEXT_MAX_WORDS:
+                report.errors.append(
+                    f"{where}: {name} has {words} words, expected "
+                    f"{config.DEMO_FREE_TEXT_MIN_WORDS}–{config.DEMO_FREE_TEXT_MAX_WORDS}"
+                )
+    count_ok = len(profiles) == config.DEMO_PROFILE_COUNT
+    if not count_ok:
+        report.errors.append(f"demo profiles: {len(profiles)}, expected {config.DEMO_PROFILE_COUNT}")
+    report.row("demo profiles", len(profiles), str(config.DEMO_PROFILE_COUNT), OK if count_ok else FAIL)
 
 
 def _check_reference_data(
@@ -199,12 +301,18 @@ def validate(data_dir: Path = DATA_DIR) -> Report:
     )
     school = _load(report, data_dir / "questions_school.json", QuestionSet)
     college = _load(report, data_dir / "questions_college.json", QuestionSet)
+    profiles: list[DemoProfile] = (
+        _load(report, data_dir / "demo_profiles.json", list[DemoProfile]) or []
+    )
 
     skill_names = {s.name for s in skills}
     _check_careers(report, careers, {e.id for e in exams}, skill_names)
     _check_reference_data(report, exams, scholarships, cities, skills)
     _check_questions(report, "questions_school", school, "school", skill_names, careers)
     _check_questions(report, "questions_college", college, "college", skill_names, careers)
+    _check_demo_profiles(
+        report, profiles, {"school": school, "college": college}, {c.id for c in careers}
+    )
     return report
 
 

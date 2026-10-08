@@ -292,6 +292,15 @@ class ParentInput(StrictModel):
     free_text: str = ""
 
 
+# ---------------------------------------------------------------- §14 demo personas
+class DemoProfile(StrictModel):
+    id: NonEmptyStr
+    name: NonEmptyStr
+    summary: NonEmptyStr
+    student: StudentInput
+    parent: ParentInput
+
+
 # ---------------------------------------------------------------- loaded dataset
 class Dataset(BaseModel):
     careers: list[Career]
@@ -301,6 +310,7 @@ class Dataset(BaseModel):
     skills: list[SkillVocabularyEntry]
     questions_school: QuestionSet
     questions_college: QuestionSet
+    demo_profiles: list[DemoProfile]
 
 
 # ---------------------------------------------------------------- §13 API
