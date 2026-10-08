@@ -301,6 +301,76 @@ class DemoProfile(StrictModel):
     parent: ParentInput
 
 
+# ---------------------------------------------------------------- §7.2 engine: normalize
+class StudentVector(BaseModel):
+    values: dict[str, float]  # the 11 §7.2 dimensions, each in [0, 1]
+    aptitude_correct: dict[str, int]  # correct answers per aptitude dimension
+    defaulted: list[str]  # Likert dimensions with no answers, set to the neutral value
+
+
+class StudentPreferences(BaseModel):
+    risk_tolerance: float
+    relocation: float
+    higher_studies: float
+    stability: float  # workstyle stability_vs_excitement item; 1 = prefers stability
+    marks: float | None
+
+
+class ParentPreferences(BaseModel):
+    risk_appetite: float
+    location: float
+    higher_studies: float
+    priority_stability: float
+
+
+class Completeness(BaseModel):
+    score: float
+    answered: int
+    total: int
+    missing: list[str]
+
+
+# ---------------------------------------------------------------- §7.4 engine: solver
+CareerStatus = Literal["feasible", "needs_aid", "no_pathway"]
+
+
+class PathwayEvaluation(BaseModel):
+    pathway_id: str
+    label: str
+    entry: Entry
+    institution_type: InstitutionType
+    quality: float
+    stage_fit: bool
+    cost_mid: int
+    scholarship: int
+    scholarship_id: str | None
+    scholarship_capped: bool
+    effective_cost: int
+    feasible: bool
+    objective: float | None  # None when not a candidate for this student's stage
+
+
+class CareerFinance(BaseModel):
+    career_id: str
+    status: CareerStatus
+    chosen_pathway_id: str | None
+    effective_cost: int | None
+    financial_fit: float
+    funding_gap: int
+    budget: int
+    capacity: int
+    pathways: list[PathwayEvaluation]
+
+
+# ---------------------------------------------------------------- §7.5 engine: matcher
+class StudentFit(BaseModel):
+    career_id: str
+    centred_cosine: float
+    domain_affinity: float
+    academic_alignment: float
+    student_fit: float
+
+
 # ---------------------------------------------------------------- loaded dataset
 class Dataset(BaseModel):
     careers: list[Career]

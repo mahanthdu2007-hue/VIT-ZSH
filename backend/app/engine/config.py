@@ -53,6 +53,8 @@ LIKERT_MIN: Final[int] = 1  # §7.2 Likert normalised as (x − 1) / 4
 LIKERT_RANGE: Final[int] = 4  # §7.2
 MARKS_SCALE: Final[float] = 100.0  # §7.2 marks / 100
 LEVEL_VALUES: Final[dict[str, float]] = {"low": 0.2, "medium": 0.5, "high": 0.8}  # §7.2
+LIKERT_NEUTRAL: Final[float] = 0.5  # §7.2 unanswered Likert dimension = midpoint answer 3 → (3 − 1)/4
+BOOL_VALUES: Final[dict[bool, float]] = {False: 0.0, True: 1.0}  # §7.6 yes/no answers as 0/1
 
 # ---------------------------------------------------------------- §7.3 System 1 Decision Layer
 DOMAINS: Final[tuple[str, ...]] = (  # §7.3 student_domain_affinity labels (§5 domains)
@@ -75,12 +77,27 @@ SOLVER_LAMBDA: Final[float] = 0.6  # §7.4 λ in quality − λ·effective_cost/
 FF_WITHIN_BUDGET: Final[float] = 1.0  # §7.4 FF when cost ≤ budget
 FF_STRETCH_PENALTY: Final[float] = 0.5  # §7.4 FF = 1 − 0.5·(cost − budget)/(capacity − budget)
 FF_NEEDS_AID: Final[float] = 0.0  # §7.4 FF for needs_aid careers
+PATHWAY_ENTRY_STUDY_LEVEL: Final[dict[str, str]] = {  # §7.4 "level matches": pathway entry → level
+    "after_class_10": "diploma",
+    "after_class_12": "ug",
+    "graduate": "pg",
+}
+DIPLOMA_INSTITUTION_LEVEL: Final[str] = "diploma"  # §7.4 diploma-type pathways count as diploma level
+OBJECTIVE_TIE_TOLERANCE: Final[float] = 1e-9  # §7.4 objectives this close are a tie (§16 determinism)
+NO_SCHOLARSHIP_INSTITUTIONS: Final[tuple[str, ...]] = ("online",)  # §7.4 schemes fund formal courses only
+STAGE_ENTRIES: Final[dict[str, tuple[str, ...]]] = {  # §7.4 pathways whose entry fits the student's stage
+    "school_before_11": ("after_class_10", "after_class_12"),
+    "school_11_12": ("after_class_12",),
+    "college": ("graduate",),
+}
 
 # ---------------------------------------------------------------- §7.5 Career Matcher
 MATCH_CENTRE: Final[float] = 0.5  # §7.5 centred cosine cos(S − 0.5, R − 0.5)
 SF_WEIGHT_COSINE: Final[float] = 0.6  # §7.5
 SF_WEIGHT_DOMAIN_AFFINITY: Final[float] = 0.25  # §7.5
 SF_WEIGHT_ACADEMIC: Final[float] = 0.15  # §7.5
+ACADEMIC_DIMENSIONS: Final[tuple[str, ...]] = ("numerical", "verbal")  # §7.5 how numerical/verbal a career is
+MARKS_NEUTRAL: Final[float] = 0.5  # §7.5 marks value used when marks were not given
 
 # ---------------------------------------------------------------- §7.6 Parent-Student Conflict Index
 CONFLICT_WEIGHTS: Final[dict[str, float]] = {  # §7.6 dimension weights, sum 1

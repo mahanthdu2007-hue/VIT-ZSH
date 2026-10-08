@@ -7,7 +7,7 @@
     "levels": ["ug", "pg"],
     "domains": ["Technology", "Engineering", "Science", "Health", "Arts & Design", "Finance & Maths", "Hyper-local"],
     "amount_inr_per_year": 12000,
-    "restricted_to": null,
+    "restricted_to": "Students above the 80th percentile in their Class 12 board exam (merit-based selection)",
     "source": "National Scholarship Portal, scholarships.gov.in (for students above the 80th percentile in their Class 12 board)"
   },
   {
@@ -18,7 +18,7 @@
     "levels": ["ug"],
     "domains": ["Technology", "Engineering", "Science", "Health", "Arts & Design", "Finance & Maths", "Hyper-local"],
     "amount_inr_per_year": 50000,
-    "restricted_to": null,
+    "restricted_to": "Selected through a competitive aptitude test and interview",
     "source": "scholarships.reliancefoundation.org (up to ₹2,00,000 over the degree; selection includes an aptitude test)"
   },
   {
@@ -95,7 +95,7 @@
     "levels": ["ug"],
     "domains": ["Technology", "Engineering", "Health"],
     "amount_inr_per_year": 40000,
-    "restricted_to": null,
+    "restricted_to": "High-merit students (e.g. top JEE or NEET ranks), selected by the foundation",
     "source": "ffe.org (for high-merit students in engineering, medicine and law)"
   },
   {

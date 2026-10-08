@@ -106,3 +106,23 @@
 - Ananya's §14 story expects hotspots "location and risk". With parent preferences Technology +
   Engineering, the domain mismatch (≥ 1/3 × 0.25) can outrank risk (0.3 × 0.15) depending on System 1
   output. Check after Phase 4 and tune persona answers only, as §14 allows.
+
+## Phase 2A: Engine part 1 (2026-10-08)
+
+**Built**
+- `engine/normalize.py` (§7.2): student vector, student and parent preference values, completeness
+  with missing-field names.
+- `engine/solver.py` (§7.4): capacity, cost_mid, scholarship eligibility (open schemes only) with 60% cap,
+  effective cost, stage filtering, `scipy.optimize.milp` pathway choice with deterministic tie-break,
+  Financial Fit (capacity == budget handled without division), needs_aid / no_pathway, funding gap,
+  full per-pathway evaluation.
+- `engine/matcher.py` (§7.5): centred cosine, academic alignment (blend), Student Fit.
+- Result models in `schemas.py`; constants in `config.py`. Competitive scholarships marked restricted.
+
+**Checks**
+- `pytest -q`: 55 passed (normalize, solver, matcher: hand-calculated cases and edge cases for zero
+  budget, no loan, all pathways unaffordable, 60% cap, stage filtering, exact ties).
+- `python scripts/validate_data.py`: 0 errors. `npm run typecheck`, `npm run build`: passed.
+
+**Known issues**
+- None new.
