@@ -1,5 +1,5 @@
 import type { Config } from "tailwindcss";
-import { colors, fontSizes, fontWeights, fonts } from "./src/theme/tokens";
+import { colors, fontSizes, fontWeights, fonts, radii, shadows, spacing } from "./src/theme/tokens";
 
 export default {
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
@@ -15,6 +15,9 @@ export default {
       medium: String(fontWeights.bodyStrong),
       semibold: String(fontWeights.heading),
     },
+    spacing,
+    borderRadius: radii,
+    boxShadow: shadows,
   },
   plugins: [],
 } satisfies Config;

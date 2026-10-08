@@ -1,15 +1,76 @@
 import type { components } from "./schema";
 
-export type HealthResponse = components["schemas"]["HealthResponse"];
+type Schemas = components["schemas"];
 
-async function getJson<T>(path: string): Promise<T> {
-  const response = await fetch(path);
+export type HealthResponse = Schemas["HealthResponse"];
+export type QuestionSet = Schemas["PublicQuestionSet"];
+export type DemoProfile = Schemas["DemoProfile"];
+export type CareerSummary = Schemas["CareerSummary"];
+export type AssessRequest = Schemas["AssessRequest"];
+export type AssessmentResult = Schemas["AssessmentResult"];
+export type Explanations = Schemas["Explanations"];
+export type CareerExplanation = Schemas["CareerExplanation"];
+export type SchoolStudentInput = Schemas["SchoolStudentInput"];
+export type CollegeStudentInput = Schemas["CollegeStudentInput"];
+export type StudentInput = SchoolStudentInput | CollegeStudentInput;
+export type ParentInput = Schemas["ParentInput"];
+export type Track = QuestionSet["track"];
+export type CityId = SchoolStudentInput["home_city"];
+export type Level = SchoolStudentInput["risk_tolerance"];
+export type Stream = NonNullable<SchoolStudentInput["stream"]>;
+export type Domain = CareerSummary["domain"];
+export type LoanWillingness = ParentInput["loan_willingness"];
+export type LocationPreference = ParentInput["location_preference"];
+export type TopPriority = ParentInput["top_priority"];
+export type RankedCareer = Schemas["RankedCareer"];
+export type CareerDetail = Schemas["CareerDetail"];
+export type Confidence = Schemas["Confidence"];
+export type ConflictResult = Schemas["ConflictResult"];
+export type ConflictDimension = Schemas["ConflictDimension"];
+export type MiddlePath = Schemas["MiddlePath"];
+export type StretchOption = Schemas["StretchOption"];
+
+export class ApiError extends Error {
+  constructor(
+    message: string,
+    readonly status: number,
+  ) {
+    super(message);
+  }
+}
+
+async function request<T>(path: string, init?: RequestInit): Promise<T> {
+  const response = await fetch(path, init);
   if (!response.ok) {
-    throw new Error(`Request to ${path} failed with status ${response.status}`);
+    throw new ApiError(`Request to ${path} failed with status ${response.status}`, response.status);
   }
   return (await response.json()) as T;
 }
 
 export function fetchHealth(): Promise<HealthResponse> {
-  return getJson<HealthResponse>("/api/health");
+  return request<HealthResponse>("/api/health");
+}
+
+export function fetchQuestions(track: Track): Promise<QuestionSet> {
+  return request<QuestionSet>(`/api/questions/${track}`);
+}
+
+export function fetchDemoProfiles(): Promise<DemoProfile[]> {
+  return request<DemoProfile[]>("/api/demo-profiles");
+}
+
+export function fetchCareers(): Promise<CareerSummary[]> {
+  return request<CareerSummary[]>("/api/careers");
+}
+
+export function fetchExplanations(assessmentId: string): Promise<Explanations> {
+  return request<Explanations>(`/api/explanations/${encodeURIComponent(assessmentId)}`);
+}
+
+export function postAssess(body: AssessRequest): Promise<AssessmentResult> {
+  return request<AssessmentResult>("/api/assess", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
 }

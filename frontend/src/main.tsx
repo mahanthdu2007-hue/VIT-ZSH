@@ -1,10 +1,14 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
+import { App } from "./App";
 import "./index.css";
-import { HealthPage } from "./pages/HealthPage";
+import { DraftProvider } from "./state/draft";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { refetchOnWindowFocus: false } },
+});
 
 const root = document.getElementById("root");
 if (!root) {
@@ -14,7 +18,11 @@ if (!root) {
 createRoot(root).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <HealthPage />
+      <BrowserRouter>
+        <DraftProvider>
+          <App />
+        </DraftProvider>
+      </BrowserRouter>
     </QueryClientProvider>
   </StrictMode>,
 );

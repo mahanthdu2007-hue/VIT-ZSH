@@ -232,3 +232,33 @@
 - Rahul's #1 (Data Analyst 82.6) is only 0.1 ahead of Financial Analyst (82.5).
 - Ananya's middle path is her own #1 (AI/ML Engineer via a govt B.Tech): she gives up nothing, and the parents gain
   +0.121 over the median.
+
+## Phase F1: Assessment screens + main dashboard (2026-10-08)
+
+**Built**
+- Foundation: react-router, typed API client + TanStack Query hooks (`src/api/client.ts`, `queries.ts`, types only from
+  the generated schema), layout shell with engine status, primitives Button, Card, Field, Choice (radio/checkbox), MoneyInput,
+  Stepper, Badge; spacing/radius tokens in `tokens.ts`.
+- Landing: one-line pitch, "I'm in school" / "I'm in college", three "Try a demo family" cards that run POST /api/assess.
+- StudentAssessment: About you, Aptitude, Interests, Work style, In your words, Preferences (+ Skills for college), loaded
+  from /api/questions/{track}; per-step validation, inline errors, error summary that takes focus, progress bar, back/next.
+- ParentForm: "Hand the device to your parent" screen, money inputs with Indian grouping (5,00,000) and amount in words.
+- Dashboard: PrismBar (tooltip per segment on hover, tap and keyboard), top-careers list, selected career with
+  ScoreBreakdown, ConfidenceBadge with missing-input hints, why / why-not, ConflictPanel, MiddlePathCard, StretchOptions
+  with AidOptions; loading and error states.
+
+**Checks**
+- `npm run typecheck`, `npm run build`: passed after each part.
+- `pytest -q`: 184 passed.
+- Live servers (real DeBERTa System 1): Ananya, Rahul, Meera through the Vite proxy, 1.2–1.4 s each; every section
+  has content (10 top careers, breakdown, confidence, why/why-not, 6 conflict dimensions, middle path, stretch options).
+- Headless Edge: all three dashboards at 1440 px and 375 px, no horizontal page scroll, no console errors; PrismBar
+  tooltip shows on mouse hover and on Tab with a visible focus outline; full college + parent form filled and submitted
+  to a dashboard.
+
+**Known issues**
+- Reloading a dashboard page clears it (no GET endpoint for saved assessments; see DECISIONS.md).
+- Ananya and Meera have no stretch options (all good-fit careers are affordable); the section says so in a sentence.
+- Ananya's confidence badge shows 100.0 with a hint about parent free text: the hint comes from the abstained
+  parent_concerns decision (§7.8 missing_inputs).
+- The selected career's suggested route appears both above the breakdown and inside the template narrative.
