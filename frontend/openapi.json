@@ -813,6 +813,53 @@
         ],
         "title": "CareerDetail"
       },
+      "CareerExplainTrace": {
+        "properties": {
+          "career_id": {
+            "type": "string",
+            "title": "Career Id"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "template",
+              "llm"
+            ],
+            "title": "Source"
+          },
+          "fallback_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fallback Reason"
+          },
+          "retrieved_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Retrieved Ids"
+          },
+          "duration_ms": {
+            "type": "integer",
+            "title": "Duration Ms"
+          }
+        },
+        "type": "object",
+        "required": [
+          "career_id",
+          "source",
+          "fallback_reason",
+          "retrieved_ids",
+          "duration_ms"
+        ],
+        "title": "CareerExplainTrace"
+      },
       "CareerExplanation": {
         "properties": {
           "career_id": {
@@ -843,6 +890,22 @@
             },
             "type": "array",
             "title": "Cited Ids"
+          },
+          "citations": {
+            "items": {
+              "$ref": "#/components/schemas/Citation"
+            },
+            "type": "array",
+            "title": "Citations"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "template",
+              "llm"
+            ],
+            "title": "Source",
+            "default": "template"
           }
         },
         "type": "object",
@@ -851,7 +914,8 @@
           "why",
           "why_not",
           "roadmap_narrative",
-          "cited_ids"
+          "cited_ids",
+          "citations"
         ],
         "title": "CareerExplanation"
       },
@@ -997,6 +1061,53 @@
           "funding_gap"
         ],
         "title": "CheaperPathway"
+      },
+      "Citation": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "career",
+              "pathway",
+              "scholarship",
+              "exam"
+            ],
+            "title": "Kind"
+          },
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "career_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Career Id"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "text": {
+            "type": "string",
+            "title": "Text"
+          }
+        },
+        "type": "object",
+        "required": [
+          "kind",
+          "id",
+          "career_id",
+          "label",
+          "text"
+        ],
+        "title": "Citation",
+        "description": "A dataset row an explanation used; the dashboard opens it from a source link."
       },
       "CollegeStudentInput": {
         "properties": {
@@ -1584,12 +1695,31 @@
             ],
             "title": "Source"
           },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "ready"
+            ],
+            "title": "Status",
+            "default": "ready"
+          },
           "items": {
             "items": {
               "$ref": "#/components/schemas/CareerExplanation"
             },
             "type": "array",
             "title": "Items"
+          },
+          "trace": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/System2Trace"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "type": "object",
@@ -1651,6 +1781,59 @@
         ],
         "title": "Growth"
       },
+      "GuardrailHit": {
+        "properties": {
+          "career_id": {
+            "type": "string",
+            "title": "Career Id"
+          },
+          "field": {
+            "type": "string",
+            "title": "Field"
+          },
+          "sentence": {
+            "type": "string",
+            "title": "Sentence"
+          },
+          "unsupported": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Unsupported"
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "replaced",
+              "removed"
+            ],
+            "title": "Action"
+          },
+          "replacement": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Replacement"
+          }
+        },
+        "type": "object",
+        "required": [
+          "career_id",
+          "field",
+          "sentence",
+          "unsupported",
+          "action",
+          "replacement"
+        ],
+        "title": "GuardrailHit",
+        "description": "\u00a712 a sentence with a number that is not in ENGINE_RESULT or CONTEXT."
+      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -1678,11 +1861,39 @@
           "llm": {
             "type": "string",
             "enum": [
-              "groq",
               "gemini",
+              "nvidia",
               "none"
             ],
             "title": "Llm"
+          },
+          "llm_model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Llm Model"
+          },
+          "llm_requested": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "gemini",
+              "nvidia",
+              "none"
+            ],
+            "title": "Llm Requested"
+          },
+          "llm_notes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Llm Notes"
           },
           "demo_mode": {
             "type": "boolean",
@@ -1697,6 +1908,9 @@
           "status",
           "system1",
           "llm",
+          "llm_model",
+          "llm_requested",
+          "llm_notes",
           "demo_mode",
           "dataset"
         ],
@@ -3425,6 +3639,62 @@
           "parent_concerns"
         ],
         "title": "System1Trace"
+      },
+      "System2Trace": {
+        "properties": {
+          "provider": {
+            "type": "string",
+            "title": "Provider"
+          },
+          "model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model"
+          },
+          "retrieval": {
+            "type": "string",
+            "enum": [
+              "chroma",
+              "dataset",
+              "none"
+            ],
+            "title": "Retrieval"
+          },
+          "careers": {
+            "items": {
+              "$ref": "#/components/schemas/CareerExplainTrace"
+            },
+            "type": "array",
+            "title": "Careers"
+          },
+          "guardrail_hits": {
+            "items": {
+              "$ref": "#/components/schemas/GuardrailHit"
+            },
+            "type": "array",
+            "title": "Guardrail Hits"
+          },
+          "duration_ms": {
+            "type": "integer",
+            "title": "Duration Ms"
+          }
+        },
+        "type": "object",
+        "required": [
+          "provider",
+          "model",
+          "retrieval",
+          "careers",
+          "guardrail_hits",
+          "duration_ms"
+        ],
+        "title": "System2Trace"
       },
       "TimelineYear": {
         "properties": {

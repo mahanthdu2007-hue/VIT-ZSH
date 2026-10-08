@@ -18,14 +18,21 @@ from app.models.schemas import (
     WhatIfRequest,
     WhatIfResult,
 )
+from app.rag.explain import llm_explanations
+from app.rag.llm import get_llm
 from app.rag.templates import template_explanations
 from app.settings import get_settings
 
 
+def _city_names() -> dict[str, str]:
+    return {c.id: c.name for c in get_dataset().cities}
+
+
 def _explain(result: PipelineResult, request: AssessRequest) -> Explanations:
-    data = get_dataset()
-    return template_explanations(result, {c.id: c.name for c in data.cities}, request.student.home_city,
-                                 request.parent.annual_income_inr)
+    """Template text now; marked pending when an LLM will reword it in the background (§13 lazy load)."""
+    templates = template_explanations(result, _city_names(), request.student.home_city,
+                                      request.parent.annual_income_inr)
+    return templates.model_copy(update={"status": "pending" if get_llm().name != "none" else "ready"})
 
 
 def _run(request: AssessRequest) -> DemoCacheEntry:
@@ -53,8 +60,24 @@ def assess(request: AssessRequest) -> AssessmentResult:
     return assessment
 
 
+def write_explanations(assessment_id: str) -> None:
+    """Background task: System 2 explanations for a saved assessment (§12). Never leaves them pending."""
+    result, inputs = storage.load_result(assessment_id), storage.load_inputs(assessment_id)
+    if result is None or inputs is None:
+        return
+    try:
+        explained = llm_explanations(get_llm(), result, result.explanations, _city_names(), inputs.student,
+                                     inputs.parent)
+    except Exception:  # §2.4 an unexpected failure keeps the template text the student already sees
+        explained = result.explanations.model_copy(update={"status": "ready"})
+    storage.save_explanations(assessment_id, explained)
+
+
 def explanations(assessment_id: str) -> Explanations | None:
-    """§13 explanations for a saved assessment (template text until System 2 is built)."""
+    """§13 the LLM explanations when written, else the template text saved with the result."""
+    saved = storage.load_explanations(assessment_id)
+    if saved is not None:
+        return saved
     result = storage.load_result(assessment_id)
     return None if result is None else result.explanations
 

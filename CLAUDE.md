@@ -78,7 +78,9 @@ when the phase ends.
 
 ## Never
 - Never use a paid API, or localStorage.
-- Never call an LLM inside backend/app/engine/ or in the What-If path.
+- Never call an LLM inside backend/app/engine/ or in the What-If path. The chatbot (§17)
+  may use an LLM to understand a question and word the answer, but every number it shows
+  comes from the engine.
 - Never hardcode demo results. The demo always runs through the real pipeline.
 - Never commit .env or API keys.
 
@@ -116,8 +118,20 @@ Built for the DataQuest 3.0 final round, where we demo the prototype and explain
   `MoritzLaurer/deberta-v3-base-zeroshot-v2.0`; light fallback
   `typeform/distilbert-base-uncased-mnli`. CPU-only PyTorch.
 - System 2: ChromaDB (local persistent) + `sentence-transformers/all-MiniLM-L6-v2`
-  embeddings; generator via `LLM_PROVIDER` = `groq` (default, model from `GROQ_MODEL`) or
-  `gemini` (model from `GEMINI_MODEL`) or `none` (templates only).
+  embeddings; generator chosen by `LLM_PROVIDER`:
+  - `auto` (default): at startup, test Gemini with a tiny request; if it works use it,
+    else test NVIDIA NIM; if that works use it, else `none`. Report the result in /api/health.
+  - `gemini`: `google-genai` SDK, key `GEMINI_API_KEY`, model from `GEMINI_MODEL`
+    (a current Flash model; confirm the exact id by listing models with the key).
+  - `nvidia`: NVIDIA NIM via the `openai` Python SDK with
+    base_url `https://integrate.api.nvidia.com/v1`, key `NVIDIA_API_KEY`, model from
+    `NVIDIA_MODEL` (Nemotron 3.5 Lightning; confirm the exact id with GET /v1/models).
+    Use only the final message content, never the reasoning field; if content is empty,
+    retry once with a larger max_tokens. On HTTP 429, wait and retry once.
+  - `none`: deterministic templates only.
+  All providers sit behind one interface in `rag/llm.py`:
+  `complete_json(system, user, schema) -> dict` and `complete_text(system, user) -> str`,
+  with timeouts, and they raise a typed error the callers turn into template fallbacks.
 - Frontend: React 18 + Vite + TypeScript (strict) + Tailwind, Recharts, React Flow
   (`@xyflow/react`), Framer Motion, TanStack Query. API types generated from FastAPI's
   OpenAPI schema with `openapi-typescript`. Never hand-write API types.
@@ -141,7 +155,7 @@ prism-engine/
         normalize.py  system1.py  solver.py  matcher.py  conflict.py
         market.py  scoring.py  skills.py  swot.py  roi.py  alternatives.py
         whatif.py  pipeline.py
-      rag/ index.py  explain.py  templates.py
+      rag/ llm.py  index.py  explain.py  templates.py  chat.py
       data/
         careers/ technology.json engineering.json science.json health.json
                  arts_design.json finance_math.json hyperlocal.json
@@ -376,7 +390,7 @@ No LLM in this path.
 - explain.py: for the top 5 careers + middle path, retrieve with
   `where={"career_id": {"$in": ids}}`. Prompt: answer only from CONTEXT and ENGINE_RESULT;
   return JSON `{career_id, why[3], why_not[2], roadmap_narrative, cited_ids[]}`;
-  temperature 0.2.
+  temperature 0.2. Calls go through `rag/llm.py` (§3).
 - Numeric guardrail: extract every number and ₹ amount from the LLM output. Each must
   appear in ENGINE_RESULT or CONTEXT (normalize 5,00,000 / 500000 / 5 lakh / 5L).
   Replace any sentence failing the check with its template sentence. Log hits in the trace.
@@ -387,13 +401,15 @@ No LLM in this path.
   `scripts/warmup.py` pre-downloads all models.
 
 ## §13 API
-- `GET  /api/health` → backends active (system1, llm), dataset counts, demo_mode
+- `GET  /api/health` → backends active (system1, llm provider + model), dataset counts, demo_mode
 - `GET  /api/questions/{track}` → school | college question set
 - `GET  /api/demo-profiles`
 - `POST /api/assess` → `AssessmentResult` (id, ranking, details per career, conflict,
   middle_path, stretch_options, alternatives, swot, confidence, explanations, trace)
 - `POST /api/whatif` → `WhatIfResult`
 - `GET  /api/careers`, `GET /api/careers/{id}`
+- `POST /api/chat` → `ChatReply` (§17)
+- `GET  /api/chat/{assessment_id}` → saved chat history
 Explanations may load lazily: `/api/assess` returns template text immediately, and
 `GET /api/explanations/{assessment_id}` returns LLM text when ready.
 
@@ -432,7 +448,7 @@ Signature component: **PrismBar**, a career's score as one horizontal bar split 
 coloured segments sized by points earned, with a tooltip per segment.
 Components: PrismBar, ScoreBreakdown, ConfidenceBadge, ConflictPanel, MiddlePathCard,
 RiskRadar, SkillGap, PathwayGraph, Timeline, CityDemand, SwotGrid, RoiCard,
-AidOptions, StretchOptions, WhatIfDrawer, StageCard (inspector).
+AidOptions, StretchOptions, WhatIfDrawer, StageCard (inspector), ChatPanel (§17).
 Dashboard order: top careers → selected career detail (breakdown, why/why-not,
 confidence) → family alignment (conflict + middle path) → risk radar + skill gap →
 pathway graph + timeline → city demand + SWOT → ROI + scholarships/exams → stretch options.
@@ -450,3 +466,52 @@ conflict breakdown, score components, guardrail hits).
   the pipeline is deterministic for identical input.
 - `scripts/benchmark.py` writes docs/BENCHMARK.md with exact counts. The deck quotes
   only these numbers.
+- Chat tests (LLM mocked): intent routing, a What-If asked in chat matches /api/whatif
+  exactly, numeric guardrail, `none`-mode answers, history saved and reloaded.
+
+## §17 "Ask PRISM" chatbot
+Purpose: the student or parent asks questions about THEIR results in plain words.
+It is grounded in everything they entered and everything the engine computed.
+
+**UI (ChatPanel):** an "Ask PRISM" button on the dashboard opens a side panel (desktop) or
+a bottom sheet (mobile). A switch "Asking as: student / parent" changes tone only.
+Show 5 suggested questions built from the result, e.g. "Why is <#1 career> ranked first?",
+"What if our budget is ₹3,00,000?", "Which scholarships can I apply for?",
+"What should I learn first?", "Why not <dream career>?". Each reply shows small source
+chips (career, scholarship or exam ids) and, for what-if answers, a "Show on dashboard"
+button that opens the WhatIfDrawer with the same values. A one-line note under the input:
+"Answers use your results. Money values are indicative estimates." When the provider is
+external, add: "Your answers are sent to <provider> to write replies."
+No streaming; show a typing indicator. The panel opens without animation (the What-If
+re-rank stays the only motion moment). Chat history is stored in SQLite per assessment,
+never in browser storage.
+
+**Backend (`rag/chat.py`), per message:**
+1. Build CONTEXT (compact JSON, ≤ 6,000 tokens): student and parent inputs (no free-text
+   longer than 300 characters each), top 10 ranking with component points, details for the
+   selected and mentioned careers (pathway, cost, scholarship, skill gaps, roadmap,
+   timeline, ROI, risk radar, city demand), conflict breakdown and middle path, SWOT,
+   stretch options, alternatives, eligible scholarships and exams, plus Chroma retrieval
+   for the question (filtered to careers in the result or named in the question), plus
+   the last 8 chat turns.
+2. Route the question with `complete_json` into
+   `{intent: explain|compare|whatif|scholarships|plan|other, career_ids[], overrides{}}`
+   (overrides use the §11 fields; parse amounts like "3 lakh", "₹3,00,000", "3L").
+   Validate with Pydantic. If the LLM fails or returns invalid JSON, use a rule-based
+   router (keywords, career names, city names, regex for amounts).
+3. If intent is `whatif`, run engine/whatif.py with the overrides and add its result
+   (new ranks, point deltas, reason sentences) to CONTEXT. If `compare`, add both careers'
+   component points. The LLM never computes numbers.
+4. Answer with `complete_text`: answer only from CONTEXT; at most 120 words; plain language
+   for a Class 9–12 student or a parent; say clearly when something isn't in the results and
+   which input would help; never promise admission, salary or outcomes; politely steer
+   off-topic questions back to career planning.
+5. Run the §12 numeric guardrail on the answer. Remove sentences with unsupported numbers;
+   if nothing useful is left, use the template answer for that intent.
+6. Return `ChatReply {answer, intent, sources[], whatif?, guardrail_hits, provider}`.
+**Fallback (`none` or any failure):** rule-based router + template answers for every intent
+built from engine values, so the chat works offline on stage.
+**Care rule:** if a message shows serious distress (for example family pressure that feels
+unbearable, or thoughts of self-harm), reply kindly, encourage talking to a trusted adult or
+school counsellor, and show Tele-MANAS 14416 (India's free mental-health helpline). Do not
+continue career advice in that reply.

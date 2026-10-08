@@ -287,3 +287,18 @@ EXPLAIN_TOP_N: Final[int] = 5  # §12 explain the top 5 careers + middle path
 EXPLAIN_WHY_COUNT: Final[int] = 3  # §12 why[3]
 EXPLAIN_WHY_NOT_COUNT: Final[int] = 2  # §12 why_not[2]
 LLM_TEMPERATURE: Final[float] = 0.2  # §12
+EXPLAIN_TIMEOUT_S: Final[float] = 90.0  # §12 one request explains all 5–6 careers, so it gets a longer timeout
+
+# ---------------------------------------------------------------- §3 LLM providers (rag/llm.py)
+NVIDIA_BASE_URL: Final[str] = "https://integrate.api.nvidia.com/v1"  # §3 NVIDIA NIM endpoint
+LLM_PROVIDER_ORDER: Final[tuple[str, ...]] = ("gemini", "nvidia")  # §3 auto: test Gemini first, then NVIDIA
+LLM_TIMEOUT_S: Final[float] = 45.0  # §3 timeout for one generation request
+LLM_PROBE_TIMEOUT_S: Final[float] = 15.0  # §3 timeout for the tiny startup test in auto mode
+LLM_MAX_TOKENS: Final[int] = 8192  # §3 output budget (reasoning models spend part of it thinking)
+LLM_EMPTY_RETRY_MAX_TOKENS: Final[int] = 16384  # §3 NVIDIA: retry once with a larger budget if content is empty
+LLM_RATE_LIMIT_WAIT_S: Final[float] = 3.0  # §3 on HTTP 429, wait this long and retry once
+LLM_BUSY_STATUS_CODES: Final[tuple[int, ...]] = (429, 503)  # §3 429 + "model busy" 503 get the one retry
+GEMINI_THINKING_LEVEL: Final[str] = "minimal"  # §3 Gemini: thinking ate the output budget; System 2 only rewords
+NVIDIA_EXTRA_BODY: Final[dict[str, object]] = {  # §3 Nemotron: skip hidden reasoning; System 2 only rewords results
+    "chat_template_kwargs": {"enable_thinking": False},
+}

@@ -284,3 +284,28 @@
 - Ananya's ₹3L What-If keeps the same top 5; the scores drop by 1.9 (Financial Fit −1.7) and rows 6/7 swap. Reasons
   appear mostly for careers ranked below 10.
 - The JS bundle is about 780 kB (Vite warning); not split yet.
+
+## Phase F3: LLM providers + System 2 explanations (2026-10-08)
+
+**Built**
+- Settings: Groq removed; LLM_PROVIDER=auto, Gemini (google-genai) and NVIDIA NIM (openai SDK) keys and models.
+- `rag/llm.py`: Gemini, NVIDIA and none providers behind complete_json / complete_text; auto mode tests Gemini then
+  NVIDIA at startup; timeouts, one retry on 429/503, typed errors. /api/health shows provider, model and why auto skipped one.
+- `rag/index.py` (Chroma, 317 documents), `rag/guardrail.py` (Indian number normalization), `rag/explain.py`
+  (one JSON request for the top 5 + middle path, temperature 0.2, per-career guardrail and template fallback, trace).
+- Lazy explanations: /api/assess returns template text (status pending), a background task writes LLM text,
+  GET /api/explanations/{id} returns it. Dashboard polls, swaps the text in, names the provider and shows source links
+  that open the data row.
+
+**Checks**
+- `python -m app.rag.index`: 317 documents indexed.
+- `pytest -q`: 247 passed before the final batching change; after it, test_llm + test_explain 67 passed and
+  `pytest -m slow tests/test_explain.py` 1 passed. The full suite was not re-run after the last change (stopped for submission).
+- `npm run typecheck`, `npm run build`: passed.
+- Real Ananya explanations: Gemini (gemini-3.5-flash) 5/5 careers in 14.6 s, 0 guardrail hits; NVIDIA 5/5 in 39 s;
+  auto fell back to NVIDIA when Gemini's daily quota was used up. Headless Edge 1440/375 px: 16/16 checks.
+
+**Known issues**
+- Gemini free tier: 20 requests per day per model; gemini-3.6-flash quota was used up during testing.
+- NVIDIA takes 25–90 s and once dropped the connection (template text stayed on screen).
+- The "Ask PRISM" chatbot (§17) is not built yet.

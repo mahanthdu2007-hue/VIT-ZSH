@@ -23,7 +23,7 @@ protobuf==7.36.2
 # System 2 (retrieval + explanations)
 sentence-transformers==6.1.0
 chromadb==1.5.9
-groq==1.7.0
+openai==3.26.0
 google-genai==2.28.0
 
 # Tests

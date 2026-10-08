@@ -12,7 +12,9 @@ def test_health_reports_backends() -> None:
     body = response.json()
     assert body["status"] == "ok"
     assert body["system1"] == "keyword"
-    assert body["llm"] in {"groq", "gemini", "none"}
+    assert body["llm"] == "none"
+    assert body["llm_requested"] == "none"
+    assert body["llm_model"] is None
     assert isinstance(body["demo_mode"], bool)
 
 

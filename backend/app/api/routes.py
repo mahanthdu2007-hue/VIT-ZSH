@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, BackgroundTasks, HTTPException
 
 from app import services
 from app.engine.loader import get_dataset
@@ -17,6 +17,7 @@ from app.models.schemas import (
     WhatIfRequest,
     WhatIfResult,
 )
+from app.rag.llm import llm_status
 from app.settings import get_settings
 
 router = APIRouter(prefix="/api")
@@ -24,13 +25,16 @@ router = APIRouter(prefix="/api")
 
 @router.get("/health", response_model=HealthResponse)
 def health() -> HealthResponse:
-    settings = get_settings()
     data = get_dataset()
+    llm = llm_status()
     return HealthResponse(
         status="ok",
         system1=get_decision_model().name,
-        llm=settings.llm_provider,
-        demo_mode=settings.demo_mode,
+        llm=llm.provider,
+        llm_model=llm.model,
+        llm_requested=llm.requested,
+        llm_notes=llm.notes,
+        demo_mode=get_settings().demo_mode,
         dataset=DatasetCounts(careers=len(data.careers), scholarships=len(data.scholarships), exams=len(data.exams),
                               cities=len(data.cities), demo_profiles=len(data.demo_profiles)),
     )
@@ -49,8 +53,11 @@ def demo_profiles() -> list[DemoProfile]:
 
 
 @router.post("/assess", response_model=AssessmentResult)
-def assess(request: AssessRequest) -> AssessmentResult:
-    return services.assess(request)
+def assess(request: AssessRequest, background: BackgroundTasks) -> AssessmentResult:
+    result = services.assess(request)
+    if result.explanations.status == "pending":  # §13 LLM text follows via GET /api/explanations/{id}
+        background.add_task(services.write_explanations, result.id)
+    return result
 
 
 @router.post("/whatif", response_model=WhatIfResult)

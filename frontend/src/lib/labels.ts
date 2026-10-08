@@ -180,3 +180,17 @@ export const RISK_AXES = [
   { key: "education_cost", label: "Cost against income", meaning: "Course cost compared with family income." },
   { key: "disruption", label: "Automation risk", meaning: "How much new technology may change this job." },
 ] as const;
+
+/** §3 System 2 providers as shown to families. */
+export const LLM_PROVIDER_NAMES: Record<string, string> = {
+  gemini: "Google Gemini",
+  nvidia: "NVIDIA Nemotron",
+};
+
+/** Kinds of dataset rows an explanation can cite. */
+export const SOURCE_KIND_LABELS: Record<"career" | "pathway" | "scholarship" | "exam", string> = {
+  career: "Career",
+  pathway: "Route",
+  scholarship: "Scholarship",
+  exam: "Exam",
+};

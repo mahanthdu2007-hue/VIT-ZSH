@@ -293,6 +293,22 @@ export interface components {
             /** Exams */
             exams: components["schemas"]["Exam"][];
         };
+        /** CareerExplainTrace */
+        CareerExplainTrace: {
+            /** Career Id */
+            career_id: string;
+            /**
+             * Source
+             * @enum {string}
+             */
+            source: "template" | "llm";
+            /** Fallback Reason */
+            fallback_reason: string | null;
+            /** Retrieved Ids */
+            retrieved_ids: string[];
+            /** Duration Ms */
+            duration_ms: number;
+        };
         /** CareerExplanation */
         CareerExplanation: {
             /** Career Id */
@@ -305,6 +321,14 @@ export interface components {
             roadmap_narrative: string;
             /** Cited Ids */
             cited_ids: string[];
+            /** Citations */
+            citations: components["schemas"]["Citation"][];
+            /**
+             * Source
+             * @default template
+             * @enum {string}
+             */
+            source: "template" | "llm";
         };
         /** CareerFinance */
         CareerFinance: {
@@ -354,6 +378,25 @@ export interface components {
             effective_cost: number;
             /** Funding Gap */
             funding_gap: number;
+        };
+        /**
+         * Citation
+         * @description A dataset row an explanation used; the dashboard opens it from a source link.
+         */
+        Citation: {
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "career" | "pathway" | "scholarship" | "exam";
+            /** Id */
+            id: string;
+            /** Career Id */
+            career_id: string | null;
+            /** Label */
+            label: string;
+            /** Text */
+            text: string;
         };
         /** CollegeStudentInput */
         CollegeStudentInput: {
@@ -571,8 +614,15 @@ export interface components {
              * @enum {string}
              */
             source: "template" | "llm";
+            /**
+             * Status
+             * @default ready
+             * @enum {string}
+             */
+            status: "pending" | "ready";
             /** Items */
             items: components["schemas"]["CareerExplanation"][];
+            trace?: components["schemas"]["System2Trace"] | null;
         };
         /** FreeTextPrompt */
         FreeTextPrompt: {
@@ -595,6 +645,27 @@ export interface components {
             /** Growth */
             growth: number;
         };
+        /**
+         * GuardrailHit
+         * @description §12 a sentence with a number that is not in ENGINE_RESULT or CONTEXT.
+         */
+        GuardrailHit: {
+            /** Career Id */
+            career_id: string;
+            /** Field */
+            field: string;
+            /** Sentence */
+            sentence: string;
+            /** Unsupported */
+            unsupported: string[];
+            /**
+             * Action
+             * @enum {string}
+             */
+            action: "replaced" | "removed";
+            /** Replacement */
+            replacement: string | null;
+        };
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
@@ -613,7 +684,16 @@ export interface components {
              * Llm
              * @enum {string}
              */
-            llm: "groq" | "gemini" | "none";
+            llm: "gemini" | "nvidia" | "none";
+            /** Llm Model */
+            llm_model: string | null;
+            /**
+             * Llm Requested
+             * @enum {string}
+             */
+            llm_requested: "auto" | "gemini" | "nvidia" | "none";
+            /** Llm Notes */
+            llm_notes: string[];
             /** Demo Mode */
             demo_mode: boolean;
             dataset: components["schemas"]["DatasetCounts"];
@@ -1245,6 +1325,24 @@ export interface components {
             parent_concerns: {
                 [key: string]: number;
             };
+        };
+        /** System2Trace */
+        System2Trace: {
+            /** Provider */
+            provider: string;
+            /** Model */
+            model: string | null;
+            /**
+             * Retrieval
+             * @enum {string}
+             */
+            retrieval: "chroma" | "dataset" | "none";
+            /** Careers */
+            careers: components["schemas"]["CareerExplainTrace"][];
+            /** Guardrail Hits */
+            guardrail_hits: components["schemas"]["GuardrailHit"][];
+            /** Duration Ms */
+            duration_ms: number;
         };
         /** TimelineYear */
         TimelineYear: {

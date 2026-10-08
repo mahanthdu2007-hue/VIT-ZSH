@@ -77,13 +77,20 @@ export function useAssessmentInputs(id: string) {
   });
 }
 
-/** §13 lazy explanations: start from the template text in the result, then fetch the latest. */
+const EXPLANATION_POLL_MS = 2000;
+const EXPLANATION_MAX_POLLS = 45; // stop asking after about 90 s; the template text stays on screen
+
+/** §13 lazy explanations: show the template text from the result, then poll until the AI text is ready. */
 export function useExplanations(result: AssessmentResult) {
   return useQuery({
     queryKey: queryKeys.explanations(result.id),
     queryFn: () => fetchExplanations(result.id),
     initialData: result.explanations,
     initialDataUpdatedAt: 0,
+    refetchInterval: (query) =>
+      query.state.data?.status === "pending" && query.state.dataUpdateCount < EXPLANATION_MAX_POLLS
+        ? EXPLANATION_POLL_MS
+        : false,
   });
 }
 

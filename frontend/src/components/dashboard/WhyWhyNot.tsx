@@ -1,4 +1,6 @@
 import type { CareerExplanation, Explanations } from "../../api/client";
+import { LLM_PROVIDER_NAMES } from "../../lib/labels";
+import { SourceLinks } from "./SourceLinks";
 
 type WhyWhyNotProps = {
   explanations: Explanations;
@@ -39,11 +41,10 @@ export function WhyWhyNot({ explanations, careerId, isRefreshing }: WhyWhyNotPro
             </div>
           </div>
           <p className="mt-4 rounded-lg bg-paper p-3">{item.roadmap_narrative}</p>
-          <p className="mt-2 text-sm text-ink/60">
-            {explanations.source === "template"
-              ? "Written directly from the engine's numbers."
-              : "Reworded by a language model from the engine's numbers."}
+          <p className="mt-2 text-sm text-ink/60" role="status">
+            {sourceNote(explanations, item)}
           </p>
+          <SourceLinks citations={item.citations} />
         </>
       ) : (
         <p className="mt-2 text-ink/80">
@@ -53,4 +54,12 @@ export function WhyWhyNot({ explanations, careerId, isRefreshing }: WhyWhyNotPro
       )}
     </section>
   );
+}
+
+function sourceNote(explanations: Explanations, item: CareerExplanation): string {
+  if (explanations.status === "pending")
+    return "Written directly from the engine's numbers. A friendlier version is on its way.";
+  if (item.source === "template") return "Written directly from the engine's numbers.";
+  const provider = LLM_PROVIDER_NAMES[explanations.trace?.provider ?? ""] ?? "an AI model";
+  return `Reworded by ${provider} from the engine's results. Every number was checked against the engine.`;
 }

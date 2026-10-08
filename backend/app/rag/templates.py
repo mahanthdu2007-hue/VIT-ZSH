@@ -7,6 +7,7 @@ fallback for the numeric guardrail. Every number here comes from the pipeline re
 from app.engine import config
 from app.engine.formatting import format_inr, points
 from app.models.schemas import CareerDetail, CareerExplanation, Explanations, PipelineResult
+from app.rag.index import citation
 
 RISK_AXES = ("financial", "skill_gap", "market", "location", "education_cost", "disruption")
 
@@ -71,20 +72,28 @@ def roadmap_narrative(d: CareerDetail) -> str:
             f"years if {d.roi.salary_share:.0%} of the entry salary goes to the cost.")
 
 
+def detail_doc_ids(d: CareerDetail) -> list[str]:
+    """Index ids of the rows behind a career's explanation: the career, its route, the route's scholarship
+    and its entrance exams."""
+    chosen = next(e for e in d.finance.pathways if e.pathway_id == d.pathway.id)
+    return [f"career:{d.career.id}", f"pathway:{d.career.id}:{d.pathway.id}",
+            *([f"scholarship:{chosen.scholarship_id}"] if chosen.scholarship_id else []),
+            *(f"exam:{e.id}" for e in d.exams)]
+
+
 def explain_career(d: CareerDetail, city_names: dict[str, str], home_city: str, income: int) -> CareerExplanation:
     by_value = sorted(config.SCORE_POINTS, key=lambda k: -d.score.values[k])
     risk_values = d.risk.model_dump()
     by_risk = sorted(RISK_AXES, key=lambda a: -risk_values[a])
-    chosen = next(e for e in d.finance.pathways if e.pathway_id == d.pathway.id)
-    cited = [d.career.id, d.pathway.id, *([chosen.scholarship_id] if chosen.scholarship_id else []),
-             *(e.id for e in d.exams)]
+    citations = [citation(doc_id) for doc_id in detail_doc_ids(d)]
     return CareerExplanation(
         career_id=d.career.id,
         why=[why_sentence(k, d, city_names) for k in by_value[:config.EXPLAIN_WHY_COUNT]],
         why_not=[why_not_sentence(a, d, city_names, home_city, income)
                  for a in by_risk[:config.EXPLAIN_WHY_NOT_COUNT]],
         roadmap_narrative=roadmap_narrative(d),
-        cited_ids=cited,
+        cited_ids=[c.id for c in citations],
+        citations=citations,
     )
 
 

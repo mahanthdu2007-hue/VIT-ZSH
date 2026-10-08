@@ -10,6 +10,7 @@ export type AssessRequest = Schemas["AssessRequest"];
 export type AssessmentResult = Schemas["AssessmentResult"];
 export type Explanations = Schemas["Explanations"];
 export type CareerExplanation = Schemas["CareerExplanation"];
+export type Citation = Schemas["Citation"];
 export type SchoolStudentInput = Schemas["SchoolStudentInput"];
 export type CollegeStudentInput = Schemas["CollegeStudentInput"];
 export type StudentInput = SchoolStudentInput | CollegeStudentInput;

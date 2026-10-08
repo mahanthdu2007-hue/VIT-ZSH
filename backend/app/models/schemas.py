@@ -678,17 +678,57 @@ class PipelineResult(BaseModel):
 
 
 # ---------------------------------------------------------------- §12 explanations
+class Citation(BaseModel):
+    """A dataset row an explanation used; the dashboard opens it from a source link."""
+    kind: Literal["career", "pathway", "scholarship", "exam"]
+    id: str
+    career_id: str | None  # the career a pathway belongs to (pathway ids repeat across careers)
+    label: str
+    text: str  # the row as indexed for System 2 (§12)
+
+
 class CareerExplanation(BaseModel):
     career_id: str
     why: list[str]
     why_not: list[str]
     roadmap_narrative: str
     cited_ids: list[str]
+    citations: list[Citation]
+    source: Literal["template", "llm"] = "template"
+
+
+class GuardrailHit(BaseModel):
+    """§12 a sentence with a number that is not in ENGINE_RESULT or CONTEXT."""
+    career_id: str
+    field: str  # e.g. "why[1]" or "roadmap_narrative"
+    sentence: str
+    unsupported: list[str]
+    action: Literal["replaced", "removed"]
+    replacement: str | None
+
+
+class CareerExplainTrace(BaseModel):
+    career_id: str
+    source: Literal["template", "llm"]
+    fallback_reason: str | None  # why the template was used for the whole career
+    retrieved_ids: list[str]
+    duration_ms: int
+
+
+class System2Trace(BaseModel):
+    provider: str
+    model: str | None
+    retrieval: Literal["chroma", "dataset", "none"]
+    careers: list[CareerExplainTrace]
+    guardrail_hits: list[GuardrailHit]
+    duration_ms: int
 
 
 class Explanations(BaseModel):
-    source: Literal["template", "llm"]
+    source: Literal["template", "llm"]  # "llm" when any career's text came from the LLM
+    status: Literal["pending", "ready"] = "ready"  # pending: LLM text is still being written (§13 lazy load)
     items: list[CareerExplanation]  # top 5 careers, then the middle path if not among them
+    trace: System2Trace | None = None
 
 
 # ---------------------------------------------------------------- §13 API
@@ -703,7 +743,10 @@ class DatasetCounts(BaseModel):
 class HealthResponse(BaseModel):
     status: Literal["ok"]
     system1: str
-    llm: Literal["groq", "gemini", "none"]
+    llm: Literal["gemini", "nvidia", "none"]  # §3 the active System 2 provider
+    llm_model: str | None
+    llm_requested: Literal["auto", "gemini", "nvidia", "none"]
+    llm_notes: list[str]  # why auto mode skipped a provider
     demo_mode: bool
     dataset: DatasetCounts
 
