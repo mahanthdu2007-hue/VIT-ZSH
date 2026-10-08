@@ -174,3 +174,31 @@
   - Rahul's roadmap has 1 learning step: his strong numerical aptitude covers skills he did not rate.
   - Rahul's #1 pathway is an online certificate, so SWOT shows no scholarships for it.
 - When one component changes, rounding can move 0.1 point between the others. Phase 5 What-If reasons should use component values.
+
+## Phase 3: System 1 (2026-10-08)
+
+**Built**
+- `engine/system1.py`: `DecisionModel` protocol, `ZeroShotNLIBackend` (multi-label, lazy, loads once, float32),
+  `KeywordBackend` (offline, confidence capped at 0.5), `JevBackend` stub raising `NotConfigured`,
+  §7.3 abstain rule, `run_decisions()` for `student_domain_affinity` and `parent_concerns`.
+- Factory with automatic fallback: SYSTEM1_MODEL → light fallback model → KeywordBackend. New `SYSTEM1_BACKEND` setting.
+- System 1 loads at server startup; `/api/health` reports the active backend.
+- `scripts/warmup.py`: downloads and loads all three models, then shows persona decisions with timings.
+- Tests: `test_system1.py` (keyword backend, abstain rule, factory fallbacks), `test_system1_model.py` (slow, real model).
+
+**Checks**
+- `python scripts/warmup.py`: 3 / 3 models loaded (DeBERTa 8.5 s, DistilBERT 1.0 s, MiniLM 4.4 s).
+- `pytest -q`: 140 passed. `pytest -q -m slow`: 1 passed.
+- `python scripts/validate_data.py`: 0 errors. `python scripts/benchmark.py`: 30 / 30 scenarios, 7 / 7 properties.
+- `npm run typecheck`, `npm run build`: passed. Live `/api/health`: `zero_shot_nli:MoritzLaurer/deberta-v3-base-zeroshot-v2.0`.
+
+**Persona decisions (real model, about 0.5–0.9 s each)**
+- Ananya: domain Technology (1.00, margin 0.96); concerns abstained (job security, new fields, distance, money all ≥ 0.97).
+- Rahul: domain abstained (Finance & Maths 1.00, Technology 0.99); concerns abstained (job security 1.00, money 0.99).
+- Meera: domain Arts & Design (0.99); concerns job security (0.91).
+
+**Known issues**
+- Multi-label + the §7.3 margin rule: when several labels clearly apply, the decision abstains. 3 of the 6 persona
+  decisions abstain, which lowers their §7.8 confidence. The probabilities still drive domain affinity and parent
+  concern weights. Changing this would change a §7.3 formula, so it is left as specified.
+- Optional §7.3 temperature scaling on calibration_set.json is not done; the word "calibrated" must not be used.

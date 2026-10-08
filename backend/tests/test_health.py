@@ -6,11 +6,12 @@ client = TestClient(app)
 
 
 def test_health_reports_backends() -> None:
-    response = client.get("/api/health")
+    with TestClient(app) as started:  # runs startup, which loads System 1
+        response = started.get("/api/health")
     assert response.status_code == 200
     body = response.json()
     assert body["status"] == "ok"
-    assert body["system1"] == "not_loaded"
+    assert body["system1"] == "keyword"
     assert body["llm"] in {"groq", "gemini", "none"}
     assert isinstance(body["demo_mode"], bool)
 

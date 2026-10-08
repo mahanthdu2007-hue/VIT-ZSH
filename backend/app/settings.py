@@ -15,6 +15,7 @@ class Settings(BaseSettings):
     groq_model: str = "llama-3.3-70b-versatile"
     gemini_api_key: str = ""
     gemini_model: str = ""
+    system1_backend: Literal["nli", "keyword", "jev"] = "nli"
     system1_model: str = "MoritzLaurer/deberta-v3-base-zeroshot-v2.0"
     database_url: str = "sqlite:///./prism.db"
     demo_mode: bool = False

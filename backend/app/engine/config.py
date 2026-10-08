@@ -66,9 +66,65 @@ PARENT_CONCERNS: Final[tuple[str, ...]] = (  # §7.3 parent_concerns labels
     "social prestige", "child's happiness", "uncertainty about new fields",
 )
 SYSTEM1_FALLBACK_MODEL: Final[str] = "typeform/distilbert-base-uncased-mnli"  # §3 light fallback
+SYSTEM1_DTYPE: Final[str] = "float32"  # §3 CPU-only: the float16 checkpoint runs about 10x slower on CPU
 ABSTAIN_MIN_CONFIDENCE: Final[float] = 0.45  # §7.3 abstain if confidence < 0.45
 ABSTAIN_MIN_MARGIN: Final[float] = 0.15  # §7.3 abstain if margin < 0.15
 KEYWORD_CONFIDENCE_CAP: Final[float] = 0.5  # §7.3 KeywordBackend confidence cap
+DECISION_STUDENT_DOMAIN: Final[str] = "student_domain_affinity"  # §7.3 decision ids
+DECISION_PARENT_CONCERNS: Final[str] = "parent_concerns"  # §7.3
+HYPOTHESIS_TEMPLATES: Final[dict[str, str]] = {  # §7.3 one NLI hypothesis per decision
+    DECISION_STUDENT_DOMAIN: "This student is interested in {}.",
+    DECISION_PARENT_CONCERNS: "The parent is worried about {}.",
+}
+LABEL_PHRASES: Final[dict[str, dict[str, str]]] = {  # §7.3 plain-English phrase put into the hypothesis
+    DECISION_STUDENT_DOMAIN: {
+        "Technology": "software, computers and artificial intelligence",
+        "Engineering": "mechanical, electrical or civil engineering",
+        "Science": "scientific research and discovery",
+        "Health": "medicine, health care and treating patients",
+        "Arts & Design": "art, design and architecture",
+        "Finance & Maths": "finance, business and data analysis",
+        "Hyper-local": "farming, local industry, renewable energy or a local business",
+    },
+    DECISION_PARENT_CONCERNS: {
+        "financial burden": "the cost of education and money",
+        "job security": "job security and a stable career",
+        "distance from home": "their child living far from home",
+        "social prestige": "social status and respect",
+        "child's happiness": "their child's happiness",
+        "uncertainty about new fields": "new fields that are uncertain or change fast",
+    },
+}
+KEYWORDS: Final[dict[str, dict[str, tuple[str, ...]]]] = {  # §7.3 KeywordBackend: whole words or phrases per label
+    DECISION_STUDENT_DOMAIN: {
+        "Technology": ("ai", "app", "apps", "artificial intelligence", "chatbot", "code", "coding",
+                       "computer", "computers", "machine learning", "programming", "python",
+                       "software", "website"),
+        "Engineering": ("circuit", "electronics", "engine", "engineering", "machine", "machines",
+                        "mechanical", "motor", "robot", "robotics"),
+        "Science": ("biology", "chemistry", "experiment", "experiments", "lab", "physics",
+                    "research", "science", "scientist"),
+        "Health": ("doctor", "health", "healthcare", "hospital", "medicine", "nurse", "patients",
+                   "therapy"),
+        "Arts & Design": ("architect", "architecture", "art", "design", "designed", "designer",
+                          "drawing", "paint", "painting", "sketch", "sketched", "sketching", "studio"),
+        "Finance & Maths": ("accounts", "analyst", "bank", "business", "dashboard", "data",
+                            "excel", "finance", "maths", "money", "numbers", "sales", "stock"),
+        "Hyper-local": ("agriculture", "factory", "farm", "farmers", "farming", "food processing",
+                        "local business", "manufacturing", "renewable", "solar", "village"),
+    },
+    DECISION_PARENT_CONCERNS: {
+        "financial burden": ("afford", "cost", "costly", "expensive", "fees", "loan", "money",
+                             "spend", "spending"),
+        "job security": ("safe job", "secure", "settled", "stable", "steady", "job security"),
+        "distance from home": ("close to home", "far away", "here in", "near home", "stay close",
+                               "move away", "relocate"),
+        "social prestige": ("prestige", "prestigious", "respect", "respected", "status"),
+        "child's happiness": ("happy", "happiness", "enjoy", "loves", "passion"),
+        "uncertainty about new fields": ("change very fast", "new field", "not sure", "risky",
+                                         "uncertain", "unclear"),
+    },
+}
 
 # ---------------------------------------------------------------- §7.4 Financial Constraint Solver
 LOAN_FACTOR: Final[dict[str, float]] = {"none": 0.0, "moderate": 0.5, "high": 1.0}  # §7.4
@@ -180,8 +236,8 @@ CONFIDENCE_BAND_MEDIUM: Final[float] = 55.0  # §7.8 Medium 55–74, Low < 55
 RISK_LOCATION_DEMAND_THRESHOLD: Final[float] = 0.4  # §7.8 location risk = 1 if demand < 0.4
 RISK_EDUCATION_COST_INCOME_YEARS: Final[float] = 4.0  # §7.8 clip(effective_cost/income/4, 0, 1)
 DECISION_SOURCE_FIELDS: Final[dict[str, tuple[str, ...]]] = {  # §7.8 missing_inputs for abstained decisions
-    "student_domain_affinity": ("free_text_1", "free_text_2"),
-    "parent_concerns": ("parent.free_text",),
+    DECISION_STUDENT_DOMAIN: ("free_text_1", "free_text_2"),
+    DECISION_PARENT_CONCERNS: ("parent.free_text",),
 }
 
 # ---------------------------------------------------------------- §7.9 Ranking
