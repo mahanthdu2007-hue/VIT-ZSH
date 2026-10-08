@@ -194,3 +194,6 @@ export const SOURCE_KIND_LABELS: Record<"career" | "pathway" | "scholarship" | "
   scholarship: "Scholarship",
   exam: "Exam",
 };
+
+/** Government portal for applying to scholarships (Ministry of Electronics and IT, Government of India). */
+export const SCHOLARSHIP_PORTAL_URL = "https://scholarships.gov.in/";

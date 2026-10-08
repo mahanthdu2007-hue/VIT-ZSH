@@ -1,10 +1,10 @@
 // Design tokens (§15). The only source of colours, fonts, type sizes and spacing.
 
 export const colors = {
-  ink: "#1B1F3B",
-  paper: "#F7F8FB",
+  ink: "#141413",
+  paper: "#FAF9F5",
   surface: "#FFFFFF",
-  line: "#E3E6EF",
+  line: "#E8E6DC",
   studentFit: "#6C4CF1",
   financialFit: "#0E9F8E",
   marketDemand: "#D9930D",
@@ -14,7 +14,7 @@ export const colors = {
 } as const;
 
 export const fonts = {
-  heading: ['"Bricolage Grotesque"', "system-ui", "sans-serif"],
+  heading: ['"Source Serif 4"', "Georgia", "serif"],
   body: ['"IBM Plex Sans"', "system-ui", "sans-serif"],
 } as const;
 
@@ -66,8 +66,8 @@ export const radii = {
 
 export const shadows = {
   none: "none",
-  DEFAULT: "0 1px 2px rgba(27, 31, 59, 0.06)",
-  lg: "0 8px 24px rgba(27, 31, 59, 0.12)",
+  DEFAULT: "none",
+  lg: "0 8px 24px rgba(20, 20, 19, 0.10)",
 } as const;
 
 // The five PRISM Score components (§7.8) and their fixed colours (§15).

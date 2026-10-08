@@ -67,7 +67,7 @@ function DashboardView({ result }: { result: AssessmentResult }) {
   const selected = selectedId ? result.details[selectedId] : undefined;
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-10">
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-xl sm:text-2xl">Your family's career map</h1>
@@ -130,7 +130,7 @@ function DashboardView({ result }: { result: AssessmentResult }) {
         <h2 id="family-heading" className="text-lg">
           Family alignment
         </h2>
-        <div className="grid items-start gap-6 lg:grid-cols-2">
+        <div className="grid items-stretch gap-6 lg:grid-cols-2">
           <ConflictPanel conflict={result.conflict} />
           <MiddlePathCard middlePath={result.middle_path} careerName={careerName} onSelect={select} />
         </div>

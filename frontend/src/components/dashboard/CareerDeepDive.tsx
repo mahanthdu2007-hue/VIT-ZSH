@@ -19,15 +19,15 @@ type CareerDeepDiveProps = {
 export function CareerDeepDive({ detail, homeCity, swot }: CareerDeepDiveProps) {
   const plan = detail.skill_plan;
   return (
-    <section aria-labelledby="deep-dive-heading" className="flex flex-col gap-4">
+    <section aria-labelledby="deep-dive-heading" className="flex flex-col gap-6">
       <h2 id="deep-dive-heading" className="text-lg">
         A closer look at {detail.career.name}
       </h2>
-      <div className="grid items-start gap-6 lg:grid-cols-2">
+      <div className="grid items-stretch gap-6 lg:grid-cols-2">
         <RiskRadar risk={detail.risk} />
         <SkillGap plan={plan} />
       </div>
-      <div className="grid items-start gap-6 lg:grid-cols-5">
+      <div className="grid items-stretch gap-6 lg:grid-cols-5">
         <div className="min-w-0 lg:col-span-3">
           <PathwayGraph plan={plan} pathwayLabel={detail.pathway.label} />
         </div>
@@ -35,11 +35,11 @@ export function CareerDeepDive({ detail, homeCity, swot }: CareerDeepDiveProps) 
           <Timeline plan={plan} />
         </div>
       </div>
-      <div className="grid items-start gap-6 lg:grid-cols-2">
+      <div className="grid items-stretch gap-6 lg:grid-cols-2">
         <CityDemand detail={detail} homeCity={homeCity} />
         {swot}
       </div>
-      <div className="grid items-start gap-6 lg:grid-cols-2">
+      <div className="grid items-stretch gap-6 lg:grid-cols-2">
         <RoiCard detail={detail} />
         <ExamsAndScholarships detail={detail} />
       </div>

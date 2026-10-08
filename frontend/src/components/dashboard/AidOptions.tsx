@@ -1,5 +1,7 @@
 import type { CareerDetail, StretchOption } from "../../api/client";
 import { formatInr } from "../../lib/format";
+import { SCHOLARSHIP_PORTAL_URL } from "../../lib/labels";
+import { ExternalLink } from "../ui/ExternalLink";
 
 type AidOptionsProps = {
   option: StretchOption;
@@ -18,7 +20,7 @@ export function AidOptions({ option, detail, careerName }: AidOptionsProps) {
           <ul className="mt-1 flex flex-col gap-2 text-sm">
             {option.scholarships.map((s) => (
               <li key={s.scholarship_id}>
-                <span className="font-medium">{s.name}</span>: up to {formatInr(s.amount_inr_per_year)} a year
+                <ExternalLink href={SCHOLARSHIP_PORTAL_URL}>{s.name}</ExternalLink>: up to {formatInr(s.amount_inr_per_year)} a year
                 {s.restricted_to && <span className="block text-ink/70">Only for {s.restricted_to}.</span>}
               </li>
             ))}
