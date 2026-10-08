@@ -1,0 +1,157 @@
+{
+  "id": "class_11_12_humanities",
+  "track": "school",
+  "label": "Class 11–12 humanities",
+  "aptitude": [
+    {
+      "id": "hum_num_1",
+      "dimension": "numerical",
+      "prompt": "A class of 40 students has 24 girls. What percentage of the class are girls?",
+      "options": [
+        "40%",
+        "60%",
+        "64%",
+        "24%"
+      ],
+      "answer": 1
+    },
+    {
+      "id": "hum_num_2",
+      "dimension": "numerical",
+      "prompt": "A book costs ₹250. A shop sells it at a 10% discount. How much do you pay?",
+      "options": [
+        "₹225",
+        "₹240",
+        "₹200",
+        "₹235"
+      ],
+      "answer": 0
+    },
+    {
+      "id": "hum_log_1",
+      "dimension": "logical",
+      "prompt": "If it rains, the match is cancelled. The match was not cancelled. What can you conclude?",
+      "options": [
+        "It rained",
+        "It did not rain",
+        "The match was played indoors",
+        "Nothing can be concluded"
+      ],
+      "answer": 1
+    },
+    {
+      "id": "hum_log_2",
+      "dimension": "logical",
+      "prompt": "Riya is older than Sam. Sam is older than Tara. Who is the youngest?",
+      "options": [
+        "Riya",
+        "Sam",
+        "Tara",
+        "Cannot tell"
+      ],
+      "answer": 2
+    },
+    {
+      "id": "hum_verb_1",
+      "dimension": "verbal",
+      "prompt": "Choose the word closest in meaning to 'ubiquitous'.",
+      "options": [
+        "Rare",
+        "Found everywhere",
+        "Unclear",
+        "Ancient"
+      ],
+      "answer": 1
+    },
+    {
+      "id": "hum_verb_2",
+      "dimension": "verbal",
+      "prompt": "Which word is spelt correctly?",
+      "options": [
+        "Accomodate",
+        "Acommodate",
+        "Accommodate",
+        "Acomodate"
+      ],
+      "answer": 2
+    },
+    {
+      "id": "hum_spa_1",
+      "dimension": "spatial",
+      "prompt": "On a map with north at the top, a village is drawn to the right of the school. In which direction is the village from the school?",
+      "options": [
+        "North",
+        "East",
+        "South",
+        "West"
+      ],
+      "answer": 1
+    },
+    {
+      "id": "hum_spa_2",
+      "dimension": "spatial",
+      "prompt": "Which of these capital letters looks the same when turned upside down?",
+      "options": [
+        "N",
+        "P",
+        "E",
+        "F"
+      ],
+      "answer": 0
+    }
+  ],
+  "riasec": [
+    {
+      "id": "hum_r",
+      "dimension": "R",
+      "prompt": "Making things by hand, like crafts, models or stage props"
+    },
+    {
+      "id": "hum_i",
+      "dimension": "I",
+      "prompt": "Researching a question about history, society or people in depth"
+    },
+    {
+      "id": "hum_a",
+      "dimension": "A",
+      "prompt": "Writing stories, making films or performing"
+    },
+    {
+      "id": "hum_s",
+      "dimension": "S",
+      "prompt": "Teaching, counselling or helping people in my community"
+    },
+    {
+      "id": "hum_e",
+      "dimension": "E",
+      "prompt": "Debating or convincing others to support a cause"
+    },
+    {
+      "id": "hum_c",
+      "dimension": "C",
+      "prompt": "Organising information neatly, like notes, timelines or records"
+    }
+  ],
+  "workstyle": [
+    {
+      "id": "ws_creative",
+      "dimension": "creative",
+      "prompt": "I like finding new ways to do things instead of the usual way."
+    },
+    {
+      "id": "ws_stability",
+      "dimension": "stability_vs_excitement",
+      "prompt": "I would choose a steady, predictable career over an exciting but uncertain one."
+    }
+  ],
+  "free_text": [
+    {
+      "id": "free_text_1",
+      "prompt": "Something you made or did that you loved"
+    },
+    {
+      "id": "free_text_2",
+      "prompt": "What do you want your work to look like in 10 years?"
+    }
+  ]
+}

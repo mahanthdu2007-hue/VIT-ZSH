@@ -1,0 +1,157 @@
+{
+  "id": "class_11_12_science",
+  "track": "school",
+  "label": "Class 11–12 science",
+  "aptitude": [
+    {
+      "id": "sci_num_1",
+      "dimension": "numerical",
+      "prompt": "A car speeds up evenly from rest to 20 m/s in 5 seconds. What is its acceleration?",
+      "options": [
+        "2 m/s²",
+        "4 m/s²",
+        "5 m/s²",
+        "100 m/s²"
+      ],
+      "answer": 1
+    },
+    {
+      "id": "sci_num_2",
+      "dimension": "numerical",
+      "prompt": "A solution has 20 g of salt in 250 mL of water. How many grams of salt are in 1 litre of the same solution?",
+      "options": [
+        "40 g",
+        "60 g",
+        "80 g",
+        "100 g"
+      ],
+      "answer": 2
+    },
+    {
+      "id": "sci_log_1",
+      "dimension": "logical",
+      "prompt": "What comes next in the series: 1, 4, 9, 16, 25, ?",
+      "options": [
+        "30",
+        "36",
+        "35",
+        "49"
+      ],
+      "answer": 1
+    },
+    {
+      "id": "sci_log_2",
+      "dimension": "logical",
+      "prompt": "All mammals breathe air. Whales are mammals. Which statement must be true?",
+      "options": [
+        "Whales live on land",
+        "Whales breathe air",
+        "Every animal that breathes air is a mammal",
+        "Some whales are not mammals"
+      ],
+      "answer": 1
+    },
+    {
+      "id": "sci_verb_1",
+      "dimension": "verbal",
+      "prompt": "Choose the word opposite in meaning to 'transparent'.",
+      "options": [
+        "Opaque",
+        "Clear",
+        "Bright",
+        "Thin"
+      ],
+      "answer": 0
+    },
+    {
+      "id": "sci_verb_2",
+      "dimension": "verbal",
+      "prompt": "Choose the word that best completes the sentence: 'The scientist repeated the experiment to ____ her results.'",
+      "options": [
+        "verify",
+        "ignore",
+        "decorate",
+        "delay"
+      ],
+      "answer": 0
+    },
+    {
+      "id": "sci_spa_1",
+      "dimension": "spatial",
+      "prompt": "A cube painted red on all faces is cut into 27 equal smaller cubes. How many small cubes have exactly two red faces?",
+      "options": [
+        "8",
+        "12",
+        "6",
+        "24"
+      ],
+      "answer": 1
+    },
+    {
+      "id": "sci_spa_2",
+      "dimension": "spatial",
+      "prompt": "You walk 3 km north and then 4 km east. How far are you from your starting point in a straight line?",
+      "options": [
+        "7 km",
+        "6 km",
+        "1 km",
+        "5 km"
+      ],
+      "answer": 3
+    }
+  ],
+  "riasec": [
+    {
+      "id": "sci_r",
+      "dimension": "R",
+      "prompt": "Building a working model or circuit in the lab"
+    },
+    {
+      "id": "sci_i",
+      "dimension": "I",
+      "prompt": "Doing science experiments to test an idea"
+    },
+    {
+      "id": "sci_a",
+      "dimension": "A",
+      "prompt": "Designing a poster, app screen or video for a science project"
+    },
+    {
+      "id": "sci_s",
+      "dimension": "S",
+      "prompt": "Helping classmates prepare for a tough exam"
+    },
+    {
+      "id": "sci_e",
+      "dimension": "E",
+      "prompt": "Leading a team in a science fair or hackathon"
+    },
+    {
+      "id": "sci_c",
+      "dimension": "C",
+      "prompt": "Writing up lab readings neatly and checking them for errors"
+    }
+  ],
+  "workstyle": [
+    {
+      "id": "ws_creative",
+      "dimension": "creative",
+      "prompt": "I like finding new ways to do things instead of the usual way."
+    },
+    {
+      "id": "ws_stability",
+      "dimension": "stability_vs_excitement",
+      "prompt": "I would choose a steady, predictable career over an exciting but uncertain one."
+    }
+  ],
+  "free_text": [
+    {
+      "id": "free_text_1",
+      "prompt": "Something you made or did that you loved"
+    },
+    {
+      "id": "free_text_2",
+      "prompt": "What do you want your work to look like in 10 years?"
+    }
+  ]
+}

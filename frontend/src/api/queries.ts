@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import {
   type AssessmentResult,
   type AssessRequest,
+  type Stream,
   type Track,
   type WhatIfOverrides,
   type ChatHistory,
@@ -22,7 +23,7 @@ const STATIC_DATA = { staleTime: Infinity } as const;
 
 export const queryKeys = {
   health: ["health"] as const,
-  questions: (track: Track) => ["questions", track] as const,
+  questions: (track: Track, stream: Stream | null) => ["questions", track, stream] as const,
   demoProfiles: ["demo-profiles"] as const,
   careers: ["careers"] as const,
   assessment: (id: string) => ["assessment", id] as const,
@@ -36,8 +37,13 @@ export function useHealth() {
   return useQuery({ queryKey: queryKeys.health, queryFn: fetchHealth });
 }
 
-export function useQuestions(track: Track) {
-  return useQuery({ queryKey: queryKeys.questions(track), queryFn: () => fetchQuestions(track), ...STATIC_DATA });
+export function useQuestions(track: Track, stream: Stream | null, enabled: boolean) {
+  return useQuery({
+    queryKey: queryKeys.questions(track, stream),
+    queryFn: () => fetchQuestions(track, stream),
+    enabled,
+    ...STATIC_DATA,
+  });
 }
 
 export function useDemoProfiles() {

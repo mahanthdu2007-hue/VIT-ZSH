@@ -20,13 +20,23 @@ SCHOLARSHIPS_MIN: Final[int] = 25  # §5 25–35 scholarships
 SCHOLARSHIPS_MAX: Final[int] = 35  # §5
 SKILL_VOCABULARY_MIN: Final[int] = 50  # §5 shared vocabulary of "about 60" skills
 SKILL_VOCABULARY_MAX: Final[int] = 70  # §5
-APTITUDE_ITEMS_TOTAL: Final[int] = 12  # §5 12 aptitude items, 3 per dimension
-RIASEC_ITEMS_PER_DIMENSION: Final[int] = 3  # §5 18 RIASEC items, 3 per letter
-WORKSTYLE_DIMENSIONS: Final[tuple[str, ...]] = (  # §5 4 workstyle Likert items
-    "creative", "stability_vs_excitement", "teamwork", "structure",
+APTITUDE_ITEMS_TOTAL: Final[int] = 8  # §5 short quiz: 8 aptitude items, 2 per dimension
+RIASEC_ITEMS_PER_DIMENSION: Final[int] = 1  # §5 short quiz: 6 RIASEC items, 1 per letter
+WORKSTYLE_DIMENSIONS: Final[tuple[str, ...]] = (  # §5 the 2 workstyle items the engine uses (§7.2, §7.6)
+    "creative", "stability_vs_excitement",
 )
 FREE_TEXT_IDS: Final[tuple[str, ...]] = ("free_text_1", "free_text_2")  # §5 / §6 2 prompts
-COLLEGE_SKILL_LIST_SIZE: Final[int] = 20  # §5 the 20 most common skills in the dataset
+COLLEGE_SKILL_LIST_SIZE: Final[int] = 10  # §5 short quiz: the 10 most common skills in the dataset
+QUESTION_SET_CLASS_9_10: Final[str] = "class_9_10"  # §5 one short question set per student path
+QUESTION_SET_COLLEGE: Final[str] = "college"  # §5
+QUESTION_SET_BY_STREAM: Final[dict[str, str]] = {  # §5 Class 11–12 question set per stream
+    "PCM": "class_11_12_science", "PCB": "class_11_12_science", "PCMB": "class_11_12_science",
+    "Commerce": "class_11_12_commerce", "Humanities": "class_11_12_humanities",
+}
+QUESTION_SET_IDS: Final[tuple[str, ...]] = (  # §5 every question set file, data/questions_<id>.json
+    QUESTION_SET_CLASS_9_10, "class_11_12_science", "class_11_12_commerce", "class_11_12_humanities",
+    QUESTION_SET_COLLEGE,
+)
 REQUIREMENT_COSINE_MAX: Final[float] = 0.98  # §5 / §7.5 audit: centred cosine above this = near-identical
 DEMO_PROFILE_COUNT: Final[int] = 3  # §5 / §14 three demo personas
 DEMO_FREE_TEXT_MIN_WORDS: Final[int] = 30  # §14 demo free text is 30–60 words
@@ -48,7 +58,7 @@ STUDENT_DIMENSIONS: Final[tuple[str, ...]] = (  # §7.2 student vector S, 11 dim
 )
 APTITUDE_DIMENSIONS: Final[tuple[str, ...]] = ("numerical", "logical", "verbal", "spatial")  # §7.2
 RIASEC_DIMENSIONS: Final[tuple[str, ...]] = ("R", "I", "A", "S", "E", "C")  # §7.2
-APTITUDE_ITEMS_PER_DIMENSION: Final[int] = 3  # §7.2 aptitude_dim = correct / 3
+APTITUDE_ITEMS_PER_DIMENSION: Final[int] = 2  # §7.2 aptitude_dim = correct / items per dimension
 LIKERT_MIN: Final[int] = 1  # §7.2 Likert normalised as (x − 1) / 4
 LIKERT_RANGE: Final[int] = 4  # §7.2
 MARKS_SCALE: Final[float] = 100.0  # §7.2 marks / 100

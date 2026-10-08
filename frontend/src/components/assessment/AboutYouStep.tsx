@@ -4,12 +4,12 @@ import { CITY_IDS, CITY_NAMES, DOMAINS, STREAMS, SUBJECTS } from "../../lib/labe
 import { CheckboxGroup, RadioGroup } from "../ui/Choice";
 import { Field, Select, TextInput, controlClass } from "../ui/Field";
 import { STREAM_FROM_CLASS } from "./steps";
-import type { StepProps } from "./types";
+import type { BasicStepProps } from "./types";
 
 const CLASSES = [9, 10, 11, 12];
 const YEARS = [1, 2, 3, 4, 5];
 
-export function AboutYouStep({ draft, update, errors }: StepProps) {
+export function AboutYouStep({ draft, update, errors }: BasicStepProps) {
   const careers = useCareers();
   return (
     <div className="flex flex-col gap-6">

@@ -155,7 +155,7 @@ def test_narrative_with_only_bad_sentences_uses_template(ananya: tuple[PipelineR
     result, templates = ananya
 
     def item(engine: dict[str, Any]) -> dict[str, Any]:
-        return good_item(engine) | {"roadmap_narrative": "It takes 11 years and costs ₹1 crore."}
+        return good_item(engine) | {"roadmap_narrative": "It takes 977 years and costs ₹9 crore."}
 
     explained = run(result, templates, ScriptedProvider(item))
     for item, template in zip(explained.items, templates.items, strict=True):

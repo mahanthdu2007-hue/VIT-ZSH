@@ -73,7 +73,7 @@ def test_validator_catches_broken_data(tmp_path: Path) -> None:
     data_dir = tmp_path / "data"
     shutil.copytree(DATA_DIR, data_dir)
 
-    questions_path = data_dir / "questions_school.json"
+    questions_path = data_dir / "questions_class_11_12_science.json"
     questions = json.loads(questions_path.read_text(encoding="utf-8"))
     questions["aptitude"][0]["answer"] = 9
     questions_path.write_text(json.dumps(questions), encoding="utf-8")
@@ -109,14 +109,14 @@ def test_validator_catches_incomplete_demo_profile(tmp_path: Path) -> None:
     shutil.copytree(DATA_DIR, data_dir)
     profiles_path = data_dir / "demo_profiles.json"
     profiles = json.loads(profiles_path.read_text(encoding="utf-8"))
-    del profiles[0]["student"]["riasec_answers"]["ria_i_1"]
+    del profiles[0]["student"]["riasec_answers"]["sci_i"]
     profiles[0]["student"]["dream_career_id"] = "astronaut"
     profiles[0]["parent"]["free_text"] = "Too short."
     profiles_path.write_text(json.dumps(profiles), encoding="utf-8")
 
     result = run_validator(data_dir)
     assert result.returncode == 1
-    for expected in ("riasec answers missing ['ria_i_1']", "unknown dream career 'astronaut'",
+    for expected in ("riasec answers missing ['sci_i']", "unknown dream career 'astronaut'",
                      "parent.free_text has 2 words"):
         assert expected in result.stdout
 
@@ -138,8 +138,10 @@ def test_loader_reads_every_file() -> None:
     dataset = load_dataset()
     assert len(dataset.cities) == len(config.CITIES)
     assert config.SCHOLARSHIPS_MIN <= len(dataset.scholarships) <= config.SCHOLARSHIPS_MAX
-    assert dataset.questions_college.skills is not None
-    assert dataset.questions_school.skills is None
+    assert sorted(dataset.question_sets) == sorted(config.QUESTION_SET_IDS)
+    for set_id, question_set in dataset.question_sets.items():
+        assert question_set.id == set_id
+        assert (question_set.skills is not None) == (set_id == config.QUESTION_SET_COLLEGE)
     assert [p.id for p in dataset.demo_profiles] == ["ananya", "rahul", "meera"]
 
 

@@ -1,11 +1,11 @@
 import type { CityId, Level } from "../../api/client";
 import { CITY_IDS, CITY_NAMES, LEVEL_LABELS, STUDENT_RISK_HINTS } from "../../lib/labels";
 import { CheckboxGroup, RadioGroup, YES_NO } from "../ui/Choice";
-import type { StepProps } from "./types";
+import type { BasicStepProps } from "./types";
 
 const yesNo = (value: boolean | null) => (value === null ? null : value ? "yes" : "no");
 
-export function PreferencesStep({ draft, update, errors }: StepProps) {
+export function PreferencesStep({ draft, update, errors }: BasicStepProps) {
   return (
     <div className="flex flex-col gap-6">
       <CheckboxGroup<CityId>

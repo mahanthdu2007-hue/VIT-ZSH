@@ -1,0 +1,157 @@
+{
+  "id": "class_11_12_commerce",
+  "track": "school",
+  "label": "Class 11–12 commerce",
+  "aptitude": [
+    {
+      "id": "com_num_1",
+      "dimension": "numerical",
+      "prompt": "A shopkeeper buys a pen for ₹80 and sells it for ₹100. What is the profit percentage?",
+      "options": [
+        "20%",
+        "25%",
+        "80%",
+        "15%"
+      ],
+      "answer": 1
+    },
+    {
+      "id": "com_num_2",
+      "dimension": "numerical",
+      "prompt": "₹10,000 is invested at 10% a year simple interest. How much interest is earned in 3 years?",
+      "options": [
+        "₹1,000",
+        "₹3,000",
+        "₹3,310",
+        "₹13,000"
+      ],
+      "answer": 1
+    },
+    {
+      "id": "com_log_1",
+      "dimension": "logical",
+      "prompt": "What comes next in the series: 5, 10, 20, 40, ?",
+      "options": [
+        "60",
+        "70",
+        "80",
+        "100"
+      ],
+      "answer": 2
+    },
+    {
+      "id": "com_log_2",
+      "dimension": "logical",
+      "prompt": "In a code, PROFIT is written as QSPGJU. How is SALES written in the same code?",
+      "options": [
+        "TBMFT",
+        "RZKDR",
+        "TAMFT",
+        "TBMET"
+      ],
+      "answer": 0
+    },
+    {
+      "id": "com_verb_1",
+      "dimension": "verbal",
+      "prompt": "Choose the word closest in meaning to 'expenditure'.",
+      "options": [
+        "Income",
+        "Spending",
+        "Saving",
+        "Profit"
+      ],
+      "answer": 1
+    },
+    {
+      "id": "com_verb_2",
+      "dimension": "verbal",
+      "prompt": "Choose the word that best completes the sentence: 'Sales were falling, so the company decided to ____ its prices.'",
+      "options": [
+        "reduce",
+        "celebrate",
+        "borrow",
+        "invent"
+      ],
+      "answer": 0
+    },
+    {
+      "id": "com_spa_1",
+      "dimension": "spatial",
+      "prompt": "Which of these capital letters looks exactly the same in a mirror?",
+      "options": [
+        "R",
+        "A",
+        "F",
+        "J"
+      ],
+      "answer": 1
+    },
+    {
+      "id": "com_spa_2",
+      "dimension": "spatial",
+      "prompt": "A clock shows exactly 3:00. What is the angle between the hour hand and the minute hand?",
+      "options": [
+        "45°",
+        "60°",
+        "90°",
+        "180°"
+      ],
+      "answer": 2
+    }
+  ],
+  "riasec": [
+    {
+      "id": "com_r",
+      "dimension": "R",
+      "prompt": "Setting up stalls, displays or equipment for a school event"
+    },
+    {
+      "id": "com_i",
+      "dimension": "I",
+      "prompt": "Finding out why some businesses succeed and others fail"
+    },
+    {
+      "id": "com_a",
+      "dimension": "A",
+      "prompt": "Designing an advertisement or a logo for a brand"
+    },
+    {
+      "id": "com_s",
+      "dimension": "S",
+      "prompt": "Helping customers or classmates sort out a problem"
+    },
+    {
+      "id": "com_e",
+      "dimension": "E",
+      "prompt": "Starting a small business or selling something"
+    },
+    {
+      "id": "com_c",
+      "dimension": "C",
+      "prompt": "Keeping accounts, budgets or records accurate"
+    }
+  ],
+  "workstyle": [
+    {
+      "id": "ws_creative",
+      "dimension": "creative",
+      "prompt": "I like finding new ways to do things instead of the usual way."
+    },
+    {
+      "id": "ws_stability",
+      "dimension": "stability_vs_excitement",
+      "prompt": "I would choose a steady, predictable career over an exciting but uncertain one."
+    }
+  ],
+  "free_text": [
+    {
+      "id": "free_text_1",
+      "prompt": "Something you made or did that you loved"
+    },
+    {
+      "id": "free_text_2",
+      "prompt": "What do you want your work to look like in 10 years?"
+    }
+  ]
+}

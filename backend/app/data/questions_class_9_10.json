@@ -1,0 +1,157 @@
+{
+  "id": "class_9_10",
+  "track": "school",
+  "label": "Class 9–10",
+  "aptitude": [
+    {
+      "id": "c910_num_1",
+      "dimension": "numerical",
+      "prompt": "A shop gives a 20% discount on a bag priced at ₹1,500. What is the sale price?",
+      "options": [
+        "₹1,200",
+        "₹1,300",
+        "₹1,250",
+        "₹1,180"
+      ],
+      "answer": 0
+    },
+    {
+      "id": "c910_num_2",
+      "dimension": "numerical",
+      "prompt": "A train covers 240 km in 3 hours. At the same speed, how far will it travel in 5 hours?",
+      "options": [
+        "360 km",
+        "400 km",
+        "420 km",
+        "480 km"
+      ],
+      "answer": 1
+    },
+    {
+      "id": "c910_log_1",
+      "dimension": "logical",
+      "prompt": "What comes next in the series: 2, 6, 12, 20, 30, ?",
+      "options": [
+        "40",
+        "42",
+        "44",
+        "36"
+      ],
+      "answer": 1
+    },
+    {
+      "id": "c910_log_2",
+      "dimension": "logical",
+      "prompt": "In a code, CAT is written as DBU. How is DOG written in the same code?",
+      "options": [
+        "EPH",
+        "DPG",
+        "FQI",
+        "EOH"
+      ],
+      "answer": 0
+    },
+    {
+      "id": "c910_verb_1",
+      "dimension": "verbal",
+      "prompt": "Choose the word closest in meaning to 'abundant'.",
+      "options": [
+        "Scarce",
+        "Plentiful",
+        "Ordinary",
+        "Hidden"
+      ],
+      "answer": 1
+    },
+    {
+      "id": "c910_verb_2",
+      "dimension": "verbal",
+      "prompt": "Book is to reading as fork is to ___.",
+      "options": [
+        "Drawing",
+        "Eating",
+        "Sleeping",
+        "Writing"
+      ],
+      "answer": 1
+    },
+    {
+      "id": "c910_spa_1",
+      "dimension": "spatial",
+      "prompt": "You face north, turn 90° to your right, then turn 180°. Which direction are you facing now?",
+      "options": [
+        "North",
+        "East",
+        "South",
+        "West"
+      ],
+      "answer": 3
+    },
+    {
+      "id": "c910_spa_2",
+      "dimension": "spatial",
+      "prompt": "How many faces does a triangular prism have?",
+      "options": [
+        "4",
+        "6",
+        "5",
+        "9"
+      ],
+      "answer": 2
+    }
+  ],
+  "riasec": [
+    {
+      "id": "c910_r",
+      "dimension": "R",
+      "prompt": "Fixing or assembling things, like a bicycle or a gadget"
+    },
+    {
+      "id": "c910_i",
+      "dimension": "I",
+      "prompt": "Figuring out why something works the way it does"
+    },
+    {
+      "id": "c910_a",
+      "dimension": "A",
+      "prompt": "Drawing, painting, designing or making music"
+    },
+    {
+      "id": "c910_s",
+      "dimension": "S",
+      "prompt": "Helping a friend understand a difficult topic"
+    },
+    {
+      "id": "c910_e",
+      "dimension": "E",
+      "prompt": "Leading a team or a school club"
+    },
+    {
+      "id": "c910_c",
+      "dimension": "C",
+      "prompt": "Keeping my notes and files neatly organised"
+    }
+  ],
+  "workstyle": [
+    {
+      "id": "ws_creative",
+      "dimension": "creative",
+      "prompt": "I like finding new ways to do things instead of the usual way."
+    },
+    {
+      "id": "ws_stability",
+      "dimension": "stability_vs_excitement",
+      "prompt": "I would choose a steady, predictable career over an exciting but uncertain one."
+    }
+  ],
+  "free_text": [
+    {
+      "id": "free_text_1",
+      "prompt": "Something you made or did that you loved"
+    },
+    {
+      "id": "free_text_2",
+      "prompt": "What do you want your work to look like in 10 years?"
+    }
+  ]
+}

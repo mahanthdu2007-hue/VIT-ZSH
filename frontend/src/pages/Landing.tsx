@@ -41,7 +41,7 @@ export function Landing() {
         <h2 id="start-heading" className="text-lg">
           Start your own assessment
         </h2>
-        <p className="mt-1 text-sm text-ink/70">About 15 minutes for the student, then 3 minutes for a parent.</p>
+        <p className="mt-1 text-sm text-ink/70">About 5 minutes for the student, then 3 minutes for a parent. The questions match your class and stream.</p>
         <div className="mt-4 flex flex-col gap-3 sm:flex-row">
           <Link to="/assess/school" className={trackLinkClass}>
             <span className="font-heading text-lg font-semibold">I'm in school</span>

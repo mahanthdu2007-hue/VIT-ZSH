@@ -64,8 +64,10 @@ export function fetchHealth(): Promise<HealthResponse> {
   return request<HealthResponse>("/api/health");
 }
 
-export function fetchQuestions(track: Track): Promise<QuestionSet> {
-  return request<QuestionSet>(`/api/questions/${track}`);
+/** §5 the short question set for the student's path; Class 11–12 students pass their stream. */
+export function fetchQuestions(track: Track, stream: Stream | null): Promise<QuestionSet> {
+  const query = stream === null ? "" : `?stream=${encodeURIComponent(stream)}`;
+  return request<QuestionSet>(`/api/questions/${track}${query}`);
 }
 
 export function fetchDemoProfiles(): Promise<DemoProfile[]> {

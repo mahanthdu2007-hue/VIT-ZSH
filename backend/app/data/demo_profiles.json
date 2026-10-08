@@ -7,21 +7,9 @@
       "track": "school",
       "current_class": 12,
       "stream": "PCM",
-      "aptitude_answers": {
-        "apt_num_1": 0, "apt_num_2": 1, "apt_num_3": 2,
-        "apt_log_1": 1, "apt_log_2": 1, "apt_log_3": 0,
-        "apt_verb_1": 1, "apt_verb_2": 0, "apt_verb_3": 3,
-        "apt_spa_1": 1, "apt_spa_2": 3, "apt_spa_3": 1
-      },
-      "riasec_answers": {
-        "ria_r_1": 3, "ria_r_2": 3, "ria_r_3": 4,
-        "ria_i_1": 5, "ria_i_2": 5, "ria_i_3": 5,
-        "ria_a_1": 2, "ria_a_2": 3, "ria_a_3": 2,
-        "ria_s_1": 3, "ria_s_2": 2, "ria_s_3": 2,
-        "ria_e_1": 3, "ria_e_2": 3, "ria_e_3": 2,
-        "ria_c_1": 4, "ria_c_2": 4, "ria_c_3": 3
-      },
-      "workstyle_answers": {"ws_creative": 4, "ws_stability": 4, "ws_teamwork": 3, "ws_structure": 3},
+      "aptitude_answers": {"sci_num_1": 1, "sci_num_2": 2, "sci_log_1": 1, "sci_log_2": 1, "sci_verb_1": 0, "sci_verb_2": 2, "sci_spa_1": 1, "sci_spa_2": 0},
+      "riasec_answers": {"sci_r": 3, "sci_i": 5, "sci_a": 2, "sci_s": 2, "sci_e": 3, "sci_c": 4},
+      "workstyle_answers": {"ws_creative": 4, "ws_stability": 4},
       "marks_percent": 92,
       "favourite_subjects": ["Mathematics", "Computer Science", "Physics"],
       "home_city": "mysuru",
@@ -53,21 +41,9 @@
       "track": "college",
       "degree": "B.Com",
       "year": 2,
-      "aptitude_answers": {
-        "apt_num_1": 1, "apt_num_2": 2, "apt_num_3": 0,
-        "apt_log_1": 2, "apt_log_2": 1, "apt_log_3": 3,
-        "apt_verb_1": 1, "apt_verb_2": 0, "apt_verb_3": 0,
-        "apt_spa_1": 1, "apt_spa_2": 1, "apt_spa_3": 3
-      },
-      "riasec_answers": {
-        "ria_r_1": 1, "ria_r_2": 2, "ria_r_3": 1,
-        "ria_i_1": 5, "ria_i_2": 4, "ria_i_3": 3,
-        "ria_a_1": 2, "ria_a_2": 2, "ria_a_3": 1,
-        "ria_s_1": 3, "ria_s_2": 2, "ria_s_3": 3,
-        "ria_e_1": 3, "ria_e_2": 3, "ria_e_3": 3,
-        "ria_c_1": 5, "ria_c_2": 5, "ria_c_3": 4
-      },
-      "workstyle_answers": {"ws_creative": 3, "ws_stability": 5, "ws_teamwork": 3, "ws_structure": 4},
+      "aptitude_answers": {"col_num_1": 1, "col_num_2": 2, "col_log_1": 2, "col_log_2": 0, "col_verb_1": 0, "col_verb_2": 1, "col_spa_1": 1, "col_spa_2": 1},
+      "riasec_answers": {"col_r": 1, "col_i": 4, "col_a": 2, "col_s": 3, "col_e": 3, "col_c": 5},
+      "workstyle_answers": {"ws_creative": 3, "ws_stability": 5},
       "marks_percent": 78,
       "favourite_subjects": ["Accountancy", "Business Statistics", "Economics"],
       "home_city": "chennai",
@@ -77,12 +53,9 @@
       "risk_tolerance": "low",
       "dream_career_id": "data_analyst",
       "self_rated_skills": {
-        "Communication": 60, "Quality control": 25, "Mathematics": 60, "Chemistry": 15,
-        "Data analysis": 45, "Python": 15, "Problem solving": 55, "Programming fundamentals": 15,
-        "Biology": 10, "Research methods": 35, "Mechanical design": 5, "Electronics": 10,
-        "Statistics": 55, "Manufacturing processes": 10, "CAD drafting": 5,
-        "Human anatomy and physiology": 5, "Patient care": 10, "Physics": 15,
-        "Spreadsheets": 70, "Visual design": 20
+        "Communication": 60, "Quality control": 25, "Mathematics": 60, "Python": 15, "Chemistry": 15,
+        "Data analysis": 45, "Problem solving": 55, "Programming fundamentals": 15, "Research methods": 35,
+        "Biology": 10
       },
       "free_text_1": "In my first year I made an Excel dashboard for my uncle's small textile shop that tracked daily sales and stock. He started using it every evening to decide what to reorder. I enjoyed finding patterns in the numbers and explaining them to him in simple words.",
       "free_text_2": "In ten years I see myself working as a data or business analyst in a good company in Chennai, helping managers make decisions with data. I want a steady job that pays well enough to support my family, and I want to keep learning tools like SQL and Python."
@@ -106,21 +79,9 @@
     "student": {
       "track": "school",
       "current_class": 10,
-      "aptitude_answers": {
-        "apt_num_1": 0, "apt_num_2": 1, "apt_num_3": 1,
-        "apt_log_1": 0, "apt_log_2": 1, "apt_log_3": 0,
-        "apt_verb_1": 2, "apt_verb_2": 0, "apt_verb_3": 1,
-        "apt_spa_1": 1, "apt_spa_2": 3, "apt_spa_3": 2
-      },
-      "riasec_answers": {
-        "ria_r_1": 3, "ria_r_2": 4, "ria_r_3": 4,
-        "ria_i_1": 3, "ria_i_2": 3, "ria_i_3": 3,
-        "ria_a_1": 5, "ria_a_2": 5, "ria_a_3": 5,
-        "ria_s_1": 3, "ria_s_2": 2, "ria_s_3": 3,
-        "ria_e_1": 2, "ria_e_2": 3, "ria_e_3": 2,
-        "ria_c_1": 2, "ria_c_2": 2, "ria_c_3": 1
-      },
-      "workstyle_answers": {"ws_creative": 5, "ws_stability": 2, "ws_teamwork": 4, "ws_structure": 2},
+      "aptitude_answers": {"c910_num_1": 0, "c910_num_2": 0, "c910_log_1": 0, "c910_log_2": 0, "c910_verb_1": 2, "c910_verb_2": 1, "c910_spa_1": 3, "c910_spa_2": 2},
+      "riasec_answers": {"c910_r": 4, "c910_i": 3, "c910_a": 5, "c910_s": 3, "c910_e": 2, "c910_c": 2},
+      "workstyle_answers": {"ws_creative": 5, "ws_stability": 2},
       "marks_percent": 88,
       "favourite_subjects": ["Art", "Mathematics", "Science"],
       "home_city": "bengaluru",

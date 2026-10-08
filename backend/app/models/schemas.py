@@ -25,9 +25,11 @@ Month = Literal[
 ]
 AptitudeDimension = Literal["numerical", "logical", "verbal", "spatial"]
 RiasecDimension = Literal["R", "I", "A", "S", "E", "C"]
-WorkstyleDimension = Literal["creative", "stability_vs_excitement", "teamwork", "structure"]
+WorkstyleDimension = Literal["creative", "stability_vs_excitement"]
 FreeTextId = Literal["free_text_1", "free_text_2"]
 Track = Literal["school", "college"]
+QuestionSetId = Literal["class_9_10", "class_11_12_science", "class_11_12_commerce", "class_11_12_humanities",
+                        "college"]  # §5 one short question set per student path (config.QUESTION_SET_IDS)
 Stream = Literal["PCM", "PCB", "PCMB", "Commerce", "Humanities"]
 LikertAnswer = Annotated[int, Field(ge=config.LIKERT_MIN, le=config.LIKERT_MAX)]
 SkillRating = Annotated[int, Field(ge=0, le=int(config.SKILL_RATING_SCALE))]
@@ -205,7 +207,9 @@ class FreeTextPrompt(StrictModel):
 
 
 class QuestionSet(StrictModel):
+    id: QuestionSetId
     track: Track
+    label: NonEmptyStr  # shown to the student, e.g. "Class 11–12 science"
     aptitude: list[AptitudeItem]
     riasec: list[RiasecItem]
     workstyle: list[WorkstyleItem]
@@ -231,6 +235,8 @@ class QuestionSet(StrictModel):
         ids = [i.id for i in (*self.aptitude, *self.riasec, *self.workstyle)]
         if len(ids) != len(set(ids)):
             raise ValueError("question ids must be unique")
+        if (self.track == "college") != (self.id == config.QUESTION_SET_COLLEGE):
+            raise ValueError(f"question set {self.id} does not belong to the {self.track} track")
         if self.track == "college":
             if self.skills is None or len(set(self.skills)) != config.COLLEGE_SKILL_LIST_SIZE:
                 raise ValueError(f"college set needs {config.COLLEGE_SKILL_LIST_SIZE} distinct skills")
@@ -564,14 +570,14 @@ class Dataset(BaseModel):
     scholarships: list[Scholarship]
     cities: list[City]
     skills: list[SkillVocabularyEntry]
-    questions_school: QuestionSet
-    questions_college: QuestionSet
+    question_sets: dict[str, QuestionSet]  # §5 keyed by QuestionSet.id
     demo_profiles: list[DemoProfile]
 
 
 # ---------------------------------------------------------------- §7 pipeline trace
 class IngestTrace(BaseModel):
     track: Track
+    question_set: QuestionSetId  # §5 the short question set this student answered
     completeness: Completeness
 
 
@@ -760,7 +766,9 @@ class PublicAptitudeItem(StrictModel):
 
 class PublicQuestionSet(StrictModel):
     """§13 question set as sent to the browser: aptitude answer keys stay on the server."""
+    id: QuestionSetId
     track: Track
+    label: str
     aptitude: list[PublicAptitudeItem]
     riasec: list[RiasecItem]
     workstyle: list[WorkstyleItem]

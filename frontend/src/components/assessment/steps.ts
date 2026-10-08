@@ -1,21 +1,19 @@
 import type { QuestionSet, Track } from "../../api/client";
 import type { StudentDraft } from "../../state/draft";
 
-export type StepKey = "about" | "aptitude" | "interests" | "workstyle" | "words" | "preferences" | "skills";
+export type StepKey = "about" | "aptitude" | "interests" | "plans" | "skills";
 export type StepErrors = Record<string, string>;
 
 export const STEP_TITLES: Record<StepKey, string> = {
   about: "About you",
-  aptitude: "Aptitude",
-  interests: "Interests",
-  workstyle: "Work style",
-  words: "In your words",
-  preferences: "Preferences",
-  skills: "Skills",
+  aptitude: "Quick puzzles",
+  interests: "What you enjoy",
+  plans: "Your plans",
+  skills: "Your skills",
 };
 
 export function stepsFor(track: Track): StepKey[] {
-  const steps: StepKey[] = ["about", "aptitude", "interests", "workstyle", "words", "preferences"];
+  const steps: StepKey[] = ["about", "aptitude", "interests", "plans"];
   return track === "college" ? [...steps, "skills"] : steps;
 }
 
@@ -25,8 +23,14 @@ export const FREE_TEXT_GOOD_WORDS = 15;
 const unanswered = (ids: string[], answers: Record<string, number>, message: string): StepErrors =>
   Object.fromEntries(ids.filter((id) => answers[id] === undefined).map((id) => [id, message]));
 
-/** Inline errors for one step; an empty object means the step is complete. */
-export function validateStep(step: StepKey, draft: StudentDraft, questions: QuestionSet): StepErrors {
+/** The about step decides which question set loads: college, Class 9–10, or Class 11–12 once a stream is chosen. */
+export function questionSetKnown(draft: StudentDraft): boolean {
+  if (draft.track === "college" || draft.current_class === null) return draft.track === "college";
+  return draft.current_class < STREAM_FROM_CLASS || draft.stream !== null;
+}
+
+/** Inline errors for one step; an empty object means the step is complete. Question steps need the loaded set. */
+export function validateStep(step: StepKey, draft: StudentDraft, questions: QuestionSet | undefined): StepErrors {
   const errors: StepErrors = {};
   switch (step) {
     case "about":
@@ -43,19 +47,20 @@ export function validateStep(step: StepKey, draft: StudentDraft, questions: Ques
       if (draft.home_city === null) errors.home_city = "Choose your home city.";
       return errors;
     case "aptitude":
+      if (questions === undefined) return errors;
       return unanswered(questions.aptitude.map((q) => q.id), draft.aptitude_answers, "Choose an answer. A guess is fine.");
     case "interests":
-      return unanswered(questions.riasec.map((q) => q.id), draft.riasec_answers, "Choose how much you would enjoy this.");
-    case "workstyle":
-      return unanswered(questions.workstyle.map((q) => q.id), draft.workstyle_answers, "Choose how much you agree.");
-    case "words":
-      return errors;
-    case "preferences":
+      if (questions === undefined) return errors;
+      return {
+        ...unanswered(questions.riasec.map((q) => q.id), draft.riasec_answers, "Choose how much you would enjoy this."),
+        ...unanswered(questions.workstyle.map((q) => q.id), draft.workstyle_answers, "Choose how much you agree."),
+      };
+    case "plans":
       if (draft.willing_to_relocate === null) errors.willing_to_relocate = "Choose yes or no.";
       if (draft.wants_higher_studies === null) errors.wants_higher_studies = "Choose yes or no.";
       if (draft.risk_tolerance === null) errors.risk_tolerance = "Choose one option.";
       return errors;
     case "skills":
-      return unanswered(questions.skills ?? [], draft.self_rated_skills, "Choose a level. None is fine.");
+      return unanswered(questions?.skills ?? [], draft.self_rated_skills, "Choose a level. None is fine.");
   }
 }

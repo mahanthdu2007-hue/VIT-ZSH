@@ -28,7 +28,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Questions */
+        /**
+         * Questions
+         * @description §5 the short question set for the student's path; school students in Class 11–12 pass their stream.
+         */
         get: operations["questions_api_questions__track__get"];
         put?: never;
         post?: never;
@@ -802,6 +805,11 @@ export interface components {
              * @enum {string}
              */
             track: "school" | "college";
+            /**
+             * Question Set
+             * @enum {string}
+             */
+            question_set: "class_9_10" | "class_11_12_science" | "class_11_12_commerce" | "class_11_12_humanities" | "college";
             completeness: components["schemas"]["Completeness"];
         };
         /** MarketDemand */
@@ -1041,10 +1049,17 @@ export interface components {
          */
         PublicQuestionSet: {
             /**
+             * Id
+             * @enum {string}
+             */
+            id: "class_9_10" | "class_11_12_science" | "class_11_12_commerce" | "class_11_12_humanities" | "college";
+            /**
              * Track
              * @enum {string}
              */
             track: "school" | "college";
+            /** Label */
+            label: string;
             /** Aptitude */
             aptitude: components["schemas"]["PublicAptitudeItem"][];
             /** Riasec */
@@ -1536,7 +1551,7 @@ export interface components {
              * Dimension
              * @enum {string}
              */
-            dimension: "creative" | "stability_vs_excitement" | "teamwork" | "structure";
+            dimension: "creative" | "stability_vs_excitement";
             /** Prompt */
             prompt: string;
         };
@@ -1571,7 +1586,9 @@ export interface operations {
     };
     questions_api_questions__track__get: {
         parameters: {
-            query?: never;
+            query?: {
+                stream?: ("PCM" | "PCB" | "PCMB" | "Commerce" | "Humanities") | null;
+            };
             header?: never;
             path: {
                 track: "school" | "college";

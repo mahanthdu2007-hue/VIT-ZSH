@@ -6,6 +6,7 @@ from typing import Any
 
 from pydantic import TypeAdapter, ValidationError
 
+from app.engine import config
 from app.models.schemas import (
     Career,
     City,
@@ -53,8 +54,9 @@ def load_dataset(data_dir: Path = DATA_DIR) -> Dataset:
         scholarships=load_file(data_dir / "scholarships.json", list[Scholarship]),
         cities=load_file(data_dir / "cities.json", list[City]),
         skills=load_file(data_dir / "skills_vocabulary.json", list[SkillVocabularyEntry]),
-        questions_school=load_file(data_dir / "questions_school.json", QuestionSet),
-        questions_college=load_file(data_dir / "questions_college.json", QuestionSet),
+        question_sets={
+            set_id: load_file(data_dir / f"questions_{set_id}.json", QuestionSet) for set_id in config.QUESTION_SET_IDS
+        },
         demo_profiles=load_file(data_dir / "demo_profiles.json", list[DemoProfile]),
     )
 

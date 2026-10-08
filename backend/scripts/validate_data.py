@@ -18,6 +18,7 @@ sys.path.insert(0, str(BACKEND_DIR))
 
 from app.engine import config  # noqa: E402
 from app.engine.loader import DATA_DIR, DataFileError, career_files, load_file  # noqa: E402
+from app.engine.normalize import student_question_set_id  # noqa: E402
 from app.models.schemas import (  # noqa: E402
     Career,
     City,
@@ -156,7 +157,7 @@ def _check_demo_profiles(
     for profile in profiles:
         where = f"demo profile {profile.id}"
         student = profile.student
-        question_set = questions[student.track]
+        question_set = questions[student_question_set_id(student)]
         if question_set is not None:
             answers = {
                 "aptitude": (student.aptitude_answers, question_set.aptitude),
@@ -254,18 +255,19 @@ def _check_reference_data(
 
 def _check_questions(
     report: Report,
-    label: str,
+    set_id: str,
     questions: QuestionSet | None,
-    track: str,
     skill_names: set[str],
     careers: list[Career],
 ) -> None:
+    label = f"questions_{set_id}"
     if questions is None:
         report.row(label, "-", "valid file", FAIL)
         return
-    if questions.track != track:
-        report.errors.append(f"{label}: track is '{questions.track}', expected '{track}'")
     status = OK
+    if questions.id != set_id:
+        report.errors.append(f"{label}: id is '{questions.id}', expected '{set_id}'")
+        status = FAIL
     if questions.skills is not None:
         unknown = [s for s in questions.skills if s not in skill_names]
         if unknown:
@@ -276,13 +278,16 @@ def _check_questions(
             cutoff = counts.most_common(config.COLLEGE_SKILL_LIST_SIZE)[-1][1]
             not_common = [s for s in questions.skills if counts[s] < cutoff]
             if not_common:
-                report.warnings.append(f"{label}: not among the 20 most common career skills {not_common}")
+                report.warnings.append(
+                    f"{label}: not among the {config.COLLEGE_SKILL_LIST_SIZE} most common career skills {not_common}"
+                )
                 status = WARN if status == OK else status
     sizes = f"{len(questions.aptitude)}/{len(questions.riasec)}/{len(questions.workstyle)}/{len(questions.free_text)}"
-    expected = "12/18/4/2"
+    expected = (f"{config.APTITUDE_ITEMS_TOTAL}/{config.RIASEC_ITEMS_PER_DIMENSION * len(config.RIASEC_DIMENSIONS)}"
+                f"/{len(config.WORKSTYLE_DIMENSIONS)}/{len(config.FREE_TEXT_IDS)}")
     if questions.skills is not None:
         sizes += f" + {len(questions.skills)} skills"
-        expected += " + 20 skills"
+        expected += f" + {config.COLLEGE_SKILL_LIST_SIZE} skills"
     report.row(label, sizes, expected, status)
 
 
@@ -299,8 +304,9 @@ def validate(data_dir: Path = DATA_DIR) -> Report:
     skills: list[SkillVocabularyEntry] = (
         _load(report, data_dir / "skills_vocabulary.json", list[SkillVocabularyEntry]) or []
     )
-    school = _load(report, data_dir / "questions_school.json", QuestionSet)
-    college = _load(report, data_dir / "questions_college.json", QuestionSet)
+    question_sets: dict[str, QuestionSet | None] = {
+        set_id: _load(report, data_dir / f"questions_{set_id}.json", QuestionSet) for set_id in config.QUESTION_SET_IDS
+    }
     profiles: list[DemoProfile] = (
         _load(report, data_dir / "demo_profiles.json", list[DemoProfile]) or []
     )
@@ -308,11 +314,9 @@ def validate(data_dir: Path = DATA_DIR) -> Report:
     skill_names = {s.name for s in skills}
     _check_careers(report, careers, {e.id for e in exams}, skill_names)
     _check_reference_data(report, exams, scholarships, cities, skills)
-    _check_questions(report, "questions_school", school, "school", skill_names, careers)
-    _check_questions(report, "questions_college", college, "college", skill_names, careers)
-    _check_demo_profiles(
-        report, profiles, {"school": school, "college": college}, {c.id for c in careers}
-    )
+    for set_id, question_set in question_sets.items():
+        _check_questions(report, set_id, question_set, skill_names, careers)
+    _check_demo_profiles(report, profiles, question_sets, {c.id for c in careers})
     return report
 
 

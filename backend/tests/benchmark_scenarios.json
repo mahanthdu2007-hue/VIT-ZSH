@@ -783,9 +783,7 @@
           "wants_higher_studies": true,
           "workstyle_answers": {
             "ws_creative": 4,
-            "ws_stability": 5,
-            "ws_teamwork": 3,
-            "ws_structure": 3
+            "ws_stability": 5
           }
         },
         "parent": {
@@ -828,9 +826,7 @@
           "wants_higher_studies": true,
           "workstyle_answers": {
             "ws_creative": 4,
-            "ws_stability": 1,
-            "ws_teamwork": 3,
-            "ws_structure": 3
+            "ws_stability": 1
           }
         },
         "parent": {

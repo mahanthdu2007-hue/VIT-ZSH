@@ -20,3 +20,4 @@ dist/
 backend/chroma/
 backend/cache/
 .cache/
+.claude/worktrees/

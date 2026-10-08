@@ -42,17 +42,29 @@ def test_health_reports_dataset_counts(client: TestClient) -> None:
                                "exams": len(DATA.exams), "cities": len(DATA.cities), "demo_profiles": 3}
 
 
-@pytest.mark.parametrize("track", ["school", "college"])
-def test_questions_hide_answer_keys(client: TestClient, track: str) -> None:
-    body = client.get(f"/api/questions/{track}").json()
-    assert body["track"] == track
+@pytest.mark.parametrize(
+    ("query", "track", "set_id"),
+    [
+        ("school", "school", "class_9_10"),
+        ("school?stream=PCB", "school", "class_11_12_science"),
+        ("school?stream=Commerce", "school", "class_11_12_commerce"),
+        ("school?stream=Humanities", "school", "class_11_12_humanities"),
+        ("college", "college", "college"),
+    ],
+)
+def test_questions_follow_the_path_and_hide_answer_keys(
+    client: TestClient, query: str, track: str, set_id: str
+) -> None:
+    body = client.get(f"/api/questions/{query}").json()
+    assert (body["track"], body["id"]) == (track, set_id)
     assert len(body["aptitude"]) == config.APTITUDE_ITEMS_TOTAL
     assert all("answer" not in item for item in body["aptitude"])
     assert (body["skills"] is not None) == (track == "college")
 
 
-def test_questions_unknown_track(client: TestClient) -> None:
+def test_questions_unknown_track_or_stream(client: TestClient) -> None:
     assert client.get("/api/questions/university").status_code == 422
+    assert client.get("/api/questions/school?stream=Medicine").status_code == 422
 
 
 def test_demo_profiles(client: TestClient) -> None:

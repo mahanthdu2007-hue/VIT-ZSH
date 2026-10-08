@@ -8,3 +8,6 @@ export type StepProps = {
   errors: StepErrors;
   questions: QuestionSet;
 };
+
+/** Steps that ask only fixed questions, so they can show before the question set has loaded. */
+export type BasicStepProps = Omit<StepProps, "questions">;

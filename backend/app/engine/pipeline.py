@@ -17,7 +17,13 @@ from app.engine.conflict import (
 )
 from app.engine.market import market_demand
 from app.engine.matcher import match_all
-from app.engine.normalize import completeness, parent_preferences, student_preferences, student_vector
+from app.engine.normalize import (
+    completeness,
+    parent_preferences,
+    student_question_set_id,
+    student_preferences,
+    student_vector,
+)
 from app.engine.roi import roi
 from app.engine.scoring import confidence, entry_mid_inr, growth, prism_score, risk_radar
 from app.engine.skills import skill_plan
@@ -41,7 +47,6 @@ from app.models.schemas import (
     PrismScore,
     RankedCareer,
     RankingTrace,
-    SchoolStudentInput,
     ScoringTrace,
     SkillPlan,
     SolverTrace,
@@ -79,11 +84,13 @@ def run_pipeline(
     if (model is None) == (decisions is None):
         raise ValueError("pass exactly one of model or decisions")
     careers = {c.id: c for c in data.careers}
-    questions = data.questions_school if isinstance(student, SchoolStudentInput) else data.questions_college
+    set_id = student_question_set_id(student)
+    questions = data.question_sets[set_id]
     income = parent.annual_income_inr
 
     # §7.1 Stage 1: Ingest Multi-Stakeholder Inputs (already validated by the Pydantic models)
-    ingest = IngestTrace(track=student.track, completeness=completeness(student, parent, questions))
+    ingest = IngestTrace(track=student.track, question_set=set_id,
+                         completeness=completeness(student, parent, questions))
 
     # §7.2 Stage 2: Vectorize & Normalize
     vector = student_vector(student, questions)

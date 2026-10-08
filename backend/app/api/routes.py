@@ -2,6 +2,7 @@ from fastapi import APIRouter, BackgroundTasks, HTTPException
 
 from app import services
 from app.engine.loader import get_dataset
+from app.engine.normalize import question_set_id
 from app.engine.system1 import get_decision_model
 from app.models.schemas import (
     AssessmentResult,
@@ -16,6 +17,7 @@ from app.models.schemas import (
     Explanations,
     HealthResponse,
     PublicQuestionSet,
+    Stream,
     Track,
     WhatIfRequest,
     WhatIfResult,
@@ -44,9 +46,9 @@ def health() -> HealthResponse:
 
 
 @router.get("/questions/{track}", response_model=PublicQuestionSet)
-def questions(track: Track) -> PublicQuestionSet:
-    data = get_dataset()
-    question_set = data.questions_school if track == "school" else data.questions_college
+def questions(track: Track, stream: Stream | None = None) -> PublicQuestionSet:
+    """§5 the short question set for the student's path; school students in Class 11–12 pass their stream."""
+    question_set = get_dataset().question_sets[question_set_id(track, stream)]
     return PublicQuestionSet.model_validate(question_set.model_dump(exclude={"aptitude": {"__all__": {"answer"}}}))
 
 

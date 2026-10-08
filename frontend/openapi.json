@@ -26,6 +26,7 @@
     "/api/questions/{track}": {
       "get": {
         "summary": "Questions",
+        "description": "\u00a75 the short question set for the student's path; school students in Class 11\u201312 pass their stream.",
         "operationId": "questions_api_questions__track__get",
         "parameters": [
           {
@@ -39,6 +40,29 @@
               ],
               "type": "string",
               "title": "Track"
+            }
+          },
+          {
+            "name": "stream",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "PCM",
+                    "PCB",
+                    "PCMB",
+                    "Commerce",
+                    "Humanities"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Stream"
             }
           }
         ],
@@ -2183,6 +2207,17 @@
             ],
             "title": "Track"
           },
+          "question_set": {
+            "type": "string",
+            "enum": [
+              "class_9_10",
+              "class_11_12_science",
+              "class_11_12_commerce",
+              "class_11_12_humanities",
+              "college"
+            ],
+            "title": "Question Set"
+          },
           "completeness": {
             "$ref": "#/components/schemas/Completeness"
           }
@@ -2190,6 +2225,7 @@
         "type": "object",
         "required": [
           "track",
+          "question_set",
           "completeness"
         ],
         "title": "IngestTrace"
@@ -2806,6 +2842,17 @@
       },
       "PublicQuestionSet": {
         "properties": {
+          "id": {
+            "type": "string",
+            "enum": [
+              "class_9_10",
+              "class_11_12_science",
+              "class_11_12_commerce",
+              "class_11_12_humanities",
+              "college"
+            ],
+            "title": "Id"
+          },
           "track": {
             "type": "string",
             "enum": [
@@ -2813,6 +2860,10 @@
               "college"
             ],
             "title": "Track"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
           },
           "aptitude": {
             "items": {
@@ -2860,7 +2911,9 @@
         "additionalProperties": false,
         "type": "object",
         "required": [
+          "id",
           "track",
+          "label",
           "aptitude",
           "riasec",
           "workstyle",
@@ -4303,9 +4356,7 @@
             "type": "string",
             "enum": [
               "creative",
-              "stability_vs_excitement",
-              "teamwork",
-              "structure"
+              "stability_vs_excitement"
             ],
             "title": "Dimension"
           },

@@ -7,6 +7,7 @@ from hypothesis import strategies as st
 
 from app.engine import config
 from app.engine.loader import get_dataset
+from app.engine.normalize import question_set_id
 from app.engine.system1 import build_decision
 from app.models.schemas import (
     CollegeStudentInput,
@@ -62,17 +63,18 @@ def _common(draw: st.DrawFn, questions: QuestionSet) -> dict[str, Any]:
 
 @st.composite
 def school_students(draw: st.DrawFn) -> SchoolStudentInput:
-    data = draw(_common(DATA.questions_school))
     current_class = draw(st.integers(config.SCHOOL_CLASS_MIN, config.SCHOOL_CLASS_MAX))
     stream = draw(st.sampled_from(STREAMS)) if current_class >= config.STREAM_FROM_CLASS else None
+    data = draw(_common(DATA.question_sets[question_set_id("school", stream)]))
     return SchoolStudentInput.model_validate(data | {"track": "school", "current_class": current_class,
                                                      "stream": stream})
 
 
 @st.composite
 def college_students(draw: st.DrawFn) -> CollegeStudentInput:
-    data = draw(_common(DATA.questions_college))
-    skills = _subset_dict(DATA.questions_college.skills or [], st.integers(0, int(config.SKILL_RATING_SCALE)))
+    questions = DATA.question_sets[config.QUESTION_SET_COLLEGE]
+    data = draw(_common(questions))
+    skills = _subset_dict(questions.skills or [], st.integers(0, int(config.SKILL_RATING_SCALE)))
     return CollegeStudentInput.model_validate(data | {
         "track": "college",
         "degree": draw(st.sampled_from(["B.Com", "B.Sc", "B.A.", "B.Tech"])),

@@ -12,7 +12,20 @@ from app.models.schemas import (
     StudentInput,
     StudentPreferences,
     StudentVector,
+    Stream,
+    Track,
 )
+
+
+def question_set_id(track: Track, stream: Stream | None) -> str:
+    """§5 the short question set for a student's path: college, Class 9–10 (no stream yet) or Class 11–12 by stream."""
+    if track == "college":
+        return config.QUESTION_SET_COLLEGE
+    return config.QUESTION_SET_CLASS_9_10 if stream is None else config.QUESTION_SET_BY_STREAM[stream]
+
+
+def student_question_set_id(student: StudentInput) -> str:
+    return question_set_id(student.track, student.stream if isinstance(student, SchoolStudentInput) else None)
 
 
 def likert_value(answer: int) -> float:
