@@ -14,15 +14,27 @@ BACKEND = Path(__file__).resolve().parents[1]
 TESTS = BACKEND / "tests"
 sys.path[:0] = [str(BACKEND), str(TESTS)]
 
-from engine_chain import ChainResult, apply_overrides, deltas, run  # noqa: E402
+from strategies import AS_OF, stand_in_decisions  # noqa: E402
 from test_properties import MAX_EXAMPLES, PROPERTIES, SEED, hypothesis_test  # noqa: E402
 
 from app.engine import config  # noqa: E402
 from app.engine.loader import get_dataset  # noqa: E402
+from app.engine.pipeline import run_pipeline  # noqa: E402
 from app.engine.solver import capacity  # noqa: E402
+from app.engine.system1 import DecisionModel, get_decision_model  # noqa: E402
+from app.engine.whatif import apply_overrides, run_whatif  # noqa: E402
 from pydantic import TypeAdapter  # noqa: E402
 
-from app.models.schemas import Dataset, ParentInput, StudentInput  # noqa: E402
+from app.models.schemas import (  # noqa: E402
+    CareerFinance,
+    Dataset,
+    ParentInput,
+    PipelineResult,
+    PrismScore,
+    StudentInput,
+    WhatIfOverrides,
+    WhatIfResult,
+)
 
 SCENARIOS = TESTS / "benchmark_scenarios.json"
 OUTPUT = BACKEND.parent / "docs" / "BENCHMARK.md"
@@ -30,20 +42,41 @@ POINTS_TOLERANCE = 0.1  # §16
 STUDENT_ADAPTER: TypeAdapter[StudentInput] = TypeAdapter(StudentInput)
 
 
-class Case:
-    """One scenario's inputs, its engine result, and (if it has What-If overrides) the re-run."""
+def finances_of(result: PipelineResult) -> dict[str, CareerFinance]:
+    return {f.career_id: f for f in result.trace.solver.finances}
 
-    def __init__(self, scenario: dict[str, Any], data: Dataset) -> None:
+
+def scores_of(result: PipelineResult) -> dict[str, PrismScore]:
+    return {s.career_id: s for s in result.trace.scoring.scores}
+
+
+class Case:
+    """One scenario's inputs and pipeline result, plus the What-If re-run if the scenario has overrides.
+
+    Scenarios with a domain_affinity block use stand-in System 1 probabilities; the others run the full
+    pipeline, including the real System 1 backend.
+    """
+
+    def __init__(self, scenario: dict[str, Any], data: Dataset, model: DecisionModel) -> None:
         self.data = data
         self.careers = {c.id: c for c in data.careers}
         self.student, self.parent = build_inputs(scenario["profile"], data)
-        self.affinity = {d: 0.0 for d in config.DOMAINS} | scenario.get("domain_affinity", {})
-        self.concerns = scenario.get("parent_concerns", {})
-        self.result = run(self.student, self.parent, self.affinity, self.concerns, data)
-        self.whatif: ChainResult | None = None
+        if "domain_affinity" in scenario:
+            affinity = dict.fromkeys(config.DOMAINS, 0.0) | scenario["domain_affinity"]
+            decisions = stand_in_decisions(affinity, scenario.get("parent_concerns", {}))
+            self.result = run_pipeline(self.student, self.parent, data, AS_OF, decisions=decisions)
+        else:
+            self.result = run_pipeline(self.student, self.parent, data, AS_OF, model=model)
+        self.decisions = self.result.trace.system1.decisions
+        self.finances = finances_of(self.result)
+        self.scores = scores_of(self.result)
+        self.whatif: WhatIfResult | None = None
+        self.after: PipelineResult | None = None
         if "whatif" in scenario:
-            student, parent = apply_overrides(self.student, self.parent, scenario["whatif"])
-            self.whatif = run(student, parent, self.affinity, self.concerns, data)
+            self.overrides = WhatIfOverrides.model_validate(scenario["whatif"])
+            self.whatif = run_whatif(self.student, self.parent, self.decisions, self.overrides, data, AS_OF)
+            student, parent = apply_overrides(self.student, self.parent, self.overrides)
+            self.after = run_pipeline(student, parent, data, AS_OF, decisions=self.decisions)
 
     def top(self, n: int) -> list[str]:
         return [s.career_id for s in self.result.ranking[:n]]
@@ -57,15 +90,15 @@ def build_inputs(profile: dict[str, Any], data: Dataset) -> tuple[StudentInput, 
     return student, parent
 
 
-def _require_whatif(case: Case) -> ChainResult:
-    if case.whatif is None:
+def _require_whatif(case: Case) -> tuple[WhatIfResult, PipelineResult]:
+    if case.whatif is None or case.after is None:
         raise ValueError("this check needs a 'whatif' block in the scenario")
-    return case.whatif
+    return case.whatif, case.after
 
 
 def no_feasible_exceeds_capacity(case: Case, c: dict[str, Any]) -> tuple[bool, str]:
     cap = capacity(case.parent)
-    over = [f.career_id for f in case.result.finances.values()
+    over = [f.career_id for f in case.finances.values()
             if f.status == "feasible" and (f.effective_cost or 0) > cap]
     return not over, f"capacity {cap:,}; over capacity: {over or 'none'}"
 
@@ -90,23 +123,29 @@ def top_career_domain_in(case: Case, c: dict[str, Any]) -> tuple[bool, str]:
 def top_chosen_entry_in(case: Case, c: dict[str, Any]) -> tuple[bool, str]:
     entries = []
     for career_id in case.top(c["n"]):
-        finance = case.result.finances[career_id]
+        finance = case.finances[career_id]
         entries.append(next(p.entry for p in finance.pathways if p.pathway_id == finance.chosen_pathway_id))
     return all(e in c["entries"] for e in entries), f"chosen entries of top {c['n']}: {sorted(set(entries))}"
 
 
+def top_chosen_institution_in(case: Case, c: dict[str, Any]) -> tuple[bool, str]:
+    kinds = [case.result.details[t].pathway.institution_type for t in case.top(c["n"])]
+    found = [k for k in kinds if k in c["institutions"]]
+    return len(found) >= c.get("at_least", 1), f"chosen institution types of top {c['n']}: {kinds}"
+
+
 def status_is(case: Case, c: dict[str, Any]) -> tuple[bool, str]:
-    status = case.result.finances[c["career"]].status
+    status = case.finances[c["career"]].status
     return status == c["status"], f"{c['career']} is {status}"
 
 
 def feasible_count(case: Case, c: dict[str, Any]) -> tuple[bool, str]:
-    count = sum(f.status == "feasible" for f in case.result.finances.values())
+    count = sum(f.status == "feasible" for f in case.finances.values())
     return c.get("min", 0) <= count <= c.get("max", len(case.careers)), f"{count} feasible careers"
 
 
 def all_feasible_ff_equal(case: Case, c: dict[str, Any]) -> tuple[bool, str]:
-    values = {round(f.financial_fit, 9) for f in case.result.finances.values() if f.status == "feasible"}
+    values = {round(f.financial_fit, 9) for f in case.finances.values() if f.status == "feasible"}
     return values <= {c["value"]}, f"feasible FF values: {sorted(values)}"
 
 
@@ -124,102 +163,141 @@ def middle_path_check(case: Case, c: dict[str, Any]) -> tuple[bool, str]:
     mp = case.result.middle_path
     if mp is None:
         return False, "no middle path"
-    ok = case.result.finances[mp.career_id].status == "feasible"
+    pathway = case.result.details[mp.career_id].pathway
+    ok = case.finances[mp.career_id].status == "feasible"
     if "method" in c:
         ok = ok and mp.method == c["method"]
     if c.get("both_gain"):
         ok = ok and mp.student_gain > 0 and mp.parent_gain > 0
     if "domains" in c:
         ok = ok and case.careers[mp.career_id].domain in c["domains"]
-    return ok, (f"{mp.career_id} ({case.careers[mp.career_id].domain}) via {mp.method}; "
-                f"gains student {mp.student_gain:+.3f}, parent {mp.parent_gain:+.3f}")
+    if "institutions" in c:
+        ok = ok and pathway.institution_type in c["institutions"]
+    return ok, (f"{mp.career_id} ({case.careers[mp.career_id].domain}, {pathway.institution_type} pathway) via "
+                f"{mp.method}; gains student {mp.student_gain:+.3f}, parent {mp.parent_gain:+.3f}")
 
 
 def stretch_options_valid(case: Case, c: dict[str, Any]) -> tuple[bool, str]:
-    options = case.result.stretch
-    all_need_aid = all(case.result.finances[o.career_id].status == "needs_aid" for o in options)
+    options = case.result.stretch_options
+    all_need_aid = all(case.finances[o.career_id].status == "needs_aid" for o in options)
     with_aid = all(o.cheaper_pathways for o in options)
     return (all_need_aid and with_aid and c.get("min", 0) <= len(options) <= c.get("max", len(case.careers)),
             f"{len(options)} stretch options: {[o.career_id for o in options][:5]}")
 
 
 def dream_alternatives_check(case: Case, c: dict[str, Any]) -> tuple[bool, str]:
-    dream = case.result.dream
+    dream = case.result.alternatives
     if c.get("reason") is None:
         return dream is None, f"dream alternatives: {dream.reason if dream else 'none'}"
     ok = dream is not None and dream.reason == c["reason"] and bool(dream.alternatives)
-    return ok, f"dream alternatives: {dream.reason if dream else 'none'}, " \
-               f"{[a.career_id for a in dream.alternatives] if dream else []}"
+    shown = [a.career_id for a in dream.alternatives] if dream else []
+    return ok, f"dream alternatives: {dream.reason if dream else 'none'}, {shown}"
 
 
 def scholarship_applied(case: Case, c: dict[str, Any]) -> tuple[bool, str]:
-    used = sorted({e.scholarship_id for f in case.result.finances.values() for e in f.pathways
+    used = sorted({e.scholarship_id for f in case.finances.values() for e in f.pathways
                    if e.scholarship > 0 and e.scholarship_id})
     return len(used) >= c["min"], f"{len(used)} schemes lower a pathway cost: {used[:5]}"
 
 
 def scholarship_cap_respected(case: Case, c: dict[str, Any]) -> tuple[bool, str]:
-    over = [(f.career_id, e.pathway_id) for f in case.result.finances.values() for e in f.pathways
+    over = [(f.career_id, e.pathway_id) for f in case.finances.values() for e in f.pathways
             if e.scholarship > round(config.SCHOLARSHIP_CAP_FRACTION * e.cost_mid)]
     return not over, f"pathways above the 60% cap: {over or 'none'}"
 
 
+def scholarships_shown(case: Case, c: dict[str, Any]) -> tuple[bool, str]:
+    """Scholarships the dashboard lists for a top career's pathway or for a stretch option."""
+    shown = {s.scholarship_id for t in case.top(c["n"]) for s in case.result.details[t].scholarships}
+    shown |= {s.scholarship_id for o in case.result.stretch_options for s in o.scholarships}
+    return len(shown) >= c["min"], f"{len(shown)} schemes shown for the top {c['n']} and stretch options"
+
+
 def roadmap_learning_steps(case: Case, c: dict[str, Any]) -> tuple[bool, str]:
-    plan = case.result.top_plan
+    top = case.top(1)
+    plan = case.result.details[top[0]].skill_plan if top else None
     steps = sum(s.kind == "learning" for s in plan.roadmap) if plan else 0
     return steps >= c["min"], f"{steps} learning steps for {plan.career_id if plan else None}"
 
 
 def swot_items(case: Case, c: dict[str, Any]) -> tuple[bool, str]:
-    swot = case.result.top_swot
+    swot = case.result.swot
     items = [o for o in (swot.opportunities if swot else []) if o.kind == c["kind"]]
     return len(items) >= c["min"], f"{len(items)} {c['kind']} opportunities: {[o.label for o in items]}"
 
 
 def scores_valid(case: Case, c: dict[str, Any]) -> tuple[bool, str]:
-    scores = case.result.scores.values()
+    scores = case.scores.values()
     in_range = all(0 <= s.score <= 100 for s in scores)
     sums = all(abs(sum(s.points.values()) - s.score) <= POINTS_TOLERANCE for s in scores)
     return in_range and sums, f"{len(scores)} scores in [0, 100] with matching points: {in_range and sums}"
 
 
 def whatif_ff_not_higher(case: Case, c: dict[str, Any]) -> tuple[bool, str]:
-    after = _require_whatif(case)
-    raised = [k for k, f in after.finances.items() if f.financial_fit > case.result.finances[k].financial_fit + 1e-9]
+    _, after = _require_whatif(case)
+    raised = [k for k, f in finances_of(after).items() if f.financial_fit > case.finances[k].financial_fit + 1e-9]
     return not raised, f"careers whose FF rose: {raised or 'none'}"
 
 
 def whatif_rank_changes(case: Case, c: dict[str, Any]) -> tuple[bool, str]:
-    after = _require_whatif(case)
-    moved = [k for k, d in deltas(case.result, after).items() if d["rank"] != 0]
+    whatif, _ = _require_whatif(case)
+    moved = [ch.career_id for ch in whatif.changes if ch.rank_before != ch.rank_after]
     return len(moved) >= c["min"], f"{len(moved)} careers changed rank"
+
+
+def whatif_top_changes(case: Case, c: dict[str, Any]) -> tuple[bool, str]:
+    """The top-n list itself changes (order or membership), so the re-rank is visible."""
+    whatif, _ = _require_whatif(case)
+    before, after = case.top(c["n"]), [r.career_id for r in whatif.ranking[:c["n"]]]
+    return before != after, f"top {c['n']} before {before}; after {after}"
+
+
+def whatif_reason_mentions(case: Case, c: dict[str, Any]) -> tuple[bool, str]:
+    """At least one reason sentence, for a career in the top n before or after, names the component."""
+    whatif, _ = _require_whatif(case)
+    label = config.COMPONENT_LABELS[c["component"]]
+    outside = c["n"] + 1
+    reasons = [ch.reason for ch in whatif.changes
+               if ch.reason and label in ch.reason
+               and min(ch.rank_before or outside, ch.rank_after or outside) <= c["n"]]
+    return bool(reasons), f"{len(reasons)} reasons name {label}: {reasons[:1]}"
+
+
+def whatif_latency(case: Case, c: dict[str, Any]) -> tuple[bool, str]:
+    """§11 What-If time over repeated runs; the scenario's own What-If was the warm-up run."""
+    _require_whatif(case)
+    times = sorted(run_whatif(case.student, case.parent, case.decisions, case.overrides, case.data, AS_OF).elapsed_ms
+                   for _ in range(c["runs"]))
+    median, worst = times[len(times) // 2], times[-1]
+    return worst < c["max_ms"], f"median {median:.0f} ms, slowest {worst:.0f} ms over {c['runs']} runs"
 
 
 def whatif_component_unchanged(case: Case, c: dict[str, Any]) -> tuple[bool, str]:
     """Compares component values (0–1): rounding points to tenths can move 0.1 between components."""
-    after = _require_whatif(case)
+    _, after = _require_whatif(case)
     key = c["component"]
-    changed = [k for k, s in after.scores.items() if s.values[key] != case.result.scores[k].values[key]]
+    changed = [k for k, s in scores_of(after).items() if s.values[key] != case.scores[k].values[key]]
     return not changed, f"{key} changed for: {changed or 'none'}"
 
 
 def whatif_component_not_lower(case: Case, c: dict[str, Any]) -> tuple[bool, str]:
-    after = _require_whatif(case)
+    _, after = _require_whatif(case)
     key = c["component"]
-    lower = [k for k, s in after.scores.items() if s.values[key] < case.result.scores[k].values[key] - 1e-9]
+    lower = [k for k, s in scores_of(after).items() if s.values[key] < case.scores[k].values[key] - 1e-9]
     return not lower, f"{key} fell for: {lower or 'none'}"
 
 
 def whatif_feasible_not_more(case: Case, c: dict[str, Any]) -> tuple[bool, str]:
-    after = _require_whatif(case)
-    before_n = sum(f.status == "feasible" for f in case.result.finances.values())
-    after_n = sum(f.status == "feasible" for f in after.finances.values())
+    _, after = _require_whatif(case)
+    before_n = sum(f.status == "feasible" for f in case.finances.values())
+    after_n = sum(f.status == "feasible" for f in finances_of(after).values())
     return after_n <= before_n, f"feasible careers {before_n} → {after_n}"
 
 
 def whatif_zero_deltas(case: Case, c: dict[str, Any]) -> tuple[bool, str]:
-    after = _require_whatif(case)
-    nonzero = [k for k, d in deltas(case.result, after).items() if any(v != 0 for v in d.values())]
+    whatif, _ = _require_whatif(case)
+    nonzero = [ch.career_id for ch in whatif.changes
+               if ch.score_delta != 0 or ch.rank_before != ch.rank_after or any(ch.point_deltas.values())]
     return not nonzero, f"careers with a non-zero delta: {nonzero or 'none'}"
 
 
@@ -229,6 +307,7 @@ CHECKS: dict[str, Callable[[Case, dict[str, Any]], tuple[bool, str]]] = {
     "domain_in_top": domain_in_top,
     "top_career_domain_in": top_career_domain_in,
     "top_chosen_entry_in": top_chosen_entry_in,
+    "top_chosen_institution_in": top_chosen_institution_in,
     "status_is": status_is,
     "feasible_count": feasible_count,
     "all_feasible_ff_equal": all_feasible_ff_equal,
@@ -239,11 +318,15 @@ CHECKS: dict[str, Callable[[Case, dict[str, Any]], tuple[bool, str]]] = {
     "dream_alternatives": dream_alternatives_check,
     "scholarship_applied": scholarship_applied,
     "scholarship_cap_respected": scholarship_cap_respected,
+    "scholarships_shown": scholarships_shown,
     "roadmap_learning_steps": roadmap_learning_steps,
     "swot_items": swot_items,
     "scores_valid": scores_valid,
     "whatif_ff_not_higher": whatif_ff_not_higher,
     "whatif_rank_changes": whatif_rank_changes,
+    "whatif_top_changes": whatif_top_changes,
+    "whatif_reason_mentions": whatif_reason_mentions,
+    "whatif_latency": whatif_latency,
     "whatif_component_unchanged": whatif_component_unchanged,
     "whatif_component_not_lower": whatif_component_not_lower,
     "whatif_feasible_not_more": whatif_feasible_not_more,
@@ -251,11 +334,11 @@ CHECKS: dict[str, Callable[[Case, dict[str, Any]], tuple[bool, str]]] = {
 }
 
 
-def run_scenarios(data: Dataset, group: str = "scenarios") -> list[dict[str, Any]]:
+def run_scenarios(data: Dataset, model: DecisionModel, group: str) -> list[dict[str, Any]]:
     spec = json.loads(SCENARIOS.read_text(encoding="utf-8"))
     results = []
     for scenario in spec[group]:
-        case = Case(scenario, data)
+        case = Case(scenario, data, model)
         checks = []
         for constraint in scenario["constraints"]:
             passed, detail = CHECKS[constraint["check"]](case, constraint)
@@ -283,12 +366,29 @@ def run_properties() -> list[dict[str, Any]]:
     return results
 
 
+def _scenario_table(results: list[dict[str, Any]]) -> list[str]:
+    lines = ["| Scenario | Constraints passed | Result |", "|---|---|---|"]
+    for s in results:
+        ok = sum(c["passed"] for c in s["checks"])
+        lines.append(f"| {s['id']}: {s['description']} | {ok} / {len(s['checks'])} | "
+                     f"{'passed' if s['passed'] else 'failed'} |")
+    return lines
+
+
+def _counts(results: list[dict[str, Any]]) -> str:
+    n_checks = sum(len(s["checks"]) for s in results)
+    n_checks_ok = sum(c["passed"] for s in results for c in s["checks"])
+    return f"**{sum(s['passed'] for s in results)} / {len(results)}** ({n_checks_ok} / {n_checks} constraints)"
+
+
 def write_report(
-    scenarios: list[dict[str, Any]], tracked: list[dict[str, Any]], properties: list[dict[str, Any]], data: Dataset
+    scenarios: list[dict[str, Any]],
+    personas: list[dict[str, Any]],
+    tracked: list[dict[str, Any]],
+    properties: list[dict[str, Any]],
+    data: Dataset,
+    backend: str,
 ) -> str:
-    n_checks = sum(len(s["checks"]) for s in scenarios)
-    n_checks_ok = sum(c["passed"] for s in scenarios for c in s["checks"])
-    n_ok = sum(s["passed"] for s in scenarios)
     props_ok = sum(p["passed"] for p in properties)
     profiles = sum(p["examples"] for p in properties)
     lines = [
@@ -299,18 +399,21 @@ def write_report(
         "",
         "## Summary",
         "",
-        f"- Scenarios passed: **{n_ok} / {len(scenarios)}** ({n_checks_ok} / {n_checks} constraints)",
+        f"- Engine scenarios passed: {_counts(scenarios)}",
+        f"- Full-pipeline persona scenarios passed: {_counts(personas)}",
         f"- Properties passed: **{props_ok} / {len(properties)}**",
         f"- Random profiles tested: **{profiles:,}** ({len(properties)} properties × up to "
         f"{MAX_EXAMPLES:,} examples, hypothesis seed {SEED})",
         f"- Dataset: {len(data.careers)} careers, {len(data.scholarships)} scholarships, {len(data.exams)} exams",
+        f"- System 1 backend for full-pipeline scenarios: `{backend}`",
         "",
         "Scenarios check rules only (for example \"no feasible career exceeds capacity\"); "
-        "they never compare against stored scores.",
+        "they never compare against stored scores. Every scenario runs `engine/pipeline.py`, and What-If "
+        "scenarios run `engine/whatif.py`.",
         "",
-        "Until System 1 is built, each scenario gives the student's domain affinity and the parent's concerns as "
-        "inputs (stand-ins for the System 1 output). pipeline.py and whatif.py come in later phases, "
-        "so the engine stages are chained by `tests/engine_chain.py`.",
+        "Engine scenarios give the student's domain affinity and the parent's concerns as fixed probabilities "
+        "(stand-in System 1 decisions), so they test the engine alone. Full-pipeline persona scenarios run "
+        "every stage, including the System 1 backend above, on the §14 demo profiles.",
         "",
         "## Properties (§16)",
         "",
@@ -320,20 +423,18 @@ def write_report(
     for p in properties:
         result = "passed" if p["passed"] else f"failed: {p['error']}"
         lines.append(f"| {p['name']} | {p['examples']:,} | {result} |")
-    lines += ["", "## Scenarios", "", "| Scenario | Constraints passed | Result |", "|---|---|---|"]
-    for s in scenarios:
-        ok = sum(c["passed"] for c in s["checks"])
-        lines.append(f"| {s['id']}: {s['description']} | {ok} / {len(s['checks'])} | "
-                     f"{'passed' if s['passed'] else 'failed'} |")
+    lines += ["", "## Engine scenarios", "", *_scenario_table(scenarios)]
+    lines += ["", "## Full-pipeline persona scenarios (§14)", "", *_scenario_table(personas)]
+    lines += ["", "### Persona details", ""]
+    lines += [f"- {s['id']} / {c['check']}: {c['detail']}" for s in personas for c in s["checks"]]
     lines += ["", "## Tracked persona stories (not counted)", "",
-              "§14 says persona answers are tuned after Phase 4 so each story holds. These checks are "
-              "reported now so the gap is visible.", "",
+              "§14 story checks that do not hold with the §14 answers; see docs/DECISIONS.md.", "",
               "| Story | Constraints holding | Detail |", "|---|---|---|"]
     for s in tracked:
         ok = sum(c["passed"] for c in s["checks"])
         detail = "; ".join(c["detail"] for c in s["checks"] if not c["passed"]) or "holds"
         lines.append(f"| {s['id']}: {s['description']} | {ok} / {len(s['checks'])} | {detail} |")
-    failed = [(s, c) for s in scenarios for c in s["checks"] if not c["passed"]]
+    failed = [(s, c) for s in scenarios + personas for c in s["checks"] if not c["passed"]]
     if failed:
         lines += ["", "## Failed constraints", ""]
         lines += [f"- {s['id']} / {c['check']}: {c['detail']}" for s, c in failed]
@@ -345,17 +446,19 @@ def write_report(
 def main() -> int:
     sys.stdout.reconfigure(encoding="utf-8")  # type: ignore[union-attr]  # Windows consoles default to cp1252
     data = get_dataset()
-    scenarios = run_scenarios(data)
-    tracked = run_scenarios(data, "tracked")
-    for s in scenarios + tracked:
+    model = get_decision_model()
+    scenarios = run_scenarios(data, model, "scenarios")
+    personas = run_scenarios(data, model, "personas")
+    tracked = run_scenarios(data, model, "tracked")
+    for s in scenarios + personas + tracked:
         print(f"{'PASS' if s['passed'] else 'FAIL'}  {s['id']}")
         for c in s["checks"]:
             print(f"      {'ok ' if c['passed'] else 'NO '} {c['check']}: {c['detail']}")
     properties = run_properties()
-    report = write_report(scenarios, tracked, properties, data)
+    report = write_report(scenarios, personas, tracked, properties, data, model.name)
     print()
     print(report)
-    all_ok = all(s["passed"] for s in scenarios) and all(p["passed"] for p in properties)
+    all_ok = all(s["passed"] for s in scenarios + personas) and all(p["passed"] for p in properties)
     return 0 if all_ok else 1
 
 

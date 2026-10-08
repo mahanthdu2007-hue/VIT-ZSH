@@ -22,10 +22,1648 @@
           }
         }
       }
+    },
+    "/api/questions/{track}": {
+      "get": {
+        "summary": "Questions",
+        "operationId": "questions_api_questions__track__get",
+        "parameters": [
+          {
+            "name": "track",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "enum": [
+                "school",
+                "college"
+              ],
+              "type": "string",
+              "title": "Track"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicQuestionSet"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/demo-profiles": {
+      "get": {
+        "summary": "Demo Profiles",
+        "operationId": "demo_profiles_api_demo_profiles_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/DemoProfile"
+                  },
+                  "type": "array",
+                  "title": "Response Demo Profiles Api Demo Profiles Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/assess": {
+      "post": {
+        "summary": "Assess",
+        "operationId": "assess_api_assess_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssessRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssessmentResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/whatif": {
+      "post": {
+        "summary": "Whatif",
+        "operationId": "whatif_api_whatif_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WhatIfRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WhatIfResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/explanations/{assessment_id}": {
+      "get": {
+        "summary": "Explanations",
+        "operationId": "explanations_api_explanations__assessment_id__get",
+        "parameters": [
+          {
+            "name": "assessment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Assessment Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Explanations"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/careers": {
+      "get": {
+        "summary": "Careers",
+        "operationId": "careers_api_careers_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/CareerSummary"
+                  },
+                  "type": "array",
+                  "title": "Response Careers Api Careers Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/careers/{career_id}": {
+      "get": {
+        "summary": "Career",
+        "operationId": "career_api_careers__career_id__get",
+        "parameters": [
+          {
+            "name": "career_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Career Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Career"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "AidScholarship": {
+        "properties": {
+          "scholarship_id": {
+            "type": "string",
+            "title": "Scholarship Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "amount_inr_per_year": {
+            "type": "integer",
+            "title": "Amount Inr Per Year"
+          },
+          "restricted_to": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Restricted To"
+          }
+        },
+        "type": "object",
+        "required": [
+          "scholarship_id",
+          "name",
+          "amount_inr_per_year",
+          "restricted_to"
+        ],
+        "title": "AidScholarship"
+      },
+      "AssessRequest": {
+        "properties": {
+          "student": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/SchoolStudentInput"
+              },
+              {
+                "$ref": "#/components/schemas/CollegeStudentInput"
+              }
+            ],
+            "title": "Student",
+            "discriminator": {
+              "propertyName": "track",
+              "mapping": {
+                "college": "#/components/schemas/CollegeStudentInput",
+                "school": "#/components/schemas/SchoolStudentInput"
+              }
+            }
+          },
+          "parent": {
+            "$ref": "#/components/schemas/ParentInput"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "student",
+          "parent"
+        ],
+        "title": "AssessRequest"
+      },
+      "AssessmentResult": {
+        "properties": {
+          "as_of": {
+            "type": "string",
+            "format": "date",
+            "title": "As Of"
+          },
+          "ranking": {
+            "items": {
+              "$ref": "#/components/schemas/RankedCareer"
+            },
+            "type": "array",
+            "title": "Ranking"
+          },
+          "details": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/CareerDetail"
+            },
+            "type": "object",
+            "title": "Details"
+          },
+          "conflict": {
+            "$ref": "#/components/schemas/ConflictResult"
+          },
+          "middle_path": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MiddlePath"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "stretch_options": {
+            "items": {
+              "$ref": "#/components/schemas/StretchOption"
+            },
+            "type": "array",
+            "title": "Stretch Options"
+          },
+          "alternatives": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DreamAlternatives"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "swot": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Swot"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Confidence"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "trace": {
+            "$ref": "#/components/schemas/PipelineTrace"
+          },
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "explanations": {
+            "$ref": "#/components/schemas/Explanations"
+          }
+        },
+        "type": "object",
+        "required": [
+          "as_of",
+          "ranking",
+          "details",
+          "conflict",
+          "middle_path",
+          "stretch_options",
+          "alternatives",
+          "swot",
+          "confidence",
+          "trace",
+          "id",
+          "explanations"
+        ],
+        "title": "AssessmentResult"
+      },
+      "Career": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Name"
+          },
+          "domain": {
+            "type": "string",
+            "enum": [
+              "Technology",
+              "Engineering",
+              "Science",
+              "Health",
+              "Arts & Design",
+              "Finance & Maths",
+              "Hyper-local"
+            ],
+            "title": "Domain"
+          },
+          "steam": {
+            "items": {
+              "type": "string",
+              "enum": [
+                "S",
+                "T",
+                "E",
+                "A",
+                "M"
+              ]
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Steam"
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Summary"
+          },
+          "requirement_vector": {
+            "$ref": "#/components/schemas/RequirementVector"
+          },
+          "skills": {
+            "items": {
+              "$ref": "#/components/schemas/Skill"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Skills"
+          },
+          "pathways": {
+            "items": {
+              "$ref": "#/components/schemas/Pathway"
+            },
+            "type": "array",
+            "maxItems": 4,
+            "minItems": 2,
+            "title": "Pathways"
+          },
+          "salary_inr_lpa": {
+            "$ref": "#/components/schemas/SalaryBands"
+          },
+          "growth_index": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Growth Index"
+          },
+          "job_velocity": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Job Velocity"
+          },
+          "disruption_index": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Disruption Index"
+          },
+          "stability": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Stability"
+          },
+          "risk_level": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Risk Level"
+          },
+          "prestige": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Prestige"
+          },
+          "higher_studies_typical": {
+            "type": "boolean",
+            "title": "Higher Studies Typical"
+          },
+          "city_demand": {
+            "additionalProperties": {
+              "type": "number",
+              "maximum": 1.0,
+              "minimum": 0.0
+            },
+            "propertyNames": {
+              "enum": [
+                "bengaluru",
+                "mysuru",
+                "chennai",
+                "hyderabad",
+                "pune",
+                "delhi_ncr",
+                "mumbai",
+                "coimbatore"
+              ]
+            },
+            "type": "object",
+            "title": "City Demand"
+          },
+          "adjacent_careers": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Adjacent Careers"
+          },
+          "sources": {
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Sources"
+          },
+          "data_note": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Data Note"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "domain",
+          "steam",
+          "summary",
+          "requirement_vector",
+          "skills",
+          "pathways",
+          "salary_inr_lpa",
+          "growth_index",
+          "job_velocity",
+          "disruption_index",
+          "stability",
+          "risk_level",
+          "prestige",
+          "higher_studies_typical",
+          "city_demand",
+          "adjacent_careers",
+          "sources",
+          "data_note"
+        ],
+        "title": "Career"
+      },
+      "CareerChange": {
+        "properties": {
+          "career_id": {
+            "type": "string",
+            "title": "Career Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "status_before": {
+            "type": "string",
+            "enum": [
+              "feasible",
+              "needs_aid",
+              "no_pathway"
+            ],
+            "title": "Status Before"
+          },
+          "status_after": {
+            "type": "string",
+            "enum": [
+              "feasible",
+              "needs_aid",
+              "no_pathway"
+            ],
+            "title": "Status After"
+          },
+          "rank_before": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rank Before"
+          },
+          "rank_after": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rank After"
+          },
+          "rank_change": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rank Change"
+          },
+          "score_before": {
+            "type": "number",
+            "title": "Score Before"
+          },
+          "score_after": {
+            "type": "number",
+            "title": "Score After"
+          },
+          "score_delta": {
+            "type": "number",
+            "title": "Score Delta"
+          },
+          "point_deltas": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Point Deltas"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          }
+        },
+        "type": "object",
+        "required": [
+          "career_id",
+          "name",
+          "status_before",
+          "status_after",
+          "rank_before",
+          "rank_after",
+          "rank_change",
+          "score_before",
+          "score_after",
+          "score_delta",
+          "point_deltas",
+          "reason"
+        ],
+        "title": "CareerChange"
+      },
+      "CareerDetail": {
+        "properties": {
+          "career": {
+            "$ref": "#/components/schemas/Career"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "feasible",
+              "needs_aid",
+              "no_pathway"
+            ],
+            "title": "Status"
+          },
+          "rank": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rank"
+          },
+          "score": {
+            "$ref": "#/components/schemas/PrismScore"
+          },
+          "student_fit": {
+            "$ref": "#/components/schemas/StudentFit"
+          },
+          "finance": {
+            "$ref": "#/components/schemas/CareerFinance"
+          },
+          "parent_alignment": {
+            "$ref": "#/components/schemas/ParentAlignment"
+          },
+          "market": {
+            "$ref": "#/components/schemas/MarketDemand"
+          },
+          "growth": {
+            "$ref": "#/components/schemas/Growth"
+          },
+          "confidence": {
+            "$ref": "#/components/schemas/Confidence"
+          },
+          "risk": {
+            "$ref": "#/components/schemas/RiskRadar"
+          },
+          "skill_plan": {
+            "$ref": "#/components/schemas/SkillPlan"
+          },
+          "roi": {
+            "$ref": "#/components/schemas/Roi"
+          },
+          "pathway": {
+            "$ref": "#/components/schemas/Pathway"
+          },
+          "scholarships": {
+            "items": {
+              "$ref": "#/components/schemas/AidScholarship"
+            },
+            "type": "array",
+            "title": "Scholarships"
+          },
+          "exams": {
+            "items": {
+              "$ref": "#/components/schemas/Exam"
+            },
+            "type": "array",
+            "title": "Exams"
+          }
+        },
+        "type": "object",
+        "required": [
+          "career",
+          "status",
+          "rank",
+          "score",
+          "student_fit",
+          "finance",
+          "parent_alignment",
+          "market",
+          "growth",
+          "confidence",
+          "risk",
+          "skill_plan",
+          "roi",
+          "pathway",
+          "scholarships",
+          "exams"
+        ],
+        "title": "CareerDetail"
+      },
+      "CareerExplanation": {
+        "properties": {
+          "career_id": {
+            "type": "string",
+            "title": "Career Id"
+          },
+          "why": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Why"
+          },
+          "why_not": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Why Not"
+          },
+          "roadmap_narrative": {
+            "type": "string",
+            "title": "Roadmap Narrative"
+          },
+          "cited_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Cited Ids"
+          }
+        },
+        "type": "object",
+        "required": [
+          "career_id",
+          "why",
+          "why_not",
+          "roadmap_narrative",
+          "cited_ids"
+        ],
+        "title": "CareerExplanation"
+      },
+      "CareerFinance": {
+        "properties": {
+          "career_id": {
+            "type": "string",
+            "title": "Career Id"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "feasible",
+              "needs_aid",
+              "no_pathway"
+            ],
+            "title": "Status"
+          },
+          "chosen_pathway_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Chosen Pathway Id"
+          },
+          "effective_cost": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Effective Cost"
+          },
+          "financial_fit": {
+            "type": "number",
+            "title": "Financial Fit"
+          },
+          "funding_gap": {
+            "type": "integer",
+            "title": "Funding Gap"
+          },
+          "budget": {
+            "type": "integer",
+            "title": "Budget"
+          },
+          "capacity": {
+            "type": "integer",
+            "title": "Capacity"
+          },
+          "pathways": {
+            "items": {
+              "$ref": "#/components/schemas/PathwayEvaluation"
+            },
+            "type": "array",
+            "title": "Pathways"
+          }
+        },
+        "type": "object",
+        "required": [
+          "career_id",
+          "status",
+          "chosen_pathway_id",
+          "effective_cost",
+          "financial_fit",
+          "funding_gap",
+          "budget",
+          "capacity",
+          "pathways"
+        ],
+        "title": "CareerFinance"
+      },
+      "CareerSummary": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "domain": {
+            "type": "string",
+            "enum": [
+              "Technology",
+              "Engineering",
+              "Science",
+              "Health",
+              "Arts & Design",
+              "Finance & Maths",
+              "Hyper-local"
+            ],
+            "title": "Domain"
+          },
+          "steam": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Steam"
+          },
+          "summary": {
+            "type": "string",
+            "title": "Summary"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "domain",
+          "steam",
+          "summary"
+        ],
+        "title": "CareerSummary"
+      },
+      "CheaperPathway": {
+        "properties": {
+          "pathway_id": {
+            "type": "string",
+            "title": "Pathway Id"
+          },
+          "effective_cost": {
+            "type": "integer",
+            "title": "Effective Cost"
+          },
+          "funding_gap": {
+            "type": "integer",
+            "title": "Funding Gap"
+          }
+        },
+        "type": "object",
+        "required": [
+          "pathway_id",
+          "effective_cost",
+          "funding_gap"
+        ],
+        "title": "CheaperPathway"
+      },
+      "CollegeStudentInput": {
+        "properties": {
+          "aptitude_answers": {
+            "additionalProperties": {
+              "type": "integer",
+              "minimum": 0.0
+            },
+            "type": "object",
+            "title": "Aptitude Answers",
+            "default": {}
+          },
+          "riasec_answers": {
+            "additionalProperties": {
+              "type": "integer",
+              "maximum": 5.0,
+              "minimum": 1.0
+            },
+            "type": "object",
+            "title": "Riasec Answers",
+            "default": {}
+          },
+          "workstyle_answers": {
+            "additionalProperties": {
+              "type": "integer",
+              "maximum": 5.0,
+              "minimum": 1.0
+            },
+            "type": "object",
+            "title": "Workstyle Answers",
+            "default": {}
+          },
+          "marks_percent": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Marks Percent"
+          },
+          "favourite_subjects": {
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "type": "array",
+            "title": "Favourite Subjects",
+            "default": []
+          },
+          "home_city": {
+            "type": "string",
+            "enum": [
+              "bengaluru",
+              "mysuru",
+              "chennai",
+              "hyderabad",
+              "pune",
+              "delhi_ncr",
+              "mumbai",
+              "coimbatore"
+            ],
+            "title": "Home City"
+          },
+          "preferred_cities": {
+            "items": {
+              "type": "string",
+              "enum": [
+                "bengaluru",
+                "mysuru",
+                "chennai",
+                "hyderabad",
+                "pune",
+                "delhi_ncr",
+                "mumbai",
+                "coimbatore"
+              ]
+            },
+            "type": "array",
+            "title": "Preferred Cities",
+            "default": []
+          },
+          "willing_to_relocate": {
+            "type": "boolean",
+            "title": "Willing To Relocate"
+          },
+          "wants_higher_studies": {
+            "type": "boolean",
+            "title": "Wants Higher Studies"
+          },
+          "risk_tolerance": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "title": "Risk Tolerance"
+          },
+          "dream_career_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dream Career Id"
+          },
+          "free_text_1": {
+            "type": "string",
+            "title": "Free Text 1",
+            "default": ""
+          },
+          "free_text_2": {
+            "type": "string",
+            "title": "Free Text 2",
+            "default": ""
+          },
+          "track": {
+            "type": "string",
+            "const": "college",
+            "title": "Track"
+          },
+          "degree": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Degree"
+          },
+          "year": {
+            "type": "integer",
+            "maximum": 5.0,
+            "minimum": 1.0,
+            "title": "Year"
+          },
+          "self_rated_skills": {
+            "additionalProperties": {
+              "type": "integer",
+              "maximum": 100.0,
+              "minimum": 0.0
+            },
+            "type": "object",
+            "title": "Self Rated Skills",
+            "default": {}
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "home_city",
+          "willing_to_relocate",
+          "wants_higher_studies",
+          "risk_tolerance",
+          "track",
+          "degree",
+          "year"
+        ],
+        "title": "CollegeStudentInput"
+      },
+      "Completeness": {
+        "properties": {
+          "score": {
+            "type": "number",
+            "title": "Score"
+          },
+          "answered": {
+            "type": "integer",
+            "title": "Answered"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "missing": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Missing"
+          }
+        },
+        "type": "object",
+        "required": [
+          "score",
+          "answered",
+          "total",
+          "missing"
+        ],
+        "title": "Completeness"
+      },
+      "Confidence": {
+        "properties": {
+          "score": {
+            "type": "number",
+            "title": "Score"
+          },
+          "band": {
+            "type": "string",
+            "enum": [
+              "High",
+              "Medium",
+              "Low"
+            ],
+            "title": "Band"
+          },
+          "completeness": {
+            "type": "number",
+            "title": "Completeness"
+          },
+          "system1_confidence": {
+            "type": "number",
+            "title": "System1 Confidence"
+          },
+          "data_completeness": {
+            "type": "number",
+            "title": "Data Completeness"
+          },
+          "missing_inputs": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Missing Inputs"
+          }
+        },
+        "type": "object",
+        "required": [
+          "score",
+          "band",
+          "completeness",
+          "system1_confidence",
+          "data_completeness",
+          "missing_inputs"
+        ],
+        "title": "Confidence"
+      },
+      "ConflictDimension": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "weight": {
+            "type": "number",
+            "title": "Weight"
+          },
+          "student_value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Student Value"
+          },
+          "parent_value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parent Value"
+          },
+          "mismatch": {
+            "type": "number",
+            "title": "Mismatch"
+          },
+          "points": {
+            "type": "number",
+            "title": "Points"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "weight",
+          "student_value",
+          "parent_value",
+          "mismatch",
+          "points"
+        ],
+        "title": "ConflictDimension"
+      },
+      "ConflictResult": {
+        "properties": {
+          "index": {
+            "type": "number",
+            "title": "Index"
+          },
+          "dimensions": {
+            "items": {
+              "$ref": "#/components/schemas/ConflictDimension"
+            },
+            "type": "array",
+            "title": "Dimensions"
+          },
+          "hotspots": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Hotspots"
+          },
+          "student_top_domains": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Student Top Domains"
+          }
+        },
+        "type": "object",
+        "required": [
+          "index",
+          "dimensions",
+          "hotspots",
+          "student_top_domains"
+        ],
+        "title": "ConflictResult"
+      },
+      "ConflictTrace": {
+        "properties": {
+          "conflict": {
+            "$ref": "#/components/schemas/ConflictResult"
+          },
+          "concern_weights": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Concern Weights"
+          },
+          "parent_alignment": {
+            "items": {
+              "$ref": "#/components/schemas/ParentAlignment"
+            },
+            "type": "array",
+            "title": "Parent Alignment"
+          },
+          "middle_path": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MiddlePath"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "conflict",
+          "concern_weights",
+          "parent_alignment",
+          "middle_path"
+        ],
+        "title": "ConflictTrace"
+      },
+      "CostRange": {
+        "properties": {
+          "min": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Min"
+          },
+          "max": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Max"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "min",
+          "max"
+        ],
+        "title": "CostRange"
+      },
+      "DatasetCounts": {
+        "properties": {
+          "careers": {
+            "type": "integer",
+            "title": "Careers"
+          },
+          "scholarships": {
+            "type": "integer",
+            "title": "Scholarships"
+          },
+          "exams": {
+            "type": "integer",
+            "title": "Exams"
+          },
+          "cities": {
+            "type": "integer",
+            "title": "Cities"
+          },
+          "demo_profiles": {
+            "type": "integer",
+            "title": "Demo Profiles"
+          }
+        },
+        "type": "object",
+        "required": [
+          "careers",
+          "scholarships",
+          "exams",
+          "cities",
+          "demo_profiles"
+        ],
+        "title": "DatasetCounts"
+      },
+      "DemoProfile": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Name"
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Summary"
+          },
+          "student": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/SchoolStudentInput"
+              },
+              {
+                "$ref": "#/components/schemas/CollegeStudentInput"
+              }
+            ],
+            "title": "Student",
+            "discriminator": {
+              "propertyName": "track",
+              "mapping": {
+                "college": "#/components/schemas/CollegeStudentInput",
+                "school": "#/components/schemas/SchoolStudentInput"
+              }
+            }
+          },
+          "parent": {
+            "$ref": "#/components/schemas/ParentInput"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "summary",
+          "student",
+          "parent"
+        ],
+        "title": "DemoProfile"
+      },
+      "DreamAlternatives": {
+        "properties": {
+          "dream_career_id": {
+            "type": "string",
+            "title": "Dream Career Id"
+          },
+          "reason": {
+            "type": "string",
+            "enum": [
+              "needs_aid",
+              "outside_top"
+            ],
+            "title": "Reason"
+          },
+          "alternatives": {
+            "items": {
+              "$ref": "#/components/schemas/RankedAlternative"
+            },
+            "type": "array",
+            "title": "Alternatives"
+          }
+        },
+        "type": "object",
+        "required": [
+          "dream_career_id",
+          "reason",
+          "alternatives"
+        ],
+        "title": "DreamAlternatives"
+      },
+      "Exam": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Name"
+          },
+          "level": {
+            "type": "string",
+            "enum": [
+              "school",
+              "ug",
+              "pg"
+            ],
+            "title": "Level"
+          },
+          "domains": {
+            "items": {
+              "type": "string",
+              "enum": [
+                "Technology",
+                "Engineering",
+                "Science",
+                "Health",
+                "Arts & Design",
+                "Finance & Maths",
+                "Hyper-local"
+              ]
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Domains"
+          },
+          "typical_month": {
+            "type": "string",
+            "enum": [
+              "January",
+              "February",
+              "March",
+              "April",
+              "May",
+              "June",
+              "July",
+              "August",
+              "September",
+              "October",
+              "November",
+              "December"
+            ],
+            "title": "Typical Month"
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Source"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "level",
+          "domains",
+          "typical_month",
+          "source"
+        ],
+        "title": "Exam"
+      },
+      "Explanations": {
+        "properties": {
+          "source": {
+            "type": "string",
+            "enum": [
+              "template",
+              "llm"
+            ],
+            "title": "Source"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/CareerExplanation"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "type": "object",
+        "required": [
+          "source",
+          "items"
+        ],
+        "title": "Explanations"
+      },
+      "FreeTextPrompt": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "enum": [
+              "free_text_1",
+              "free_text_2"
+            ],
+            "title": "Id"
+          },
+          "prompt": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Prompt"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "prompt"
+        ],
+        "title": "FreeTextPrompt"
+      },
+      "Growth": {
+        "properties": {
+          "career_id": {
+            "type": "string",
+            "title": "Career Id"
+          },
+          "trajectory": {
+            "type": "number",
+            "title": "Trajectory"
+          },
+          "mobility_uplift": {
+            "type": "number",
+            "title": "Mobility Uplift"
+          },
+          "growth": {
+            "type": "number",
+            "title": "Growth"
+          }
+        },
+        "type": "object",
+        "required": [
+          "career_id",
+          "trajectory",
+          "mobility_uplift",
+          "growth"
+        ],
+        "title": "Growth"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
       "HealthResponse": {
         "properties": {
           "status": {
@@ -49,6 +1687,9 @@
           "demo_mode": {
             "type": "boolean",
             "title": "Demo Mode"
+          },
+          "dataset": {
+            "$ref": "#/components/schemas/DatasetCounts"
           }
         },
         "type": "object",
@@ -56,9 +1697,2105 @@
           "status",
           "system1",
           "llm",
-          "demo_mode"
+          "demo_mode",
+          "dataset"
         ],
         "title": "HealthResponse"
+      },
+      "IngestTrace": {
+        "properties": {
+          "track": {
+            "type": "string",
+            "enum": [
+              "school",
+              "college"
+            ],
+            "title": "Track"
+          },
+          "completeness": {
+            "$ref": "#/components/schemas/Completeness"
+          }
+        },
+        "type": "object",
+        "required": [
+          "track",
+          "completeness"
+        ],
+        "title": "IngestTrace"
+      },
+      "MarketDemand": {
+        "properties": {
+          "career_id": {
+            "type": "string",
+            "title": "Career Id"
+          },
+          "local_demand": {
+            "type": "number",
+            "title": "Local Demand"
+          },
+          "best_city": {
+            "type": "string",
+            "title": "Best City"
+          },
+          "market_demand": {
+            "type": "number",
+            "title": "Market Demand"
+          }
+        },
+        "type": "object",
+        "required": [
+          "career_id",
+          "local_demand",
+          "best_city",
+          "market_demand"
+        ],
+        "title": "MarketDemand"
+      },
+      "MarketTrace": {
+        "properties": {
+          "markets": {
+            "items": {
+              "$ref": "#/components/schemas/MarketDemand"
+            },
+            "type": "array",
+            "title": "Markets"
+          }
+        },
+        "type": "object",
+        "required": [
+          "markets"
+        ],
+        "title": "MarketTrace"
+      },
+      "MatcherTrace": {
+        "properties": {
+          "fits": {
+            "items": {
+              "$ref": "#/components/schemas/StudentFit"
+            },
+            "type": "array",
+            "title": "Fits"
+          }
+        },
+        "type": "object",
+        "required": [
+          "fits"
+        ],
+        "title": "MatcherTrace"
+      },
+      "MiddlePath": {
+        "properties": {
+          "career_id": {
+            "type": "string",
+            "title": "Career Id"
+          },
+          "method": {
+            "type": "string",
+            "enum": [
+              "nash",
+              "max_min"
+            ],
+            "title": "Method"
+          },
+          "disagreement_s": {
+            "type": "number",
+            "title": "Disagreement S"
+          },
+          "disagreement_p": {
+            "type": "number",
+            "title": "Disagreement P"
+          },
+          "u_s": {
+            "type": "number",
+            "title": "U S"
+          },
+          "u_p": {
+            "type": "number",
+            "title": "U P"
+          },
+          "student_top_career_id": {
+            "type": "string",
+            "title": "Student Top Career Id"
+          },
+          "student_change": {
+            "type": "number",
+            "title": "Student Change"
+          },
+          "parent_top_career_id": {
+            "type": "string",
+            "title": "Parent Top Career Id"
+          },
+          "parent_change": {
+            "type": "number",
+            "title": "Parent Change"
+          },
+          "student_gain": {
+            "type": "number",
+            "title": "Student Gain"
+          },
+          "parent_gain": {
+            "type": "number",
+            "title": "Parent Gain"
+          },
+          "candidates": {
+            "items": {
+              "$ref": "#/components/schemas/NashCandidate"
+            },
+            "type": "array",
+            "title": "Candidates"
+          }
+        },
+        "type": "object",
+        "required": [
+          "career_id",
+          "method",
+          "disagreement_s",
+          "disagreement_p",
+          "u_s",
+          "u_p",
+          "student_top_career_id",
+          "student_change",
+          "parent_top_career_id",
+          "parent_change",
+          "student_gain",
+          "parent_gain",
+          "candidates"
+        ],
+        "title": "MiddlePath"
+      },
+      "NashCandidate": {
+        "properties": {
+          "career_id": {
+            "type": "string",
+            "title": "Career Id"
+          },
+          "u_s": {
+            "type": "number",
+            "title": "U S"
+          },
+          "u_p": {
+            "type": "number",
+            "title": "U P"
+          },
+          "product": {
+            "type": "number",
+            "title": "Product"
+          }
+        },
+        "type": "object",
+        "required": [
+          "career_id",
+          "u_s",
+          "u_p",
+          "product"
+        ],
+        "title": "NashCandidate"
+      },
+      "ParentAlignment": {
+        "properties": {
+          "career_id": {
+            "type": "string",
+            "title": "Career Id"
+          },
+          "components": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Components"
+          },
+          "weights": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Weights"
+          },
+          "parent_alignment": {
+            "type": "number",
+            "title": "Parent Alignment"
+          }
+        },
+        "type": "object",
+        "required": [
+          "career_id",
+          "components",
+          "weights",
+          "parent_alignment"
+        ],
+        "title": "ParentAlignment"
+      },
+      "ParentInput": {
+        "properties": {
+          "annual_income_inr": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Annual Income Inr"
+          },
+          "education_budget_inr": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Education Budget Inr"
+          },
+          "loan_willingness": {
+            "type": "string",
+            "enum": [
+              "none",
+              "moderate",
+              "high"
+            ],
+            "title": "Loan Willingness"
+          },
+          "risk_appetite": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "title": "Risk Appetite"
+          },
+          "preferred_domains": {
+            "items": {
+              "type": "string",
+              "enum": [
+                "Technology",
+                "Engineering",
+                "Science",
+                "Health",
+                "Arts & Design",
+                "Finance & Maths",
+                "Hyper-local"
+              ]
+            },
+            "type": "array",
+            "title": "Preferred Domains",
+            "default": []
+          },
+          "location_preference": {
+            "type": "string",
+            "enum": [
+              "near_home",
+              "anywhere_india",
+              "abroad_ok"
+            ],
+            "title": "Location Preference"
+          },
+          "supports_higher_studies": {
+            "type": "boolean",
+            "title": "Supports Higher Studies"
+          },
+          "top_priority": {
+            "type": "string",
+            "enum": [
+              "stability",
+              "salary",
+              "prestige",
+              "happiness"
+            ],
+            "title": "Top Priority"
+          },
+          "free_text": {
+            "type": "string",
+            "title": "Free Text",
+            "default": ""
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "annual_income_inr",
+          "education_budget_inr",
+          "loan_willingness",
+          "risk_appetite",
+          "location_preference",
+          "supports_higher_studies",
+          "top_priority"
+        ],
+        "title": "ParentInput"
+      },
+      "ParentPreferences": {
+        "properties": {
+          "risk_appetite": {
+            "type": "number",
+            "title": "Risk Appetite"
+          },
+          "location": {
+            "type": "number",
+            "title": "Location"
+          },
+          "higher_studies": {
+            "type": "number",
+            "title": "Higher Studies"
+          },
+          "priority_stability": {
+            "type": "number",
+            "title": "Priority Stability"
+          }
+        },
+        "type": "object",
+        "required": [
+          "risk_appetite",
+          "location",
+          "higher_studies",
+          "priority_stability"
+        ],
+        "title": "ParentPreferences"
+      },
+      "Pathway": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Id"
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Label"
+          },
+          "entry": {
+            "type": "string",
+            "enum": [
+              "after_class_10",
+              "after_class_12",
+              "graduate"
+            ],
+            "title": "Entry"
+          },
+          "steps": {
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Steps"
+          },
+          "duration_years": {
+            "type": "number",
+            "exclusiveMinimum": 0.0,
+            "title": "Duration Years"
+          },
+          "cost_inr": {
+            "$ref": "#/components/schemas/CostRange"
+          },
+          "institution_type": {
+            "type": "string",
+            "enum": [
+              "govt",
+              "private",
+              "online",
+              "diploma"
+            ],
+            "title": "Institution Type"
+          },
+          "entrance_exams": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Entrance Exams"
+          },
+          "quality": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Quality"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "entry",
+          "steps",
+          "duration_years",
+          "cost_inr",
+          "institution_type",
+          "entrance_exams",
+          "quality"
+        ],
+        "title": "Pathway"
+      },
+      "PathwayEvaluation": {
+        "properties": {
+          "pathway_id": {
+            "type": "string",
+            "title": "Pathway Id"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "entry": {
+            "type": "string",
+            "enum": [
+              "after_class_10",
+              "after_class_12",
+              "graduate"
+            ],
+            "title": "Entry"
+          },
+          "institution_type": {
+            "type": "string",
+            "enum": [
+              "govt",
+              "private",
+              "online",
+              "diploma"
+            ],
+            "title": "Institution Type"
+          },
+          "quality": {
+            "type": "number",
+            "title": "Quality"
+          },
+          "stage_fit": {
+            "type": "boolean",
+            "title": "Stage Fit"
+          },
+          "cost_mid": {
+            "type": "integer",
+            "title": "Cost Mid"
+          },
+          "scholarship": {
+            "type": "integer",
+            "title": "Scholarship"
+          },
+          "scholarship_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Scholarship Id"
+          },
+          "scholarship_capped": {
+            "type": "boolean",
+            "title": "Scholarship Capped"
+          },
+          "effective_cost": {
+            "type": "integer",
+            "title": "Effective Cost"
+          },
+          "feasible": {
+            "type": "boolean",
+            "title": "Feasible"
+          },
+          "objective": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Objective"
+          }
+        },
+        "type": "object",
+        "required": [
+          "pathway_id",
+          "label",
+          "entry",
+          "institution_type",
+          "quality",
+          "stage_fit",
+          "cost_mid",
+          "scholarship",
+          "scholarship_id",
+          "scholarship_capped",
+          "effective_cost",
+          "feasible",
+          "objective"
+        ],
+        "title": "PathwayEvaluation"
+      },
+      "PipelineTrace": {
+        "properties": {
+          "ingest": {
+            "$ref": "#/components/schemas/IngestTrace"
+          },
+          "vectorize": {
+            "$ref": "#/components/schemas/VectorizeTrace"
+          },
+          "system1": {
+            "$ref": "#/components/schemas/System1Trace"
+          },
+          "solver": {
+            "$ref": "#/components/schemas/SolverTrace"
+          },
+          "matcher": {
+            "$ref": "#/components/schemas/MatcherTrace"
+          },
+          "conflict": {
+            "$ref": "#/components/schemas/ConflictTrace"
+          },
+          "market": {
+            "$ref": "#/components/schemas/MarketTrace"
+          },
+          "scoring": {
+            "$ref": "#/components/schemas/ScoringTrace"
+          },
+          "ranking": {
+            "$ref": "#/components/schemas/RankingTrace"
+          }
+        },
+        "type": "object",
+        "required": [
+          "ingest",
+          "vectorize",
+          "system1",
+          "solver",
+          "matcher",
+          "conflict",
+          "market",
+          "scoring",
+          "ranking"
+        ],
+        "title": "PipelineTrace"
+      },
+      "PrismScore": {
+        "properties": {
+          "career_id": {
+            "type": "string",
+            "title": "Career Id"
+          },
+          "score": {
+            "type": "number",
+            "title": "Score"
+          },
+          "values": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Values"
+          },
+          "points": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Points"
+          }
+        },
+        "type": "object",
+        "required": [
+          "career_id",
+          "score",
+          "values",
+          "points"
+        ],
+        "title": "PrismScore"
+      },
+      "PublicAptitudeItem": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "dimension": {
+            "type": "string",
+            "enum": [
+              "numerical",
+              "logical",
+              "verbal",
+              "spatial"
+            ],
+            "title": "Dimension"
+          },
+          "prompt": {
+            "type": "string",
+            "title": "Prompt"
+          },
+          "options": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Options"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "dimension",
+          "prompt",
+          "options"
+        ],
+        "title": "PublicAptitudeItem"
+      },
+      "PublicQuestionSet": {
+        "properties": {
+          "track": {
+            "type": "string",
+            "enum": [
+              "school",
+              "college"
+            ],
+            "title": "Track"
+          },
+          "aptitude": {
+            "items": {
+              "$ref": "#/components/schemas/PublicAptitudeItem"
+            },
+            "type": "array",
+            "title": "Aptitude"
+          },
+          "riasec": {
+            "items": {
+              "$ref": "#/components/schemas/RiasecItem"
+            },
+            "type": "array",
+            "title": "Riasec"
+          },
+          "workstyle": {
+            "items": {
+              "$ref": "#/components/schemas/WorkstyleItem"
+            },
+            "type": "array",
+            "title": "Workstyle"
+          },
+          "free_text": {
+            "items": {
+              "$ref": "#/components/schemas/FreeTextPrompt"
+            },
+            "type": "array",
+            "title": "Free Text"
+          },
+          "skills": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Skills"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "track",
+          "aptitude",
+          "riasec",
+          "workstyle",
+          "free_text"
+        ],
+        "title": "PublicQuestionSet",
+        "description": "\u00a713 question set as sent to the browser: aptitude answer keys stay on the server."
+      },
+      "RankedAlternative": {
+        "properties": {
+          "career_id": {
+            "type": "string",
+            "title": "Career Id"
+          },
+          "score": {
+            "type": "number",
+            "title": "Score"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "feasible",
+              "needs_aid",
+              "no_pathway"
+            ],
+            "title": "Status"
+          }
+        },
+        "type": "object",
+        "required": [
+          "career_id",
+          "score",
+          "status"
+        ],
+        "title": "RankedAlternative"
+      },
+      "RankedCareer": {
+        "properties": {
+          "career_id": {
+            "type": "string",
+            "title": "Career Id"
+          },
+          "score": {
+            "type": "number",
+            "title": "Score"
+          },
+          "values": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Values"
+          },
+          "points": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Points"
+          },
+          "rank": {
+            "type": "integer",
+            "title": "Rank"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "domain": {
+            "type": "string",
+            "enum": [
+              "Technology",
+              "Engineering",
+              "Science",
+              "Health",
+              "Arts & Design",
+              "Finance & Maths",
+              "Hyper-local"
+            ],
+            "title": "Domain"
+          }
+        },
+        "type": "object",
+        "required": [
+          "career_id",
+          "score",
+          "values",
+          "points",
+          "rank",
+          "name",
+          "domain"
+        ],
+        "title": "RankedCareer"
+      },
+      "RankingTrace": {
+        "properties": {
+          "order": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Order"
+          },
+          "top_career_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Top Career Ids"
+          },
+          "stretch_career_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Stretch Career Ids"
+          },
+          "dream_alternative_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Dream Alternative Ids"
+          }
+        },
+        "type": "object",
+        "required": [
+          "order",
+          "top_career_ids",
+          "stretch_career_ids",
+          "dream_alternative_ids"
+        ],
+        "title": "RankingTrace"
+      },
+      "RequirementVector": {
+        "properties": {
+          "numerical": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Numerical"
+          },
+          "logical": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Logical"
+          },
+          "verbal": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Verbal"
+          },
+          "spatial": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Spatial"
+          },
+          "creative": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Creative"
+          },
+          "R": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "R"
+          },
+          "I": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "I"
+          },
+          "A": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "A"
+          },
+          "S": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "S"
+          },
+          "E": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "E"
+          },
+          "C": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "C"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "numerical",
+          "logical",
+          "verbal",
+          "spatial",
+          "creative",
+          "R",
+          "I",
+          "A",
+          "S",
+          "E",
+          "C"
+        ],
+        "title": "RequirementVector"
+      },
+      "RiasecItem": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Id"
+          },
+          "dimension": {
+            "type": "string",
+            "enum": [
+              "R",
+              "I",
+              "A",
+              "S",
+              "E",
+              "C"
+            ],
+            "title": "Dimension"
+          },
+          "prompt": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Prompt"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "dimension",
+          "prompt"
+        ],
+        "title": "RiasecItem"
+      },
+      "RiskRadar": {
+        "properties": {
+          "career_id": {
+            "type": "string",
+            "title": "Career Id"
+          },
+          "financial": {
+            "type": "number",
+            "title": "Financial"
+          },
+          "skill_gap": {
+            "type": "number",
+            "title": "Skill Gap"
+          },
+          "market": {
+            "type": "number",
+            "title": "Market"
+          },
+          "location": {
+            "type": "number",
+            "title": "Location"
+          },
+          "education_cost": {
+            "type": "number",
+            "title": "Education Cost"
+          },
+          "disruption": {
+            "type": "number",
+            "title": "Disruption"
+          }
+        },
+        "type": "object",
+        "required": [
+          "career_id",
+          "financial",
+          "skill_gap",
+          "market",
+          "location",
+          "education_cost",
+          "disruption"
+        ],
+        "title": "RiskRadar"
+      },
+      "RoadmapStep": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "pathway",
+              "learning"
+            ],
+            "title": "Kind"
+          },
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "skill": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Skill"
+          }
+        },
+        "type": "object",
+        "required": [
+          "kind",
+          "text"
+        ],
+        "title": "RoadmapStep"
+      },
+      "Roi": {
+        "properties": {
+          "career_id": {
+            "type": "string",
+            "title": "Career Id"
+          },
+          "effective_cost": {
+            "type": "integer",
+            "title": "Effective Cost"
+          },
+          "entry_mid_inr": {
+            "type": "integer",
+            "title": "Entry Mid Inr"
+          },
+          "salary_share": {
+            "type": "number",
+            "title": "Salary Share"
+          },
+          "break_even_years": {
+            "type": "number",
+            "title": "Break Even Years"
+          }
+        },
+        "type": "object",
+        "required": [
+          "career_id",
+          "effective_cost",
+          "entry_mid_inr",
+          "salary_share",
+          "break_even_years"
+        ],
+        "title": "Roi"
+      },
+      "SalaryBands": {
+        "properties": {
+          "entry": {
+            "prefixItems": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "number",
+                "minimum": 0.0
+              }
+            ],
+            "type": "array",
+            "maxItems": 2,
+            "minItems": 2,
+            "title": "Entry"
+          },
+          "mid": {
+            "prefixItems": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "number",
+                "minimum": 0.0
+              }
+            ],
+            "type": "array",
+            "maxItems": 2,
+            "minItems": 2,
+            "title": "Mid"
+          },
+          "senior": {
+            "prefixItems": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "number",
+                "minimum": 0.0
+              }
+            ],
+            "type": "array",
+            "maxItems": 2,
+            "minItems": 2,
+            "title": "Senior"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "entry",
+          "mid",
+          "senior"
+        ],
+        "title": "SalaryBands"
+      },
+      "SchoolStudentInput": {
+        "properties": {
+          "aptitude_answers": {
+            "additionalProperties": {
+              "type": "integer",
+              "minimum": 0.0
+            },
+            "type": "object",
+            "title": "Aptitude Answers",
+            "default": {}
+          },
+          "riasec_answers": {
+            "additionalProperties": {
+              "type": "integer",
+              "maximum": 5.0,
+              "minimum": 1.0
+            },
+            "type": "object",
+            "title": "Riasec Answers",
+            "default": {}
+          },
+          "workstyle_answers": {
+            "additionalProperties": {
+              "type": "integer",
+              "maximum": 5.0,
+              "minimum": 1.0
+            },
+            "type": "object",
+            "title": "Workstyle Answers",
+            "default": {}
+          },
+          "marks_percent": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Marks Percent"
+          },
+          "favourite_subjects": {
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "type": "array",
+            "title": "Favourite Subjects",
+            "default": []
+          },
+          "home_city": {
+            "type": "string",
+            "enum": [
+              "bengaluru",
+              "mysuru",
+              "chennai",
+              "hyderabad",
+              "pune",
+              "delhi_ncr",
+              "mumbai",
+              "coimbatore"
+            ],
+            "title": "Home City"
+          },
+          "preferred_cities": {
+            "items": {
+              "type": "string",
+              "enum": [
+                "bengaluru",
+                "mysuru",
+                "chennai",
+                "hyderabad",
+                "pune",
+                "delhi_ncr",
+                "mumbai",
+                "coimbatore"
+              ]
+            },
+            "type": "array",
+            "title": "Preferred Cities",
+            "default": []
+          },
+          "willing_to_relocate": {
+            "type": "boolean",
+            "title": "Willing To Relocate"
+          },
+          "wants_higher_studies": {
+            "type": "boolean",
+            "title": "Wants Higher Studies"
+          },
+          "risk_tolerance": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "title": "Risk Tolerance"
+          },
+          "dream_career_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dream Career Id"
+          },
+          "free_text_1": {
+            "type": "string",
+            "title": "Free Text 1",
+            "default": ""
+          },
+          "free_text_2": {
+            "type": "string",
+            "title": "Free Text 2",
+            "default": ""
+          },
+          "track": {
+            "type": "string",
+            "const": "school",
+            "title": "Track"
+          },
+          "current_class": {
+            "type": "integer",
+            "maximum": 12.0,
+            "minimum": 9.0,
+            "title": "Current Class"
+          },
+          "stream": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "PCM",
+                  "PCB",
+                  "PCMB",
+                  "Commerce",
+                  "Humanities"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stream"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "home_city",
+          "willing_to_relocate",
+          "wants_higher_studies",
+          "risk_tolerance",
+          "track",
+          "current_class"
+        ],
+        "title": "SchoolStudentInput"
+      },
+      "ScoringTrace": {
+        "properties": {
+          "growth": {
+            "items": {
+              "$ref": "#/components/schemas/Growth"
+            },
+            "type": "array",
+            "title": "Growth"
+          },
+          "scores": {
+            "items": {
+              "$ref": "#/components/schemas/PrismScore"
+            },
+            "type": "array",
+            "title": "Scores"
+          },
+          "confidence": {
+            "items": {
+              "$ref": "#/components/schemas/Confidence"
+            },
+            "type": "array",
+            "title": "Confidence"
+          },
+          "risks": {
+            "items": {
+              "$ref": "#/components/schemas/RiskRadar"
+            },
+            "type": "array",
+            "title": "Risks"
+          }
+        },
+        "type": "object",
+        "required": [
+          "growth",
+          "scores",
+          "confidence",
+          "risks"
+        ],
+        "title": "ScoringTrace"
+      },
+      "Skill": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Name"
+          },
+          "importance": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Importance"
+          },
+          "level_required": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Level Required"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name",
+          "importance",
+          "level_required"
+        ],
+        "title": "Skill"
+      },
+      "SkillGap": {
+        "properties": {
+          "skill": {
+            "type": "string",
+            "title": "Skill"
+          },
+          "importance": {
+            "type": "number",
+            "title": "Importance"
+          },
+          "level_required": {
+            "type": "number",
+            "title": "Level Required"
+          },
+          "current": {
+            "type": "number",
+            "title": "Current"
+          },
+          "gap": {
+            "type": "number",
+            "title": "Gap"
+          }
+        },
+        "type": "object",
+        "required": [
+          "skill",
+          "importance",
+          "level_required",
+          "current",
+          "gap"
+        ],
+        "title": "SkillGap"
+      },
+      "SkillPlan": {
+        "properties": {
+          "career_id": {
+            "type": "string",
+            "title": "Career Id"
+          },
+          "gaps": {
+            "items": {
+              "$ref": "#/components/schemas/SkillGap"
+            },
+            "type": "array",
+            "title": "Gaps"
+          },
+          "mean_gap": {
+            "type": "number",
+            "title": "Mean Gap"
+          },
+          "roadmap": {
+            "items": {
+              "$ref": "#/components/schemas/RoadmapStep"
+            },
+            "type": "array",
+            "title": "Roadmap"
+          },
+          "timeline": {
+            "items": {
+              "$ref": "#/components/schemas/TimelineYear"
+            },
+            "type": "array",
+            "title": "Timeline"
+          }
+        },
+        "type": "object",
+        "required": [
+          "career_id",
+          "gaps",
+          "mean_gap",
+          "roadmap",
+          "timeline"
+        ],
+        "title": "SkillPlan"
+      },
+      "SolverTrace": {
+        "properties": {
+          "budget": {
+            "type": "integer",
+            "title": "Budget"
+          },
+          "loan_factor": {
+            "type": "number",
+            "title": "Loan Factor"
+          },
+          "capacity": {
+            "type": "integer",
+            "title": "Capacity"
+          },
+          "solver_lambda": {
+            "type": "number",
+            "title": "Solver Lambda"
+          },
+          "finances": {
+            "items": {
+              "$ref": "#/components/schemas/CareerFinance"
+            },
+            "type": "array",
+            "title": "Finances"
+          }
+        },
+        "type": "object",
+        "required": [
+          "budget",
+          "loan_factor",
+          "capacity",
+          "solver_lambda",
+          "finances"
+        ],
+        "title": "SolverTrace"
+      },
+      "StretchOption": {
+        "properties": {
+          "career_id": {
+            "type": "string",
+            "title": "Career Id"
+          },
+          "student_fit": {
+            "type": "number",
+            "title": "Student Fit"
+          },
+          "funding_gap": {
+            "type": "integer",
+            "title": "Funding Gap"
+          },
+          "cheapest_pathway_id": {
+            "type": "string",
+            "title": "Cheapest Pathway Id"
+          },
+          "scholarships": {
+            "items": {
+              "$ref": "#/components/schemas/AidScholarship"
+            },
+            "type": "array",
+            "title": "Scholarships"
+          },
+          "cheaper_pathways": {
+            "items": {
+              "$ref": "#/components/schemas/CheaperPathway"
+            },
+            "type": "array",
+            "title": "Cheaper Pathways"
+          },
+          "adjacent_feasible": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Adjacent Feasible"
+          }
+        },
+        "type": "object",
+        "required": [
+          "career_id",
+          "student_fit",
+          "funding_gap",
+          "cheapest_pathway_id",
+          "scholarships",
+          "cheaper_pathways",
+          "adjacent_feasible"
+        ],
+        "title": "StretchOption"
+      },
+      "StudentFit": {
+        "properties": {
+          "career_id": {
+            "type": "string",
+            "title": "Career Id"
+          },
+          "centred_cosine": {
+            "type": "number",
+            "title": "Centred Cosine"
+          },
+          "domain_affinity": {
+            "type": "number",
+            "title": "Domain Affinity"
+          },
+          "academic_alignment": {
+            "type": "number",
+            "title": "Academic Alignment"
+          },
+          "student_fit": {
+            "type": "number",
+            "title": "Student Fit"
+          }
+        },
+        "type": "object",
+        "required": [
+          "career_id",
+          "centred_cosine",
+          "domain_affinity",
+          "academic_alignment",
+          "student_fit"
+        ],
+        "title": "StudentFit"
+      },
+      "StudentPreferences": {
+        "properties": {
+          "risk_tolerance": {
+            "type": "number",
+            "title": "Risk Tolerance"
+          },
+          "relocation": {
+            "type": "number",
+            "title": "Relocation"
+          },
+          "higher_studies": {
+            "type": "number",
+            "title": "Higher Studies"
+          },
+          "stability": {
+            "type": "number",
+            "title": "Stability"
+          },
+          "marks": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Marks"
+          }
+        },
+        "type": "object",
+        "required": [
+          "risk_tolerance",
+          "relocation",
+          "higher_studies",
+          "stability",
+          "marks"
+        ],
+        "title": "StudentPreferences"
+      },
+      "StudentVector": {
+        "properties": {
+          "values": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Values"
+          },
+          "aptitude_correct": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Aptitude Correct"
+          },
+          "defaulted": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Defaulted"
+          }
+        },
+        "type": "object",
+        "required": [
+          "values",
+          "aptitude_correct",
+          "defaulted"
+        ],
+        "title": "StudentVector"
+      },
+      "Swot": {
+        "properties": {
+          "strengths": {
+            "items": {
+              "$ref": "#/components/schemas/SwotItem"
+            },
+            "type": "array",
+            "title": "Strengths"
+          },
+          "weaknesses": {
+            "items": {
+              "$ref": "#/components/schemas/SwotItem"
+            },
+            "type": "array",
+            "title": "Weaknesses"
+          },
+          "opportunities": {
+            "items": {
+              "$ref": "#/components/schemas/SwotItem"
+            },
+            "type": "array",
+            "title": "Opportunities"
+          },
+          "threats": {
+            "items": {
+              "$ref": "#/components/schemas/SwotItem"
+            },
+            "type": "array",
+            "title": "Threats"
+          }
+        },
+        "type": "object",
+        "required": [
+          "strengths",
+          "weaknesses",
+          "opportunities",
+          "threats"
+        ],
+        "title": "Swot"
+      },
+      "SwotItem": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "title": "Kind"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value"
+          }
+        },
+        "type": "object",
+        "required": [
+          "kind",
+          "label"
+        ],
+        "title": "SwotItem"
+      },
+      "System1Trace": {
+        "properties": {
+          "backend": {
+            "type": "string",
+            "title": "Backend"
+          },
+          "reused": {
+            "type": "boolean",
+            "title": "Reused"
+          },
+          "decisions": {
+            "items": {
+              "$ref": "#/components/schemas/TypedDecision"
+            },
+            "type": "array",
+            "title": "Decisions"
+          },
+          "domain_affinity": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Domain Affinity"
+          },
+          "parent_concerns": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Parent Concerns"
+          }
+        },
+        "type": "object",
+        "required": [
+          "backend",
+          "reused",
+          "decisions",
+          "domain_affinity",
+          "parent_concerns"
+        ],
+        "title": "System1Trace"
+      },
+      "TimelineYear": {
+        "properties": {
+          "year": {
+            "type": "integer",
+            "title": "Year"
+          },
+          "steps": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Steps"
+          }
+        },
+        "type": "object",
+        "required": [
+          "year",
+          "steps"
+        ],
+        "title": "TimelineYear"
+      },
+      "TypedDecision": {
+        "properties": {
+          "question_id": {
+            "type": "string",
+            "title": "Question Id"
+          },
+          "choice": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Choice"
+          },
+          "probabilities": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Probabilities"
+          },
+          "confidence": {
+            "type": "number",
+            "title": "Confidence"
+          },
+          "margin": {
+            "type": "number",
+            "title": "Margin"
+          },
+          "abstained": {
+            "type": "boolean",
+            "title": "Abstained"
+          },
+          "backend": {
+            "type": "string",
+            "title": "Backend"
+          }
+        },
+        "type": "object",
+        "required": [
+          "question_id",
+          "choice",
+          "probabilities",
+          "confidence",
+          "margin",
+          "abstained",
+          "backend"
+        ],
+        "title": "TypedDecision"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "VectorizeTrace": {
+        "properties": {
+          "student_vector": {
+            "$ref": "#/components/schemas/StudentVector"
+          },
+          "student_preferences": {
+            "$ref": "#/components/schemas/StudentPreferences"
+          },
+          "parent_preferences": {
+            "$ref": "#/components/schemas/ParentPreferences"
+          }
+        },
+        "type": "object",
+        "required": [
+          "student_vector",
+          "student_preferences",
+          "parent_preferences"
+        ],
+        "title": "VectorizeTrace"
+      },
+      "WhatIfOverrides": {
+        "properties": {
+          "budget": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Budget"
+          },
+          "loan_willingness": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "none",
+                  "moderate",
+                  "high"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Loan Willingness"
+          },
+          "home_city": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "bengaluru",
+                  "mysuru",
+                  "chennai",
+                  "hyderabad",
+                  "pune",
+                  "delhi_ncr",
+                  "mumbai",
+                  "coimbatore"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Home City"
+          },
+          "willing_to_relocate": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Willing To Relocate"
+          },
+          "risk_tolerance": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "low",
+                  "medium",
+                  "high"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Risk Tolerance"
+          },
+          "risk_appetite": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "low",
+                  "medium",
+                  "high"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Risk Appetite"
+          },
+          "wants_higher_studies": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Wants Higher Studies"
+          },
+          "top_priority": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "stability",
+                  "salary",
+                  "prestige",
+                  "happiness"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Top Priority"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "WhatIfOverrides",
+        "description": "\u00a711 inputs a What-If may change; None = keep the original answer."
+      },
+      "WhatIfRequest": {
+        "properties": {
+          "assessment_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Assessment Id"
+          },
+          "profile": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AssessRequest"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "overrides": {
+            "$ref": "#/components/schemas/WhatIfOverrides",
+            "default": {}
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "WhatIfRequest"
+      },
+      "WhatIfResult": {
+        "properties": {
+          "assessment_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Assessment Id"
+          },
+          "overrides": {
+            "$ref": "#/components/schemas/WhatIfOverrides"
+          },
+          "ranking": {
+            "items": {
+              "$ref": "#/components/schemas/RankedCareer"
+            },
+            "type": "array",
+            "title": "Ranking"
+          },
+          "changes": {
+            "items": {
+              "$ref": "#/components/schemas/CareerChange"
+            },
+            "type": "array",
+            "title": "Changes"
+          },
+          "elapsed_ms": {
+            "type": "number",
+            "title": "Elapsed Ms"
+          }
+        },
+        "type": "object",
+        "required": [
+          "assessment_id",
+          "overrides",
+          "ranking",
+          "changes",
+          "elapsed_ms"
+        ],
+        "title": "WhatIfResult"
+      },
+      "WorkstyleItem": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Id"
+          },
+          "dimension": {
+            "type": "string",
+            "enum": [
+              "creative",
+              "stability_vs_excitement",
+              "teamwork",
+              "structure"
+            ],
+            "title": "Dimension"
+          },
+          "prompt": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Prompt"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "dimension",
+          "prompt"
+        ],
+        "title": "WorkstyleItem"
       }
     }
   }

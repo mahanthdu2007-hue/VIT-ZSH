@@ -4,18 +4,25 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any
 
-from engine_chain import apply_overrides, deltas, run
 from hypothesis import HealthCheck, given, seed, settings
 from hypothesis import strategies as st
-from strategies import DATA, parents, profiles, students
+from strategies import AS_OF, DATA, parents, profiles, stand_in_decisions, students
 
 from app.engine import config
+from app.engine.pipeline import run_pipeline
 from app.engine.solver import capacity, solve_all
+from app.engine.whatif import run_whatif
+from app.models.schemas import PipelineResult, WhatIfOverrides
 
 MAX_EXAMPLES = 1000
 SEED = 20261008
 POINTS_TOLERANCE = 0.1  # §16 component points sum to the score (±0.1)
 FLOAT_TOLERANCE = 1e-9
+
+
+def run(student, parent, affinity, concerns) -> PipelineResult:  # type: ignore[no-untyped-def]
+    """The full pipeline with stand-in System 1 decisions built from the random probabilities."""
+    return run_pipeline(student, parent, DATA, AS_OF, decisions=stand_in_decisions(affinity, concerns))
 
 
 def check_feasible_within_capacity(student, parent) -> None:  # type: ignore[no-untyped-def]
@@ -40,34 +47,35 @@ def check_lower_budget_never_raises_ff(student, parent, fraction) -> None:  # ty
 
 def check_conflict_index_in_range(profile) -> None:  # type: ignore[no-untyped-def]
     """CI ∈ [0, 100]."""
-    result = run(*profile, DATA)
+    result = run(*profile)
     assert 0 <= result.conflict.index <= config.CONFLICT_INDEX_SCALE
 
 
 def check_scores_in_range(profile) -> None:  # type: ignore[no-untyped-def]
     """Every PRISM score ∈ [0, 100]."""
-    for score in run(*profile, DATA).scores.values():
+    for score in run(*profile).trace.scoring.scores:
         assert 0 <= score.score <= sum(config.SCORE_POINTS.values())
 
 
 def check_points_sum_to_score(profile) -> None:  # type: ignore[no-untyped-def]
     """Component points sum to the score (±0.1)."""
-    for score in run(*profile, DATA).scores.values():
+    for score in run(*profile).trace.scoring.scores:
         assert abs(sum(score.points.values()) - score.score) <= POINTS_TOLERANCE
 
 
 def check_whatif_no_overrides_zero_deltas(profile) -> None:  # type: ignore[no-untyped-def]
     """What-If with no overrides gives zero deltas."""
     student, parent, affinity, concerns = profile
-    base = run(student, parent, affinity, concerns, DATA)
-    same_student, same_parent = apply_overrides(student, parent, {})
-    changed = deltas(base, run(same_student, same_parent, affinity, concerns, DATA))
-    assert all(v == 0 for d in changed.values() for v in d.values())
+    result = run_whatif(student, parent, stand_in_decisions(affinity, concerns), WhatIfOverrides(), DATA, AS_OF)
+    for change in result.changes:
+        assert change.score_delta == 0 and change.rank_change in (0, None) and change.reason is None
+        assert change.rank_before == change.rank_after
+        assert all(v == 0 for v in change.point_deltas.values())
 
 
 def check_deterministic(profile) -> None:  # type: ignore[no-untyped-def]
-    """The engine chain is deterministic for identical input."""
-    assert run(*profile, DATA).dump() == run(*profile, DATA).dump()
+    """The pipeline is deterministic for identical input."""
+    assert run(*profile).model_dump() == run(*profile).model_dump()
 
 
 @dataclass(frozen=True)
@@ -85,7 +93,7 @@ PROPERTIES = [
     Property("scores ∈ [0, 100]", (profiles(),), check_scores_in_range),
     Property("component points sum to the score (±0.1)", (profiles(),), check_points_sum_to_score),
     Property("What-If with no overrides gives zero deltas", (profiles(),), check_whatif_no_overrides_zero_deltas),
-    Property("engine is deterministic for identical input", (profiles(),), check_deterministic),
+    Property("pipeline is deterministic for identical input", (profiles(),), check_deterministic),
 ]
 
 

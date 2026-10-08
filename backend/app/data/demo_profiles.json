@@ -57,7 +57,7 @@
         "apt_num_1": 1, "apt_num_2": 2, "apt_num_3": 0,
         "apt_log_1": 2, "apt_log_2": 1, "apt_log_3": 3,
         "apt_verb_1": 1, "apt_verb_2": 0, "apt_verb_3": 0,
-        "apt_spa_1": 1, "apt_spa_2": 1, "apt_spa_3": 0
+        "apt_spa_1": 1, "apt_spa_2": 1, "apt_spa_3": 3
       },
       "riasec_answers": {
         "ria_r_1": 1, "ria_r_2": 2, "ria_r_3": 1,
@@ -67,7 +67,7 @@
         "ria_e_1": 3, "ria_e_2": 3, "ria_e_3": 3,
         "ria_c_1": 5, "ria_c_2": 5, "ria_c_3": 4
       },
-      "workstyle_answers": {"ws_creative": 2, "ws_stability": 5, "ws_teamwork": 3, "ws_structure": 4},
+      "workstyle_answers": {"ws_creative": 3, "ws_stability": 5, "ws_teamwork": 3, "ws_structure": 4},
       "marks_percent": 78,
       "favourite_subjects": ["Accountancy", "Business Statistics", "Economics"],
       "home_city": "chennai",

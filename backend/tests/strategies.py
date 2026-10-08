@@ -1,14 +1,25 @@
 """Hypothesis strategies that build valid random inputs from the §6 input models and the real question sets."""
 
+from datetime import date
 from typing import Any
 
 from hypothesis import strategies as st
 
 from app.engine import config
 from app.engine.loader import get_dataset
-from app.models.schemas import CollegeStudentInput, ParentInput, QuestionSet, SchoolStudentInput, StudentInput
+from app.engine.system1 import build_decision
+from app.models.schemas import (
+    CollegeStudentInput,
+    ParentInput,
+    QuestionSet,
+    SchoolStudentInput,
+    StudentInput,
+    TypedDecision,
+)
 
 DATA = get_dataset()
+AS_OF = date(2026, 10, 8)  # fixed "today" so timelines and next exams are reproducible
+STAND_IN_BACKEND = "stand_in"
 CAREER_IDS = [c.id for c in DATA.careers]
 LEVELS = ["low", "medium", "high"]
 STREAMS = ["PCM", "PCB", "PCMB", "Commerce", "Humanities"]
@@ -94,5 +105,13 @@ concern_probabilities = st.fixed_dictionaries({c: unit for c in config.PARENT_CO
 
 @st.composite
 def profiles(draw: st.DrawFn) -> tuple[StudentInput, ParentInput, dict[str, float], dict[str, float]]:
-    """One full random profile: student, parent, and stand-in System 1 outputs."""
+    """One full random profile: student, parent, and stand-in System 1 probabilities."""
     return draw(students), draw(parents()), draw(domain_affinities), draw(concern_probabilities)
+
+
+def stand_in_decisions(domain_affinity: dict[str, float], concerns: dict[str, float]) -> list[TypedDecision]:
+    """System 1 decisions with given probabilities, so engine tests do not depend on a model."""
+    return [
+        build_decision(config.DECISION_STUDENT_DOMAIN, dict(domain_affinity), STAND_IN_BACKEND),
+        build_decision(config.DECISION_PARENT_CONCERNS, dict(concerns), STAND_IN_BACKEND),
+    ]

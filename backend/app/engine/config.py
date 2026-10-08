@@ -266,6 +266,20 @@ DREAM_TOP_RANK: Final[int] = 5  # §10 alternatives if dream ranks outside top 5
 WHATIF_RANK_DELTA_THRESHOLD: Final[int] = 2  # §11 reason if moved ≥ 2 ranks
 WHATIF_POINT_DELTA_THRESHOLD: Final[float] = 3.0  # §11 or ≥ 3 points
 WHATIF_TARGET_MS: Final[int] = 300  # §11 latency target
+COMPONENT_LABELS: Final[dict[str, str]] = {  # §11 / §15 component names used in reason sentences and UI
+    "student_fit": "Student Fit",
+    "financial_fit": "Financial Fit",
+    "market_demand": "Market Demand",
+    "growth": "Growth",
+    "parent_alignment": "Parent Alignment",
+}
+PA_COMPONENT_LABELS: Final[dict[str, str]] = {  # §11 Parent Alignment parts named in reason sentences
+    "domain": "the parents' preferred fields",
+    "risk": "the parents' risk appetite",
+    "location": "the parents' location preference",
+    "priority": "the family's top priority",
+    "financial_fit": "affordability",
+}
 
 # ---------------------------------------------------------------- §12 System 2 explanations
 EMBEDDING_MODEL: Final[str] = "sentence-transformers/all-MiniLM-L6-v2"  # §3 / §12

@@ -1,5 +1,5 @@
 {
-  "note": "Constraints only, never stored scores. Each scenario starts from a demo profile and applies field overrides. domain_affinity and parent_concerns stand in for System 1 output until Phase 3. 'tracked' holds §14 persona-story checks that are reported but not counted until persona tuning after Phase 4.",
+  "note": "Constraints only, never stored scores. Each scenario starts from a demo profile and applies field overrides. 'scenarios' give domain_affinity and parent_concerns as stand-in System 1 probabilities (engine only). 'personas' run the full pipeline with the real System 1 backend on the §14 demo profiles. 'tracked' holds §14 story checks that do not hold with the §14 answers; they are reported but not counted.",
   "scenarios": [
     {
       "id": "ananya_story",
@@ -974,21 +974,174 @@
       ]
     }
   ],
-  "tracked": [
+  "personas": [
     {
-      "id": "ananya_hotspots",
-      "description": "Ananya (§14): conflict hotspots are location and risk (§14 story; tuned after Phase 4)",
+      "id": "ananya_full",
+      "description": "Ananya (§14): AI/ML Engineer near the top, location hotspot, govt Technology middle path",
       "profile": {
         "demo": "ananya"
       },
-      "domain_affinity": {
-        "Technology": 0.9,
-        "Engineering": 0.4,
-        "Science": 0.2,
-        "Health": 0.05,
-        "Arts & Design": 0.05,
-        "Finance & Maths": 0.05,
-        "Hyper-local": 0.05
+      "constraints": [
+        {
+          "check": "career_in_top",
+          "career": "ai_ml_engineer",
+          "n": 3
+        },
+        {
+          "check": "hotspot_includes",
+          "dimension": "location"
+        },
+        {
+          "check": "middle_path",
+          "domains": [
+            "Technology"
+          ],
+          "institutions": [
+            "govt"
+          ]
+        },
+        {
+          "check": "no_feasible_exceeds_capacity"
+        },
+        {
+          "check": "scores_valid"
+        }
+      ]
+    },
+    {
+      "id": "ananya_full_whatif_3l",
+      "description": "Ananya (§14): What-If budget ₹5L → ₹3L re-ranks the top 10 with a Financial Fit reason",
+      "profile": {
+        "demo": "ananya"
+      },
+      "whatif": {
+        "budget": 300000
+      },
+      "constraints": [
+        {
+          "check": "whatif_top_changes",
+          "n": 10
+        },
+        {
+          "check": "whatif_reason_mentions",
+          "component": "financial_fit",
+          "n": 10
+        },
+        {
+          "check": "whatif_ff_not_higher"
+        },
+        {
+          "check": "whatif_latency",
+          "runs": 20,
+          "max_ms": 300
+        }
+      ]
+    },
+    {
+      "id": "rahul_full",
+      "description": "Rahul (§14): data/finance analytics via lateral and online pathways, skill-gap roadmap, scholarships shown",
+      "profile": {
+        "demo": "rahul"
+      },
+      "constraints": [
+        {
+          "check": "domain_in_top",
+          "domains": [
+            "Finance & Maths",
+            "Technology"
+          ],
+          "n": 5,
+          "at_least": 4
+        },
+        {
+          "check": "career_in_top",
+          "career": "data_analyst",
+          "n": 3
+        },
+        {
+          "check": "top_chosen_entry_in",
+          "n": 5,
+          "entries": [
+            "graduate"
+          ]
+        },
+        {
+          "check": "top_chosen_institution_in",
+          "n": 5,
+          "institutions": [
+            "online"
+          ],
+          "at_least": 3
+        },
+        {
+          "check": "roadmap_learning_steps",
+          "min": 3
+        },
+        {
+          "check": "scholarships_shown",
+          "n": 5,
+          "min": 1
+        },
+        {
+          "check": "no_feasible_exceeds_capacity"
+        }
+      ]
+    },
+    {
+      "id": "meera_full",
+      "description": "Meera (§14): Arts & Design on top, domain is the main hotspot, Nash middle path with gains for both",
+      "profile": {
+        "demo": "meera"
+      },
+      "constraints": [
+        {
+          "check": "top_career_domain_in",
+          "domains": [
+            "Arts & Design"
+          ]
+        },
+        {
+          "check": "domain_in_top",
+          "domains": [
+            "Arts & Design"
+          ],
+          "n": 3,
+          "at_least": 2
+        },
+        {
+          "check": "hotspot_includes",
+          "dimension": "domain"
+        },
+        {
+          "check": "middle_path",
+          "method": "nash",
+          "both_gain": true
+        },
+        {
+          "check": "no_feasible_exceeds_capacity"
+        }
+      ]
+    },
+    {
+      "id": "meera_full_whatif_none",
+      "description": "Meera: What-If with no overrides gives zero deltas through the full pipeline",
+      "profile": {
+        "demo": "meera"
+      },
+      "whatif": {},
+      "constraints": [
+        {
+          "check": "whatif_zero_deltas"
+        }
+      ]
+    }
+  ],
+  "tracked": [
+    {
+      "id": "ananya_risk_hotspot",
+      "description": "Ananya (§14): conflict hotspots are location and risk",
+      "profile": {
+        "demo": "ananya"
       },
       "constraints": [
         {
@@ -998,51 +1151,6 @@
         {
           "check": "hotspot_includes",
           "dimension": "risk"
-        }
-      ]
-    },
-    {
-      "id": "rahul_roadmap",
-      "description": "Rahul: the skill-gap roadmap has at least 3 learning steps (§14 story; tuned after Phase 4)",
-      "profile": {
-        "demo": "rahul"
-      },
-      "domain_affinity": {
-        "Finance & Maths": 0.8,
-        "Technology": 0.6,
-        "Engineering": 0.05,
-        "Science": 0.05,
-        "Health": 0.05,
-        "Arts & Design": 0.05,
-        "Hyper-local": 0.05
-      },
-      "constraints": [
-        {
-          "check": "roadmap_learning_steps",
-          "min": 3
-        }
-      ]
-    },
-    {
-      "id": "rahul_scholarships",
-      "description": "Rahul: at least one eligible scholarship appears in SWOT opportunities (§14 story; tuned after Phase 4)",
-      "profile": {
-        "demo": "rahul"
-      },
-      "domain_affinity": {
-        "Finance & Maths": 0.8,
-        "Technology": 0.6,
-        "Engineering": 0.05,
-        "Science": 0.05,
-        "Health": 0.05,
-        "Arts & Design": 0.05,
-        "Hyper-local": 0.05
-      },
-      "constraints": [
-        {
-          "check": "swot_items",
-          "kind": "scholarship",
-          "min": 1
         }
       ]
     }

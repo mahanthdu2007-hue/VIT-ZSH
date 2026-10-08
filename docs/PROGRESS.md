@@ -202,3 +202,33 @@
   decisions abstain, which lowers their §7.8 confidence. The probabilities still drive domain affinity and parent
   concern weights. Changing this would change a §7.3 formula, so it is left as specified.
 - Optional §7.3 temperature scaling on calibration_set.json is not done; the word "calibrated" must not be used.
+
+## Phase 4: Pipeline, What-If and API (2026-10-08)
+
+**Built**
+- `engine/pipeline.py`: runs stages 1–9 and returns a `PipelineResult` with a `PipelineTrace` of every value
+  (completeness, vectors, System 1 decisions, solver pathway table, fits, conflict + Parent Alignment, market, growth,
+  scores, confidence, risk, ranking order). Career details for the top 10, middle path, stretch options, dream alternatives.
+- `engine/whatif.py`: re-runs stages 2 and 4–9 with saved System 1 decisions; rank and per-component deltas for every
+  career; §11 reason sentences. `engine/formatting.py` (₹ Indian grouping).
+- `rag/templates.py`: deterministic why / why-not / roadmap narrative for the top 5 + middle path.
+- `app/storage.py` (SQLite via SQLAlchemy), `app/demo_cache.py` (DEMO_MODE disk cache), `app/services.py`.
+- All §13 endpoints: health (now with dataset counts), questions (answer keys hidden), demo-profiles, assess, whatif,
+  explanations, careers, careers/{id}.
+- Property tests and benchmark moved onto the real pipeline; new full-pipeline persona scenarios with the real System 1.
+- Persona tuning: Rahul (2 answers). Vite proxy now targets 127.0.0.1.
+
+**Checks**
+- `pytest -q`: 184 passed (new: test_api 18, test_pipeline 7, test_whatif 8, test_templates 11). `pytest -q -m slow`: 1 passed.
+- `python scripts/benchmark.py`: 30 / 30 engine scenarios (70 / 70), 5 / 5 full-pipeline persona scenarios (22 / 22),
+  7 / 7 properties, 7,000 random profiles. What-If median 34 ms, slowest 47 ms over 20 runs.
+- `python scripts/export_openapi.py`: written. `npm run gen:api`, `npm run typecheck`, `npm run build`: passed.
+- `python scripts/validate_data.py`: 0 errors.
+- Live server with the real model: assess about 1.4 s (System 1 about 1 s), What-If about 40 ms per request.
+
+**Known issues**
+- Ananya's second hotspot is domain, not risk (user chose to keep §14's answers; tracked in the benchmark).
+- Ananya's ₹3L What-If changes the top 10 but not the top 5 order much; AI/ML Engineer keeps FF 1.0 through its online pathway.
+- Rahul's #1 (Data Analyst 82.6) is only 0.1 ahead of Financial Analyst (82.5).
+- Ananya's middle path is her own #1 (AI/ML Engineer via a govt B.Tech): she gives up nothing, and the parents gain
+  +0.121 over the median.

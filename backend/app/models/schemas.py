@@ -1,3 +1,4 @@
+from datetime import date
 from typing import Annotated, Literal, Self
 
 from pydantic import BaseModel, ConfigDict, Field, NonNegativeInt, PositiveInt, model_validator
@@ -568,9 +569,236 @@ class Dataset(BaseModel):
     demo_profiles: list[DemoProfile]
 
 
+# ---------------------------------------------------------------- §7 pipeline trace
+class IngestTrace(BaseModel):
+    track: Track
+    completeness: Completeness
+
+
+class VectorizeTrace(BaseModel):
+    student_vector: StudentVector
+    student_preferences: StudentPreferences
+    parent_preferences: ParentPreferences
+
+
+class System1Trace(BaseModel):
+    backend: str
+    reused: bool  # True when the decisions came from an earlier run (What-If, demo cache)
+    decisions: list[TypedDecision]
+    domain_affinity: dict[str, float]
+    parent_concerns: dict[str, float]
+
+
+class SolverTrace(BaseModel):
+    budget: int
+    loan_factor: float
+    capacity: int
+    solver_lambda: float
+    finances: list[CareerFinance]
+
+
+class MatcherTrace(BaseModel):
+    fits: list[StudentFit]
+
+
+class ConflictTrace(BaseModel):
+    conflict: ConflictResult
+    concern_weights: dict[str, float]
+    parent_alignment: list[ParentAlignment]
+    middle_path: MiddlePath | None
+
+
+class MarketTrace(BaseModel):
+    markets: list[MarketDemand]
+
+
+class ScoringTrace(BaseModel):
+    growth: list[Growth]
+    scores: list[PrismScore]
+    confidence: list[Confidence]  # same order as scores
+    risks: list[RiskRadar]  # careers with a pathway for the student's stage
+
+
+class RankingTrace(BaseModel):
+    order: list[str]  # every feasible career by score; the top list is the first ten
+    top_career_ids: list[str]
+    stretch_career_ids: list[str]
+    dream_alternative_ids: list[str]
+
+
+class PipelineTrace(BaseModel):
+    ingest: IngestTrace
+    vectorize: VectorizeTrace
+    system1: System1Trace
+    solver: SolverTrace
+    matcher: MatcherTrace
+    conflict: ConflictTrace
+    market: MarketTrace
+    scoring: ScoringTrace
+    ranking: RankingTrace
+
+
+# ---------------------------------------------------------------- §7.9 pipeline outputs
+class RankedCareer(PrismScore):
+    rank: int
+    name: str
+    domain: Domain
+
+
+class CareerDetail(BaseModel):
+    career: Career
+    status: CareerStatus
+    rank: int | None  # position among feasible careers by score; None if not feasible
+    score: PrismScore
+    student_fit: StudentFit
+    finance: CareerFinance
+    parent_alignment: ParentAlignment
+    market: MarketDemand
+    growth: Growth
+    confidence: Confidence
+    risk: RiskRadar
+    skill_plan: SkillPlan
+    roi: Roi
+    pathway: Pathway  # chosen pathway (cheapest stage-fit pathway when needs_aid)
+    scholarships: list[AidScholarship]  # schemes for this pathway, restricted ones included
+    exams: list[Exam]  # entrance exams for this pathway
+
+
+class PipelineResult(BaseModel):
+    as_of: date
+    ranking: list[RankedCareer]
+    details: dict[str, CareerDetail]  # top careers, middle path, stretch options, dream alternatives
+    conflict: ConflictResult
+    middle_path: MiddlePath | None
+    stretch_options: list[StretchOption]
+    alternatives: DreamAlternatives | None
+    swot: Swot | None
+    confidence: Confidence | None  # confidence for the #1 career
+    trace: PipelineTrace
+
+
+# ---------------------------------------------------------------- §12 explanations
+class CareerExplanation(BaseModel):
+    career_id: str
+    why: list[str]
+    why_not: list[str]
+    roadmap_narrative: str
+    cited_ids: list[str]
+
+
+class Explanations(BaseModel):
+    source: Literal["template", "llm"]
+    items: list[CareerExplanation]  # top 5 careers, then the middle path if not among them
+
+
 # ---------------------------------------------------------------- §13 API
+class DatasetCounts(BaseModel):
+    careers: int
+    scholarships: int
+    exams: int
+    cities: int
+    demo_profiles: int
+
+
 class HealthResponse(BaseModel):
     status: Literal["ok"]
     system1: str
     llm: Literal["groq", "gemini", "none"]
     demo_mode: bool
+    dataset: DatasetCounts
+
+
+class PublicAptitudeItem(StrictModel):
+    id: str
+    dimension: AptitudeDimension
+    prompt: str
+    options: list[str]
+
+
+class PublicQuestionSet(StrictModel):
+    """§13 question set as sent to the browser: aptitude answer keys stay on the server."""
+    track: Track
+    aptitude: list[PublicAptitudeItem]
+    riasec: list[RiasecItem]
+    workstyle: list[WorkstyleItem]
+    free_text: list[FreeTextPrompt]
+    skills: list[str] | None = None
+
+
+class CareerSummary(BaseModel):
+    id: str
+    name: str
+    domain: Domain
+    steam: list[str]
+    summary: str
+
+
+class AssessRequest(StrictModel):
+    student: StudentInput
+    parent: ParentInput
+
+
+class AssessmentResult(PipelineResult):
+    id: str
+    explanations: Explanations
+
+
+class AssessmentInputs(BaseModel):
+    """What a saved assessment needs to be re-run (§11): the inputs and the System 1 decisions."""
+    student: StudentInput
+    parent: ParentInput
+    decisions: list[TypedDecision]
+    as_of: date
+
+
+class DemoCacheEntry(BaseModel):
+    """§12 DEMO_MODE disk cache: a demo profile's full result and the System 1 decisions behind it."""
+    decisions: list[TypedDecision]
+    result: PipelineResult
+
+
+class WhatIfOverrides(StrictModel):
+    """§11 inputs a What-If may change; None = keep the original answer."""
+    budget: NonNegativeInt | None = None
+    loan_willingness: Literal["none", "moderate", "high"] | None = None
+    home_city: CityId | None = None
+    willing_to_relocate: bool | None = None
+    risk_tolerance: Level | None = None
+    risk_appetite: Level | None = None
+    wants_higher_studies: bool | None = None
+    top_priority: Literal["stability", "salary", "prestige", "happiness"] | None = None
+
+
+class WhatIfRequest(StrictModel):
+    assessment_id: str | None = None
+    profile: AssessRequest | None = None
+    overrides: WhatIfOverrides = WhatIfOverrides()
+
+    @model_validator(mode="after")
+    def one_base(self) -> Self:
+        if (self.assessment_id is None) == (self.profile is None):
+            raise ValueError("give exactly one of assessment_id or profile")
+        return self
+
+
+class CareerChange(BaseModel):
+    career_id: str
+    name: str
+    status_before: CareerStatus
+    status_after: CareerStatus
+    rank_before: int | None  # among feasible careers; None if not feasible
+    rank_after: int | None
+    rank_change: int | None  # rank_before − rank_after (positive = moved up); None if either is None
+    score_before: float
+    score_after: float
+    score_delta: float
+    point_deltas: dict[str, float]  # from unrounded component values, so rounding never shows a fake change
+    reason: str | None  # §11 set when the career moved ≥ 2 ranks or ≥ 3 points
+
+
+class WhatIfResult(BaseModel):
+    assessment_id: str | None
+    overrides: WhatIfOverrides
+    ranking: list[RankedCareer]
+    changes: list[CareerChange]  # every career: new ranking first, then the rest in data order
+    elapsed_ms: float

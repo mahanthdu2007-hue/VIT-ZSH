@@ -21,10 +21,585 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/questions/{track}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Questions */
+        get: operations["questions_api_questions__track__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/demo-profiles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Demo Profiles */
+        get: operations["demo_profiles_api_demo_profiles_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/assess": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Assess */
+        post: operations["assess_api_assess_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/whatif": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Whatif */
+        post: operations["whatif_api_whatif_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/explanations/{assessment_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Explanations */
+        get: operations["explanations_api_explanations__assessment_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/careers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Careers */
+        get: operations["careers_api_careers_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/careers/{career_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Career */
+        get: operations["career_api_careers__career_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** AidScholarship */
+        AidScholarship: {
+            /** Scholarship Id */
+            scholarship_id: string;
+            /** Name */
+            name: string;
+            /** Amount Inr Per Year */
+            amount_inr_per_year: number;
+            /** Restricted To */
+            restricted_to: string | null;
+        };
+        /** AssessRequest */
+        AssessRequest: {
+            /** Student */
+            student: components["schemas"]["SchoolStudentInput"] | components["schemas"]["CollegeStudentInput"];
+            parent: components["schemas"]["ParentInput"];
+        };
+        /** AssessmentResult */
+        AssessmentResult: {
+            /**
+             * As Of
+             * Format: date
+             */
+            as_of: string;
+            /** Ranking */
+            ranking: components["schemas"]["RankedCareer"][];
+            /** Details */
+            details: {
+                [key: string]: components["schemas"]["CareerDetail"];
+            };
+            conflict: components["schemas"]["ConflictResult"];
+            middle_path: components["schemas"]["MiddlePath"] | null;
+            /** Stretch Options */
+            stretch_options: components["schemas"]["StretchOption"][];
+            alternatives: components["schemas"]["DreamAlternatives"] | null;
+            swot: components["schemas"]["Swot"] | null;
+            confidence: components["schemas"]["Confidence"] | null;
+            trace: components["schemas"]["PipelineTrace"];
+            /** Id */
+            id: string;
+            explanations: components["schemas"]["Explanations"];
+        };
+        /** Career */
+        Career: {
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /**
+             * Domain
+             * @enum {string}
+             */
+            domain: "Technology" | "Engineering" | "Science" | "Health" | "Arts & Design" | "Finance & Maths" | "Hyper-local";
+            /** Steam */
+            steam: ("S" | "T" | "E" | "A" | "M")[];
+            /** Summary */
+            summary: string;
+            requirement_vector: components["schemas"]["RequirementVector"];
+            /** Skills */
+            skills: components["schemas"]["Skill"][];
+            /** Pathways */
+            pathways: components["schemas"]["Pathway"][];
+            salary_inr_lpa: components["schemas"]["SalaryBands"];
+            /** Growth Index */
+            growth_index: number;
+            /** Job Velocity */
+            job_velocity: number;
+            /** Disruption Index */
+            disruption_index: number;
+            /** Stability */
+            stability: number;
+            /** Risk Level */
+            risk_level: number;
+            /** Prestige */
+            prestige: number;
+            /** Higher Studies Typical */
+            higher_studies_typical: boolean;
+            /** City Demand */
+            city_demand: {
+                [key: string]: number;
+            };
+            /** Adjacent Careers */
+            adjacent_careers: string[];
+            /** Sources */
+            sources: string[];
+            /** Data Note */
+            data_note: string;
+        };
+        /** CareerChange */
+        CareerChange: {
+            /** Career Id */
+            career_id: string;
+            /** Name */
+            name: string;
+            /**
+             * Status Before
+             * @enum {string}
+             */
+            status_before: "feasible" | "needs_aid" | "no_pathway";
+            /**
+             * Status After
+             * @enum {string}
+             */
+            status_after: "feasible" | "needs_aid" | "no_pathway";
+            /** Rank Before */
+            rank_before: number | null;
+            /** Rank After */
+            rank_after: number | null;
+            /** Rank Change */
+            rank_change: number | null;
+            /** Score Before */
+            score_before: number;
+            /** Score After */
+            score_after: number;
+            /** Score Delta */
+            score_delta: number;
+            /** Point Deltas */
+            point_deltas: {
+                [key: string]: number;
+            };
+            /** Reason */
+            reason: string | null;
+        };
+        /** CareerDetail */
+        CareerDetail: {
+            career: components["schemas"]["Career"];
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "feasible" | "needs_aid" | "no_pathway";
+            /** Rank */
+            rank: number | null;
+            score: components["schemas"]["PrismScore"];
+            student_fit: components["schemas"]["StudentFit"];
+            finance: components["schemas"]["CareerFinance"];
+            parent_alignment: components["schemas"]["ParentAlignment"];
+            market: components["schemas"]["MarketDemand"];
+            growth: components["schemas"]["Growth"];
+            confidence: components["schemas"]["Confidence"];
+            risk: components["schemas"]["RiskRadar"];
+            skill_plan: components["schemas"]["SkillPlan"];
+            roi: components["schemas"]["Roi"];
+            pathway: components["schemas"]["Pathway"];
+            /** Scholarships */
+            scholarships: components["schemas"]["AidScholarship"][];
+            /** Exams */
+            exams: components["schemas"]["Exam"][];
+        };
+        /** CareerExplanation */
+        CareerExplanation: {
+            /** Career Id */
+            career_id: string;
+            /** Why */
+            why: string[];
+            /** Why Not */
+            why_not: string[];
+            /** Roadmap Narrative */
+            roadmap_narrative: string;
+            /** Cited Ids */
+            cited_ids: string[];
+        };
+        /** CareerFinance */
+        CareerFinance: {
+            /** Career Id */
+            career_id: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "feasible" | "needs_aid" | "no_pathway";
+            /** Chosen Pathway Id */
+            chosen_pathway_id: string | null;
+            /** Effective Cost */
+            effective_cost: number | null;
+            /** Financial Fit */
+            financial_fit: number;
+            /** Funding Gap */
+            funding_gap: number;
+            /** Budget */
+            budget: number;
+            /** Capacity */
+            capacity: number;
+            /** Pathways */
+            pathways: components["schemas"]["PathwayEvaluation"][];
+        };
+        /** CareerSummary */
+        CareerSummary: {
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /**
+             * Domain
+             * @enum {string}
+             */
+            domain: "Technology" | "Engineering" | "Science" | "Health" | "Arts & Design" | "Finance & Maths" | "Hyper-local";
+            /** Steam */
+            steam: string[];
+            /** Summary */
+            summary: string;
+        };
+        /** CheaperPathway */
+        CheaperPathway: {
+            /** Pathway Id */
+            pathway_id: string;
+            /** Effective Cost */
+            effective_cost: number;
+            /** Funding Gap */
+            funding_gap: number;
+        };
+        /** CollegeStudentInput */
+        CollegeStudentInput: {
+            /**
+             * Aptitude Answers
+             * @default {}
+             */
+            aptitude_answers: {
+                [key: string]: number;
+            };
+            /**
+             * Riasec Answers
+             * @default {}
+             */
+            riasec_answers: {
+                [key: string]: number;
+            };
+            /**
+             * Workstyle Answers
+             * @default {}
+             */
+            workstyle_answers: {
+                [key: string]: number;
+            };
+            /** Marks Percent */
+            marks_percent?: number | null;
+            /**
+             * Favourite Subjects
+             * @default []
+             */
+            favourite_subjects: string[];
+            /**
+             * Home City
+             * @enum {string}
+             */
+            home_city: "bengaluru" | "mysuru" | "chennai" | "hyderabad" | "pune" | "delhi_ncr" | "mumbai" | "coimbatore";
+            /**
+             * Preferred Cities
+             * @default []
+             */
+            preferred_cities: ("bengaluru" | "mysuru" | "chennai" | "hyderabad" | "pune" | "delhi_ncr" | "mumbai" | "coimbatore")[];
+            /** Willing To Relocate */
+            willing_to_relocate: boolean;
+            /** Wants Higher Studies */
+            wants_higher_studies: boolean;
+            /**
+             * Risk Tolerance
+             * @enum {string}
+             */
+            risk_tolerance: "low" | "medium" | "high";
+            /** Dream Career Id */
+            dream_career_id?: string | null;
+            /**
+             * Free Text 1
+             * @default
+             */
+            free_text_1: string;
+            /**
+             * Free Text 2
+             * @default
+             */
+            free_text_2: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            track: "college";
+            /** Degree */
+            degree: string;
+            /** Year */
+            year: number;
+            /**
+             * Self Rated Skills
+             * @default {}
+             */
+            self_rated_skills: {
+                [key: string]: number;
+            };
+        };
+        /** Completeness */
+        Completeness: {
+            /** Score */
+            score: number;
+            /** Answered */
+            answered: number;
+            /** Total */
+            total: number;
+            /** Missing */
+            missing: string[];
+        };
+        /** Confidence */
+        Confidence: {
+            /** Score */
+            score: number;
+            /**
+             * Band
+             * @enum {string}
+             */
+            band: "High" | "Medium" | "Low";
+            /** Completeness */
+            completeness: number;
+            /** System1 Confidence */
+            system1_confidence: number;
+            /** Data Completeness */
+            data_completeness: number;
+            /** Missing Inputs */
+            missing_inputs: string[];
+        };
+        /** ConflictDimension */
+        ConflictDimension: {
+            /** Name */
+            name: string;
+            /** Weight */
+            weight: number;
+            /** Student Value */
+            student_value: number | null;
+            /** Parent Value */
+            parent_value: number | null;
+            /** Mismatch */
+            mismatch: number;
+            /** Points */
+            points: number;
+        };
+        /** ConflictResult */
+        ConflictResult: {
+            /** Index */
+            index: number;
+            /** Dimensions */
+            dimensions: components["schemas"]["ConflictDimension"][];
+            /** Hotspots */
+            hotspots: string[];
+            /** Student Top Domains */
+            student_top_domains: string[];
+        };
+        /** ConflictTrace */
+        ConflictTrace: {
+            conflict: components["schemas"]["ConflictResult"];
+            /** Concern Weights */
+            concern_weights: {
+                [key: string]: number;
+            };
+            /** Parent Alignment */
+            parent_alignment: components["schemas"]["ParentAlignment"][];
+            middle_path: components["schemas"]["MiddlePath"] | null;
+        };
+        /** CostRange */
+        CostRange: {
+            /** Min */
+            min: number;
+            /** Max */
+            max: number;
+        };
+        /** DatasetCounts */
+        DatasetCounts: {
+            /** Careers */
+            careers: number;
+            /** Scholarships */
+            scholarships: number;
+            /** Exams */
+            exams: number;
+            /** Cities */
+            cities: number;
+            /** Demo Profiles */
+            demo_profiles: number;
+        };
+        /** DemoProfile */
+        DemoProfile: {
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /** Summary */
+            summary: string;
+            /** Student */
+            student: components["schemas"]["SchoolStudentInput"] | components["schemas"]["CollegeStudentInput"];
+            parent: components["schemas"]["ParentInput"];
+        };
+        /** DreamAlternatives */
+        DreamAlternatives: {
+            /** Dream Career Id */
+            dream_career_id: string;
+            /**
+             * Reason
+             * @enum {string}
+             */
+            reason: "needs_aid" | "outside_top";
+            /** Alternatives */
+            alternatives: components["schemas"]["RankedAlternative"][];
+        };
+        /** Exam */
+        Exam: {
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /**
+             * Level
+             * @enum {string}
+             */
+            level: "school" | "ug" | "pg";
+            /** Domains */
+            domains: ("Technology" | "Engineering" | "Science" | "Health" | "Arts & Design" | "Finance & Maths" | "Hyper-local")[];
+            /**
+             * Typical Month
+             * @enum {string}
+             */
+            typical_month: "January" | "February" | "March" | "April" | "May" | "June" | "July" | "August" | "September" | "October" | "November" | "December";
+            /** Source */
+            source: string;
+        };
+        /** Explanations */
+        Explanations: {
+            /**
+             * Source
+             * @enum {string}
+             */
+            source: "template" | "llm";
+            /** Items */
+            items: components["schemas"]["CareerExplanation"][];
+        };
+        /** FreeTextPrompt */
+        FreeTextPrompt: {
+            /**
+             * Id
+             * @enum {string}
+             */
+            id: "free_text_1" | "free_text_2";
+            /** Prompt */
+            prompt: string;
+        };
+        /** Growth */
+        Growth: {
+            /** Career Id */
+            career_id: string;
+            /** Trajectory */
+            trajectory: number;
+            /** Mobility Uplift */
+            mobility_uplift: number;
+            /** Growth */
+            growth: number;
+        };
+        /** HTTPValidationError */
+        HTTPValidationError: {
+            /** Detail */
+            detail?: components["schemas"]["ValidationError"][];
+        };
         /** HealthResponse */
         HealthResponse: {
             /**
@@ -41,6 +616,734 @@ export interface components {
             llm: "groq" | "gemini" | "none";
             /** Demo Mode */
             demo_mode: boolean;
+            dataset: components["schemas"]["DatasetCounts"];
+        };
+        /** IngestTrace */
+        IngestTrace: {
+            /**
+             * Track
+             * @enum {string}
+             */
+            track: "school" | "college";
+            completeness: components["schemas"]["Completeness"];
+        };
+        /** MarketDemand */
+        MarketDemand: {
+            /** Career Id */
+            career_id: string;
+            /** Local Demand */
+            local_demand: number;
+            /** Best City */
+            best_city: string;
+            /** Market Demand */
+            market_demand: number;
+        };
+        /** MarketTrace */
+        MarketTrace: {
+            /** Markets */
+            markets: components["schemas"]["MarketDemand"][];
+        };
+        /** MatcherTrace */
+        MatcherTrace: {
+            /** Fits */
+            fits: components["schemas"]["StudentFit"][];
+        };
+        /** MiddlePath */
+        MiddlePath: {
+            /** Career Id */
+            career_id: string;
+            /**
+             * Method
+             * @enum {string}
+             */
+            method: "nash" | "max_min";
+            /** Disagreement S */
+            disagreement_s: number;
+            /** Disagreement P */
+            disagreement_p: number;
+            /** U S */
+            u_s: number;
+            /** U P */
+            u_p: number;
+            /** Student Top Career Id */
+            student_top_career_id: string;
+            /** Student Change */
+            student_change: number;
+            /** Parent Top Career Id */
+            parent_top_career_id: string;
+            /** Parent Change */
+            parent_change: number;
+            /** Student Gain */
+            student_gain: number;
+            /** Parent Gain */
+            parent_gain: number;
+            /** Candidates */
+            candidates: components["schemas"]["NashCandidate"][];
+        };
+        /** NashCandidate */
+        NashCandidate: {
+            /** Career Id */
+            career_id: string;
+            /** U S */
+            u_s: number;
+            /** U P */
+            u_p: number;
+            /** Product */
+            product: number;
+        };
+        /** ParentAlignment */
+        ParentAlignment: {
+            /** Career Id */
+            career_id: string;
+            /** Components */
+            components: {
+                [key: string]: number;
+            };
+            /** Weights */
+            weights: {
+                [key: string]: number;
+            };
+            /** Parent Alignment */
+            parent_alignment: number;
+        };
+        /** ParentInput */
+        ParentInput: {
+            /** Annual Income Inr */
+            annual_income_inr: number;
+            /** Education Budget Inr */
+            education_budget_inr: number;
+            /**
+             * Loan Willingness
+             * @enum {string}
+             */
+            loan_willingness: "none" | "moderate" | "high";
+            /**
+             * Risk Appetite
+             * @enum {string}
+             */
+            risk_appetite: "low" | "medium" | "high";
+            /**
+             * Preferred Domains
+             * @default []
+             */
+            preferred_domains: ("Technology" | "Engineering" | "Science" | "Health" | "Arts & Design" | "Finance & Maths" | "Hyper-local")[];
+            /**
+             * Location Preference
+             * @enum {string}
+             */
+            location_preference: "near_home" | "anywhere_india" | "abroad_ok";
+            /** Supports Higher Studies */
+            supports_higher_studies: boolean;
+            /**
+             * Top Priority
+             * @enum {string}
+             */
+            top_priority: "stability" | "salary" | "prestige" | "happiness";
+            /**
+             * Free Text
+             * @default
+             */
+            free_text: string;
+        };
+        /** ParentPreferences */
+        ParentPreferences: {
+            /** Risk Appetite */
+            risk_appetite: number;
+            /** Location */
+            location: number;
+            /** Higher Studies */
+            higher_studies: number;
+            /** Priority Stability */
+            priority_stability: number;
+        };
+        /** Pathway */
+        Pathway: {
+            /** Id */
+            id: string;
+            /** Label */
+            label: string;
+            /**
+             * Entry
+             * @enum {string}
+             */
+            entry: "after_class_10" | "after_class_12" | "graduate";
+            /** Steps */
+            steps: string[];
+            /** Duration Years */
+            duration_years: number;
+            cost_inr: components["schemas"]["CostRange"];
+            /**
+             * Institution Type
+             * @enum {string}
+             */
+            institution_type: "govt" | "private" | "online" | "diploma";
+            /** Entrance Exams */
+            entrance_exams: string[];
+            /** Quality */
+            quality: number;
+        };
+        /** PathwayEvaluation */
+        PathwayEvaluation: {
+            /** Pathway Id */
+            pathway_id: string;
+            /** Label */
+            label: string;
+            /**
+             * Entry
+             * @enum {string}
+             */
+            entry: "after_class_10" | "after_class_12" | "graduate";
+            /**
+             * Institution Type
+             * @enum {string}
+             */
+            institution_type: "govt" | "private" | "online" | "diploma";
+            /** Quality */
+            quality: number;
+            /** Stage Fit */
+            stage_fit: boolean;
+            /** Cost Mid */
+            cost_mid: number;
+            /** Scholarship */
+            scholarship: number;
+            /** Scholarship Id */
+            scholarship_id: string | null;
+            /** Scholarship Capped */
+            scholarship_capped: boolean;
+            /** Effective Cost */
+            effective_cost: number;
+            /** Feasible */
+            feasible: boolean;
+            /** Objective */
+            objective: number | null;
+        };
+        /** PipelineTrace */
+        PipelineTrace: {
+            ingest: components["schemas"]["IngestTrace"];
+            vectorize: components["schemas"]["VectorizeTrace"];
+            system1: components["schemas"]["System1Trace"];
+            solver: components["schemas"]["SolverTrace"];
+            matcher: components["schemas"]["MatcherTrace"];
+            conflict: components["schemas"]["ConflictTrace"];
+            market: components["schemas"]["MarketTrace"];
+            scoring: components["schemas"]["ScoringTrace"];
+            ranking: components["schemas"]["RankingTrace"];
+        };
+        /** PrismScore */
+        PrismScore: {
+            /** Career Id */
+            career_id: string;
+            /** Score */
+            score: number;
+            /** Values */
+            values: {
+                [key: string]: number;
+            };
+            /** Points */
+            points: {
+                [key: string]: number;
+            };
+        };
+        /** PublicAptitudeItem */
+        PublicAptitudeItem: {
+            /** Id */
+            id: string;
+            /**
+             * Dimension
+             * @enum {string}
+             */
+            dimension: "numerical" | "logical" | "verbal" | "spatial";
+            /** Prompt */
+            prompt: string;
+            /** Options */
+            options: string[];
+        };
+        /**
+         * PublicQuestionSet
+         * @description §13 question set as sent to the browser: aptitude answer keys stay on the server.
+         */
+        PublicQuestionSet: {
+            /**
+             * Track
+             * @enum {string}
+             */
+            track: "school" | "college";
+            /** Aptitude */
+            aptitude: components["schemas"]["PublicAptitudeItem"][];
+            /** Riasec */
+            riasec: components["schemas"]["RiasecItem"][];
+            /** Workstyle */
+            workstyle: components["schemas"]["WorkstyleItem"][];
+            /** Free Text */
+            free_text: components["schemas"]["FreeTextPrompt"][];
+            /** Skills */
+            skills?: string[] | null;
+        };
+        /** RankedAlternative */
+        RankedAlternative: {
+            /** Career Id */
+            career_id: string;
+            /** Score */
+            score: number;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "feasible" | "needs_aid" | "no_pathway";
+        };
+        /** RankedCareer */
+        RankedCareer: {
+            /** Career Id */
+            career_id: string;
+            /** Score */
+            score: number;
+            /** Values */
+            values: {
+                [key: string]: number;
+            };
+            /** Points */
+            points: {
+                [key: string]: number;
+            };
+            /** Rank */
+            rank: number;
+            /** Name */
+            name: string;
+            /**
+             * Domain
+             * @enum {string}
+             */
+            domain: "Technology" | "Engineering" | "Science" | "Health" | "Arts & Design" | "Finance & Maths" | "Hyper-local";
+        };
+        /** RankingTrace */
+        RankingTrace: {
+            /** Order */
+            order: string[];
+            /** Top Career Ids */
+            top_career_ids: string[];
+            /** Stretch Career Ids */
+            stretch_career_ids: string[];
+            /** Dream Alternative Ids */
+            dream_alternative_ids: string[];
+        };
+        /** RequirementVector */
+        RequirementVector: {
+            /** Numerical */
+            numerical: number;
+            /** Logical */
+            logical: number;
+            /** Verbal */
+            verbal: number;
+            /** Spatial */
+            spatial: number;
+            /** Creative */
+            creative: number;
+            /** R */
+            R: number;
+            /** I */
+            I: number;
+            /** A */
+            A: number;
+            /** S */
+            S: number;
+            /** E */
+            E: number;
+            /** C */
+            C: number;
+        };
+        /** RiasecItem */
+        RiasecItem: {
+            /** Id */
+            id: string;
+            /**
+             * Dimension
+             * @enum {string}
+             */
+            dimension: "R" | "I" | "A" | "S" | "E" | "C";
+            /** Prompt */
+            prompt: string;
+        };
+        /** RiskRadar */
+        RiskRadar: {
+            /** Career Id */
+            career_id: string;
+            /** Financial */
+            financial: number;
+            /** Skill Gap */
+            skill_gap: number;
+            /** Market */
+            market: number;
+            /** Location */
+            location: number;
+            /** Education Cost */
+            education_cost: number;
+            /** Disruption */
+            disruption: number;
+        };
+        /** RoadmapStep */
+        RoadmapStep: {
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "pathway" | "learning";
+            /** Text */
+            text: string;
+            /** Skill */
+            skill?: string | null;
+        };
+        /** Roi */
+        Roi: {
+            /** Career Id */
+            career_id: string;
+            /** Effective Cost */
+            effective_cost: number;
+            /** Entry Mid Inr */
+            entry_mid_inr: number;
+            /** Salary Share */
+            salary_share: number;
+            /** Break Even Years */
+            break_even_years: number;
+        };
+        /** SalaryBands */
+        SalaryBands: {
+            /** Entry */
+            entry: [
+                number,
+                number
+            ];
+            /** Mid */
+            mid: [
+                number,
+                number
+            ];
+            /** Senior */
+            senior: [
+                number,
+                number
+            ];
+        };
+        /** SchoolStudentInput */
+        SchoolStudentInput: {
+            /**
+             * Aptitude Answers
+             * @default {}
+             */
+            aptitude_answers: {
+                [key: string]: number;
+            };
+            /**
+             * Riasec Answers
+             * @default {}
+             */
+            riasec_answers: {
+                [key: string]: number;
+            };
+            /**
+             * Workstyle Answers
+             * @default {}
+             */
+            workstyle_answers: {
+                [key: string]: number;
+            };
+            /** Marks Percent */
+            marks_percent?: number | null;
+            /**
+             * Favourite Subjects
+             * @default []
+             */
+            favourite_subjects: string[];
+            /**
+             * Home City
+             * @enum {string}
+             */
+            home_city: "bengaluru" | "mysuru" | "chennai" | "hyderabad" | "pune" | "delhi_ncr" | "mumbai" | "coimbatore";
+            /**
+             * Preferred Cities
+             * @default []
+             */
+            preferred_cities: ("bengaluru" | "mysuru" | "chennai" | "hyderabad" | "pune" | "delhi_ncr" | "mumbai" | "coimbatore")[];
+            /** Willing To Relocate */
+            willing_to_relocate: boolean;
+            /** Wants Higher Studies */
+            wants_higher_studies: boolean;
+            /**
+             * Risk Tolerance
+             * @enum {string}
+             */
+            risk_tolerance: "low" | "medium" | "high";
+            /** Dream Career Id */
+            dream_career_id?: string | null;
+            /**
+             * Free Text 1
+             * @default
+             */
+            free_text_1: string;
+            /**
+             * Free Text 2
+             * @default
+             */
+            free_text_2: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            track: "school";
+            /** Current Class */
+            current_class: number;
+            /** Stream */
+            stream?: ("PCM" | "PCB" | "PCMB" | "Commerce" | "Humanities") | null;
+        };
+        /** ScoringTrace */
+        ScoringTrace: {
+            /** Growth */
+            growth: components["schemas"]["Growth"][];
+            /** Scores */
+            scores: components["schemas"]["PrismScore"][];
+            /** Confidence */
+            confidence: components["schemas"]["Confidence"][];
+            /** Risks */
+            risks: components["schemas"]["RiskRadar"][];
+        };
+        /** Skill */
+        Skill: {
+            /** Name */
+            name: string;
+            /** Importance */
+            importance: number;
+            /** Level Required */
+            level_required: number;
+        };
+        /** SkillGap */
+        SkillGap: {
+            /** Skill */
+            skill: string;
+            /** Importance */
+            importance: number;
+            /** Level Required */
+            level_required: number;
+            /** Current */
+            current: number;
+            /** Gap */
+            gap: number;
+        };
+        /** SkillPlan */
+        SkillPlan: {
+            /** Career Id */
+            career_id: string;
+            /** Gaps */
+            gaps: components["schemas"]["SkillGap"][];
+            /** Mean Gap */
+            mean_gap: number;
+            /** Roadmap */
+            roadmap: components["schemas"]["RoadmapStep"][];
+            /** Timeline */
+            timeline: components["schemas"]["TimelineYear"][];
+        };
+        /** SolverTrace */
+        SolverTrace: {
+            /** Budget */
+            budget: number;
+            /** Loan Factor */
+            loan_factor: number;
+            /** Capacity */
+            capacity: number;
+            /** Solver Lambda */
+            solver_lambda: number;
+            /** Finances */
+            finances: components["schemas"]["CareerFinance"][];
+        };
+        /** StretchOption */
+        StretchOption: {
+            /** Career Id */
+            career_id: string;
+            /** Student Fit */
+            student_fit: number;
+            /** Funding Gap */
+            funding_gap: number;
+            /** Cheapest Pathway Id */
+            cheapest_pathway_id: string;
+            /** Scholarships */
+            scholarships: components["schemas"]["AidScholarship"][];
+            /** Cheaper Pathways */
+            cheaper_pathways: components["schemas"]["CheaperPathway"][];
+            /** Adjacent Feasible */
+            adjacent_feasible: string[];
+        };
+        /** StudentFit */
+        StudentFit: {
+            /** Career Id */
+            career_id: string;
+            /** Centred Cosine */
+            centred_cosine: number;
+            /** Domain Affinity */
+            domain_affinity: number;
+            /** Academic Alignment */
+            academic_alignment: number;
+            /** Student Fit */
+            student_fit: number;
+        };
+        /** StudentPreferences */
+        StudentPreferences: {
+            /** Risk Tolerance */
+            risk_tolerance: number;
+            /** Relocation */
+            relocation: number;
+            /** Higher Studies */
+            higher_studies: number;
+            /** Stability */
+            stability: number;
+            /** Marks */
+            marks: number | null;
+        };
+        /** StudentVector */
+        StudentVector: {
+            /** Values */
+            values: {
+                [key: string]: number;
+            };
+            /** Aptitude Correct */
+            aptitude_correct: {
+                [key: string]: number;
+            };
+            /** Defaulted */
+            defaulted: string[];
+        };
+        /** Swot */
+        Swot: {
+            /** Strengths */
+            strengths: components["schemas"]["SwotItem"][];
+            /** Weaknesses */
+            weaknesses: components["schemas"]["SwotItem"][];
+            /** Opportunities */
+            opportunities: components["schemas"]["SwotItem"][];
+            /** Threats */
+            threats: components["schemas"]["SwotItem"][];
+        };
+        /** SwotItem */
+        SwotItem: {
+            /** Kind */
+            kind: string;
+            /** Label */
+            label: string;
+            /** Value */
+            value?: number | null;
+        };
+        /** System1Trace */
+        System1Trace: {
+            /** Backend */
+            backend: string;
+            /** Reused */
+            reused: boolean;
+            /** Decisions */
+            decisions: components["schemas"]["TypedDecision"][];
+            /** Domain Affinity */
+            domain_affinity: {
+                [key: string]: number;
+            };
+            /** Parent Concerns */
+            parent_concerns: {
+                [key: string]: number;
+            };
+        };
+        /** TimelineYear */
+        TimelineYear: {
+            /** Year */
+            year: number;
+            /** Steps */
+            steps: string[];
+        };
+        /** TypedDecision */
+        TypedDecision: {
+            /** Question Id */
+            question_id: string;
+            /** Choice */
+            choice: string | null;
+            /** Probabilities */
+            probabilities: {
+                [key: string]: number;
+            };
+            /** Confidence */
+            confidence: number;
+            /** Margin */
+            margin: number;
+            /** Abstained */
+            abstained: boolean;
+            /** Backend */
+            backend: string;
+        };
+        /** ValidationError */
+        ValidationError: {
+            /** Location */
+            loc: (string | number)[];
+            /** Message */
+            msg: string;
+            /** Error Type */
+            type: string;
+            /** Input */
+            input?: unknown;
+            /** Context */
+            ctx?: Record<string, never>;
+        };
+        /** VectorizeTrace */
+        VectorizeTrace: {
+            student_vector: components["schemas"]["StudentVector"];
+            student_preferences: components["schemas"]["StudentPreferences"];
+            parent_preferences: components["schemas"]["ParentPreferences"];
+        };
+        /**
+         * WhatIfOverrides
+         * @description §11 inputs a What-If may change; None = keep the original answer.
+         */
+        WhatIfOverrides: {
+            /** Budget */
+            budget?: number | null;
+            /** Loan Willingness */
+            loan_willingness?: ("none" | "moderate" | "high") | null;
+            /** Home City */
+            home_city?: ("bengaluru" | "mysuru" | "chennai" | "hyderabad" | "pune" | "delhi_ncr" | "mumbai" | "coimbatore") | null;
+            /** Willing To Relocate */
+            willing_to_relocate?: boolean | null;
+            /** Risk Tolerance */
+            risk_tolerance?: ("low" | "medium" | "high") | null;
+            /** Risk Appetite */
+            risk_appetite?: ("low" | "medium" | "high") | null;
+            /** Wants Higher Studies */
+            wants_higher_studies?: boolean | null;
+            /** Top Priority */
+            top_priority?: ("stability" | "salary" | "prestige" | "happiness") | null;
+        };
+        /** WhatIfRequest */
+        WhatIfRequest: {
+            /** Assessment Id */
+            assessment_id?: string | null;
+            profile?: components["schemas"]["AssessRequest"] | null;
+            /** @default {} */
+            overrides: components["schemas"]["WhatIfOverrides"];
+        };
+        /** WhatIfResult */
+        WhatIfResult: {
+            /** Assessment Id */
+            assessment_id: string | null;
+            overrides: components["schemas"]["WhatIfOverrides"];
+            /** Ranking */
+            ranking: components["schemas"]["RankedCareer"][];
+            /** Changes */
+            changes: components["schemas"]["CareerChange"][];
+            /** Elapsed Ms */
+            elapsed_ms: number;
+        };
+        /** WorkstyleItem */
+        WorkstyleItem: {
+            /** Id */
+            id: string;
+            /**
+             * Dimension
+             * @enum {string}
+             */
+            dimension: "creative" | "stability_vs_excitement" | "teamwork" | "structure";
+            /** Prompt */
+            prompt: string;
         };
     };
     responses: never;
@@ -67,6 +1370,205 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HealthResponse"];
+                };
+            };
+        };
+    };
+    questions_api_questions__track__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                track: "school" | "college";
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicQuestionSet"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    demo_profiles_api_demo_profiles_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DemoProfile"][];
+                };
+            };
+        };
+    };
+    assess_api_assess_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AssessRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AssessmentResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    whatif_api_whatif_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WhatIfRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WhatIfResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    explanations_api_explanations__assessment_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                assessment_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Explanations"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    careers_api_careers_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CareerSummary"][];
+                };
+            };
+        };
+    };
+    career_api_careers__career_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                career_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Career"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
