@@ -79,24 +79,23 @@ def _check_careers(
         if not any(p.entry == "graduate" for p in career.pathways):
             report.warnings.append(f"{where}: no graduate (lateral) pathway")
 
+    # Careers are written in batches: a domain with no careers yet is a warning, but any
+    # domain that has careers must meet its minimum, and the total is enforced once all exist.
     total = len(careers)
-    if total == 0:
-        report.warnings.append("no careers yet (expected while careers are not written)")
-        report.row("careers (total)", 0, f"{config.CAREERS_TOTAL_MIN}–{config.CAREERS_TOTAL_MAX}", WARN)
+    by_domain = Counter(c.domain for c in careers)
+    unwritten = [d for d in config.DOMAIN_MIN_CAREERS if by_domain[d] == 0]
+    expected_total = f"{config.CAREERS_TOTAL_MIN}–{config.CAREERS_TOTAL_MAX}"
+    if unwritten:
+        report.warnings.append(f"no careers yet for {unwritten} (expected until every batch is written)")
+        report.row("careers (total)", total, expected_total, WARN)
     else:
         in_range = config.CAREERS_TOTAL_MIN <= total <= config.CAREERS_TOTAL_MAX
         if not in_range:
-            report.errors.append(
-                f"careers: {total} total, expected {config.CAREERS_TOTAL_MIN}–{config.CAREERS_TOTAL_MAX}"
-            )
-        report.row(
-            "careers (total)", total,
-            f"{config.CAREERS_TOTAL_MIN}–{config.CAREERS_TOTAL_MAX}", OK if in_range else FAIL,
-        )
-    by_domain = Counter(c.domain for c in careers)
+            report.errors.append(f"careers: {total} total, expected {expected_total}")
+        report.row("careers (total)", total, expected_total, OK if in_range else FAIL)
     for domain, minimum in config.DOMAIN_MIN_CAREERS.items():
         count = by_domain[domain]
-        if total == 0:
+        if count == 0:
             status = WARN
         elif count < minimum:
             status = FAIL

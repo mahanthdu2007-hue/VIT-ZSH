@@ -20,3 +20,8 @@ date | decision | reason
 2026-10-08 | Student fields marks, subjects, preferred cities, dream career and free text are optional; class/year, home city, relocation, higher studies and risk are required | §6 completeness counts answered fields, so some must be optional; the engine cannot run without the required ones.
 2026-10-08 | `stability_vs_excitement` item is worded so agreeing means preferring stability | Lets §7.6 compare it directly with the parent's stability value.
 2026-10-08 | Single-valued `typical_month` uses the first or main sitting for exams held several times a year (e.g. JEE Main → January) | §5 schema has one month per exam.
+2026-10-08 | Validator: a domain with no careers yet is a warning; a domain with careers must meet its §5 minimum; the 55–60 total is enforced once every domain has careers | Careers are written in batches (Phase 1B onward); a batch must not fail on domains that belong to later batches, but written domains are still checked fully.
+2026-10-08 | Added TANCET (Anna University, MCA/MBA) to exams.json | Needed for the MCA lateral pathway into software careers.
+2026-10-08 | Pathway `cost_inr` is total tuition and fees for the whole pathway, excluding living costs | §5 gives one range per pathway; tuition is what fee disclosures publish.
+2026-10-08 | Career `sources` name the source type per value group ("Costs: …", "Salaries: …", "Demand and growth: …", "Skills: …") | Phase 1B asks that sources name where each value would come from.
+2026-10-08 | Requirement vectors tuned so the centred cosine between any two careers is ≤ 0.92 (mean 0.49) | Phase 1B: vectors must differ clearly; the §7.5 matcher uses centred cosine, so that is the measure checked.

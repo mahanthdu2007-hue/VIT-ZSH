@@ -192,6 +192,14 @@
     "source": "National Institutes of Technology (organising NIT rotates each year)"
   },
   {
+    "id": "tancet",
+    "name": "Tamil Nadu Common Entrance Test (TANCET) for MCA and MBA",
+    "level": "pg",
+    "domains": ["Technology", "Finance & Maths"],
+    "typical_month": "March",
+    "source": "Anna University, tancet.annauniv.edu"
+  },
+  {
     "id": "cat",
     "name": "Common Admission Test (CAT)",
     "level": "pg",

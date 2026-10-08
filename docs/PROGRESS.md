@@ -48,3 +48,23 @@
 - Scholarship amounts are indicative; several schemes pay different amounts by course, and the
   lower or typical figure is used.
 - College skills list must be re-checked against the 20 most common career skills after careers are added.
+
+## Phase 1B: Careers batch 1 (2026-10-08)
+
+**Built**
+- `data/careers/technology.json` (10), `engineering.json` (8), `science.json` (6): 24 careers, each with
+  3–4 pathways mixing govt / private / diploma-or-online / graduate (lateral) entry.
+- Added TANCET to `exams.json`.
+- Validator now treats unwritten domains as warnings and enforces the total once all domains exist
+  (new test covers this).
+
+**Checks**
+- `python scripts/validate_data.py`: 0 errors, 2 warnings (4 domains not written yet; college skills
+  list to re-check after all careers exist). Ran after each file: 0 errors each time.
+- `pytest -q`: 10 passed. `npm run typecheck`, `npm run build`: passed.
+- Requirement vector distinctness: closest pair centred cosine 0.92, mean 0.49, smallest spread 0.40.
+
+**Known issues**
+- All costs and salaries are indicative.
+- College skills list (questions_college.json) still to be matched to the 20 most common skills once
+  every batch is written.

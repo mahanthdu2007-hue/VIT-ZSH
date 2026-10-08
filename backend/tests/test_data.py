@@ -91,6 +91,19 @@ def test_validator_catches_broken_data(tmp_path: Path) -> None:
         assert expected in result.stdout
 
 
+def test_validator_enforces_total_once_every_domain_has_careers(tmp_path: Path) -> None:
+    data_dir = tmp_path / "data"
+    shutil.copytree(DATA_DIR, data_dir)
+    shutil.rmtree(data_dir / "careers")
+    (data_dir / "careers").mkdir()
+    one_per_domain = [sample_career(id=f"career_{i}", domain=d) for i, d in enumerate(config.DOMAINS)]
+    (data_dir / "careers" / "all.json").write_text(json.dumps(one_per_domain), encoding="utf-8")
+
+    result = run_validator(data_dir)
+    assert result.returncode == 1
+    assert "careers: 7 total, expected 55–60" in result.stdout
+
+
 def test_loader_reads_every_file() -> None:
     dataset = load_dataset()
     assert len(dataset.cities) == len(config.CITIES)
