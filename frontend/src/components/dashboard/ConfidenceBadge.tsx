@@ -9,7 +9,7 @@ const TONE = { High: "good", Medium: "warn", Low: "low" } as const;
 export function ConfidenceBadge({ confidence }: { confidence: Confidence }) {
   const hints = missingInputHints(confidence.missing_inputs);
   return (
-    <section aria-labelledby="confidence-heading" className="rounded-lg border border-line bg-paper p-3">
+    <section aria-labelledby="confidence-heading" className="rounded-xl bg-paper p-4">
       <div className="flex flex-wrap items-center gap-2">
         <h3 id="confidence-heading" className="text-base">
           How sure we are

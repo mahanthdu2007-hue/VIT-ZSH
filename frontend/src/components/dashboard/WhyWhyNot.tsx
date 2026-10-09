@@ -13,7 +13,7 @@ function ReasonTile({ title, lines, tone }: { title: string; lines: string[]; to
   const colours =
     tone === "good" ? "bg-financialFit/15 text-financialFit" : "bg-marketDemand/15 text-marketDemand";
   return (
-    <div className="flex h-full flex-col rounded-lg border border-line p-4">
+    <div className="flex h-full flex-col rounded-xl bg-paper p-5">
       <h4 className="font-medium">{title}</h4>
       <ul className="mt-3 flex flex-col gap-3">
         {lines.map((line) => (
@@ -37,7 +37,7 @@ export function WhyWhyNot({ explanations, careerId, isRefreshing }: WhyWhyNotPro
   const item: CareerExplanation | undefined = explanations.items.find((e) => e.career_id === careerId);
   if (!item) {
     return (
-      <p className="rounded-lg bg-paper p-4 text-ink/80">
+      <p className="rounded-xl bg-paper p-5 text-ink/80">
         Written reasons are prepared for the top 5 careers and the middle path. The Overview tab shows how this career
         was scored.
       </p>
@@ -49,7 +49,7 @@ export function WhyWhyNot({ explanations, careerId, isRefreshing }: WhyWhyNotPro
         <ReasonTile title="Why it fits" lines={item.why} tone="good" />
         <ReasonTile title="What to watch" lines={item.why_not} tone="watch" />
       </div>
-      <div className="rounded-lg bg-paper p-4">
+      <div className="rounded-xl bg-paper p-5">
         <h4 className="font-medium">The route in words</h4>
         <p className="mt-2 leading-relaxed">{item.roadmap_narrative}</p>
       </div>

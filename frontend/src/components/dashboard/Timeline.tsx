@@ -1,22 +1,21 @@
 import type { SkillPlan } from "../../api/client";
 import { Card } from "../ui/Card";
 
-/** §8 timeline: the roadmap placed on calendar years, one tile per year. */
+/** §8 timeline: the roadmap placed on calendar years, one tile per year in a row that swipes sideways on small screens. */
 export function Timeline({ plan }: { plan: SkillPlan }) {
-  const thisYear = plan.timeline[0]?.year;
   return (
-    <Card title="Year by year" description="When each step could happen, starting this year.">
-      <ol className="flex flex-col gap-3">
+    <Card title="Year by year">
+      <ol className="no-scrollbar -mx-6 grid snap-x snap-mandatory auto-cols-[minmax(theme(spacing.56),1fr)] grid-flow-col gap-3 overflow-x-auto px-6 pb-1 sm:-mx-8 sm:px-8">
         {plan.timeline.map((year, index) => (
           <li
             key={year.year}
-            className={`flex gap-4 rounded-lg border p-4 ${year.year === thisYear ? "border-ink/30 bg-paper" : "border-line"}`}
+            className={`flex snap-start flex-col rounded-xl p-5 ${index === 0 ? "bg-ink text-surface" : "bg-paper"}`}
           >
-            <div className="w-16 shrink-0">
-              <p className="font-heading text-lg leading-none">{year.year}</p>
-              <p className="mt-1 text-sm text-ink/60">{index === 0 ? "This year" : `Year ${index + 1}`}</p>
-            </div>
-            <ul className="flex flex-1 flex-col gap-1.5 border-l border-line pl-4">
+            <p className={`text-sm font-medium ${index === 0 ? "text-surface/60" : "text-ink/50"}`}>
+              {index === 0 ? "This year" : `Year ${index + 1}`}
+            </p>
+            <p className="mt-1 text-xl font-semibold tracking-tight">{year.year}</p>
+            <ul className={`mt-4 flex flex-col gap-2 border-t pt-4 text-sm ${index === 0 ? "border-surface/15" : "border-ink/10"}`}>
               {year.steps.map((step, i) => (
                 <li key={`${i}-${step}`} className="leading-snug">
                   {step}

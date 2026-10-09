@@ -12,8 +12,8 @@ const MIN_READABLE_ZOOM = 0.85;
 const SIDE_PADDING = 16;
 
 const NODE_CLASS = {
-  pathway: "!w-[144px] !rounded-lg !border-ink !bg-surface !text-sm !text-ink",
-  learning: "!w-[144px] !rounded-lg !border-studentFit !bg-studentFit/10 !text-sm !text-ink",
+  pathway: "!w-[144px] !rounded-lg !border-ink/20 !bg-surface !text-sm !text-ink !shadow",
+  learning: "!w-[144px] !rounded-lg !border-studentFit/50 !bg-studentFit/10 !text-sm !text-ink",
 };
 
 function buildGraph(plan: SkillPlan): { nodes: Node[]; edges: Edge[] } {
@@ -55,7 +55,7 @@ export function PathwayGraph({ plan, pathwayLabel }: { plan: SkillPlan; pathwayL
     <Card title="Your route" description={`${pathwayLabel}, with the skills to learn along the way.`}>
       <div
         ref={container}
-        className="h-32 rounded-lg border border-line bg-paper"
+        className="h-40 rounded-xl bg-paper"
         role="img"
         aria-label={`Route: ${plan.roadmap.map((step) => step.text).join(", then ")}.`}
       >
@@ -78,7 +78,7 @@ export function PathwayGraph({ plan, pathwayLabel }: { plan: SkillPlan; pathwayL
           maxZoom={1}
         />
       </div>
-      <p className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-ink/70">
+      <p className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-ink/60">
         <span className="flex items-center gap-1.5">
           <span className="h-3 w-3 rounded-sm border border-ink bg-surface" aria-hidden="true" />
           Course step

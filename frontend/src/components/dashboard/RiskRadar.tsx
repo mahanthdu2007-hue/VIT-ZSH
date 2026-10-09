@@ -46,8 +46,8 @@ function AxisLabel({ x = 0, y = 0, textAnchor = "middle", payload }: TickProps) 
 export function RiskRadar({ risk }: { risk: RiskRadarData }) {
   const data: Point[] = RISK_AXES.map((axis) => ({ label: axis.label, meaning: axis.meaning, value: risk[axis.key] }));
   return (
-    <Card title="Risks to watch" description="Further from the centre means a bigger risk. 0 is none, 100 is high.">
-      <div className="h-64" aria-hidden="true">
+    <Card title="Risks to watch" description="Further out means a bigger risk.">
+      <div className="min-h-64 flex-1" aria-hidden="true">
         <ResponsiveContainer width="100%" height="100%">
           <RadarChart data={data} outerRadius="62%">
             <PolarGrid stroke={colors.line} />
@@ -66,11 +66,11 @@ export function RiskRadar({ risk }: { risk: RiskRadarData }) {
           </RadarChart>
         </ResponsiveContainer>
       </div>
-      <ul className="mt-2 grid gap-x-4 gap-y-1 text-sm sm:grid-cols-2">
+      <ul className="sr-only">
         {data.map((point) => (
-          <li key={point.label} className="flex justify-between gap-2">
+          <li key={point.label} className="flex justify-between gap-2 rounded-lg bg-paper px-3 py-2">
             <span>{point.label}</span>
-            <span className="font-medium">{Math.round(point.value * 100)}</span>
+            <span className="font-medium tabular-nums">{Math.round(point.value * 100)}</span>
           </li>
         ))}
       </ul>

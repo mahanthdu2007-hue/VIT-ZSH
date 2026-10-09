@@ -1,8 +1,11 @@
-import { motion } from "framer-motion";
-import { useState } from "react";
+import { motion, useInView, useReducedMotion } from "framer-motion";
+import { useRef, useState } from "react";
 import { formatPoints } from "../../lib/format";
 import { COMPONENTS, type ComponentKey } from "../../lib/labels";
-import { componentColors } from "../../theme/tokens";
+import { componentColors, timing } from "../../theme/tokens";
+
+const HIDDEN = "inset(0 100% 0 0)";
+const SHOWN = "inset(0 0% 0 0)";
 
 type PrismBarProps = {
   points: Record<string, number>;
@@ -17,6 +20,10 @@ type PrismBarProps = {
 export function PrismBar({ points, score, size = "lg", animated = false }: PrismBarProps) {
   const [active, setActive] = useState<ComponentKey | null>(null);
   const interactive = size === "lg";
+  const barRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(barRef, { once: true });
+  // The bar wipes in from the left once; What-If bars skip it so their re-flow animation reads clearly.
+  const wiped = useReducedMotion() === true || animated;
   let offset = 0;
   const segments = COMPONENTS.map((component) => {
     const earned = points[component.key] ?? 0;
@@ -34,7 +41,13 @@ export function PrismBar({ points, score, size = "lg", animated = false }: Prism
       aria-hidden={interactive ? undefined : true}
       onMouseLeave={() => setActive(null)}
     >
-      <div className={`flex w-full overflow-hidden rounded-full bg-line ${size === "lg" ? "h-6" : "h-2"}`}>
+      <motion.div
+        ref={barRef}
+        className={`flex w-full overflow-hidden rounded-full bg-line ${size === "lg" ? "h-6" : "h-2"}`}
+        initial={{ clipPath: wiped ? SHOWN : HIDDEN }}
+        animate={{ clipPath: wiped || inView ? SHOWN : HIDDEN }}
+        transition={{ duration: timing.slow, ease: timing.ease }}
+      >
         {segments.map((s) => (
           <motion.span
             key={s.key}
@@ -52,7 +65,7 @@ export function PrismBar({ points, score, size = "lg", animated = false }: Prism
             onClick={() => setActive(active === s.key ? null : s.key)}
           />
         ))}
-      </div>
+      </motion.div>
       {shown && (
         <div
           role="tooltip"

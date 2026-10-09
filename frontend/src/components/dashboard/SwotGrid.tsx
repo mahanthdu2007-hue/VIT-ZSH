@@ -44,20 +44,20 @@ export function SwotGrid({ swot, topCareerName }: { swot: Swot | null; topCareer
       description={topCareerName ? `Worked out for your top career, ${topCareerName}.` : undefined}
     >
       {swot ? (
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid flex-1 auto-rows-fr gap-3 sm:grid-cols-2">
           {QUADRANTS.map((q) => {
             const items = swot[q.key];
             return (
-              <section key={q.key} className="rounded-lg border border-line bg-paper p-3">
+              <section key={q.key} className="rounded-xl bg-paper p-4">
                 <h3 className="text-base">{q.title}</h3>
                 {items.length > 0 ? (
-                  <ul className="mt-1 flex flex-col gap-1 text-sm">
+                  <ul className="mt-2 flex flex-col gap-1.5 text-sm leading-snug">
                     {items.map((item, i) => (
                       <li key={`${i}-${item.kind}-${item.label}`}>{describe(item)}</li>
                     ))}
                   </ul>
                 ) : (
-                  <p className="mt-1 text-sm text-ink/70">{q.empty}</p>
+                  <p className="mt-2 text-sm text-ink/60">{q.empty}</p>
                 )}
               </section>
             );

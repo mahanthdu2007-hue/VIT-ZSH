@@ -15,7 +15,7 @@ export function AidOptions({ option, detail, careerName }: AidOptionsProps) {
   return (
     <div className="mt-3 grid gap-4 md:grid-cols-3">
       <div>
-        <h5 className="font-medium">Scholarships</h5>
+        <h4 className="font-medium">Scholarships</h4>
         {option.scholarships.length > 0 ? (
           <ul className="mt-1 flex flex-col gap-2 text-sm">
             {option.scholarships.map((s) => (
@@ -30,7 +30,7 @@ export function AidOptions({ option, detail, careerName }: AidOptionsProps) {
         )}
       </div>
       <div>
-        <h5 className="font-medium">Cheaper ways in</h5>
+        <h4 className="font-medium">Cheaper ways in</h4>
         {option.cheaper_pathways.length > 0 ? (
           <ul className="mt-1 flex flex-col gap-2 text-sm">
             {option.cheaper_pathways.map((p) => (
@@ -45,7 +45,7 @@ export function AidOptions({ option, detail, careerName }: AidOptionsProps) {
         )}
       </div>
       <div>
-        <h5 className="font-medium">Similar careers that fit the budget</h5>
+        <h4 className="font-medium">Similar careers that fit the budget</h4>
         {option.adjacent_feasible.length > 0 ? (
           <ul className="mt-1 list-disc pl-5 text-sm">
             {option.adjacent_feasible.map((id) => (
