@@ -1,0 +1,19 @@
+# Lite install for small free servers (e.g. Render, 512 MB): no ML models.
+# System 1 uses the KeywordBackend (set SYSTEM1_BACKEND=keyword); explanations use the
+# dataset instead of Chroma. Every score and ranking is computed exactly as in the full install.
+
+# API
+fastapi==0.142.2
+uvicorn[standard]==0.54.0
+pydantic==2.13.5
+pydantic-settings==2.15.0
+SQLAlchemy==2.1.4
+
+# Numbers
+numpy==2.4.6
+pandas==3.0.6
+scipy==1.17.1
+
+# System 2 LLM providers (optional keys)
+openai==3.26.0
+google-genai==2.28.0

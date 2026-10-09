@@ -4,9 +4,9 @@ Career decision-support platform for Indian students (Class 9–12 and college) 
 parents. It combines student psychometrics, family financial constraints and labour-market
 data into ranked, explainable career pathways. Built for the DataQuest 3.0 final round.
 
-**Live demo:** https://YOUR-HF-USERNAME-prism-engine.hf.space
-(hosted free on [Hugging Face Spaces](https://huggingface.co/spaces/YOUR-HF-USERNAME/prism-engine);
-the first visit after a quiet spell can take about a minute while the Space wakes up).
+**Live demo:** https://prism-engine.onrender.com
+(hosted free on [Render](https://render.com); after 15 idle minutes the server sleeps, so the
+first visit can take about a minute to wake it up).
 
 The full specification is in [CLAUDE.md](CLAUDE.md). Progress is tracked in
 [docs/PROGRESS.md](docs/PROGRESS.md).
@@ -61,30 +61,25 @@ cd backend && python scripts/export_openapi.py   # writes frontend/openapi.json
 cd frontend && npm run gen:api                   # writes src/api/schema.d.ts
 ```
 
-## Deploy for free (Hugging Face Spaces)
+## Deploy for free (Render)
 
 The app ships as one Docker container: FastAPI serves both the API and the built React
-site on port 7860. Hugging Face Spaces runs it free (2 CPUs, 16 GB RAM, enough for the
-System 1 and embedding models). Every push to `main` redeploys automatically through
-[.github/workflows/deploy-hf.yml](.github/workflows/deploy-hf.yml).
+site. It runs on Render's free web service in **lite mode**: no ML models are installed
+([backend/requirements-lite.txt](backend/requirements-lite.txt)), System 1 uses the keyword
+backend, and explanations are retrieved from the dataset instead of Chroma. Every score,
+cost and ranking uses exactly the same formulas as the full install. It uses about 140 MB
+of memory, well inside the free 512 MB.
 
 One-time setup:
 
-1. Create a free account at https://huggingface.co.
-2. Create a Space: https://huggingface.co/new-space → name `prism-engine` → SDK **Docker**
-   → template **Blank** → hardware **CPU basic (free)** → **Public** → *Create Space*.
-3. Create a token: https://huggingface.co/settings/tokens → *Create new token* →
-   type **Write** → copy it.
-4. In this GitHub repo: *Settings → Secrets and variables → Actions*:
-   - *Secrets* tab → *New repository secret* → name `HF_TOKEN`, value = the token.
-   - *Variables* tab → *New repository variable* → name `HF_SPACE`,
-     value = `your-hf-username/prism-engine`.
-5. *Actions* tab → *Deploy to Hugging Face* → *Run workflow*. The first build takes
-   about 10–15 minutes (it downloads the models). Then open
-   `https://your-hf-username-prism-engine.hf.space`.
+1. Sign in at https://dashboard.render.com with GitHub.
+2. *New → Blueprint* → connect this repository → Render reads [render.yaml](render.yaml)
+   → *Apply*. The first build takes about 5 minutes.
+3. Open `https://prism-engine.onrender.com` (Render shows the exact address on the
+   service page). Every push to `main` redeploys automatically.
 
-Optional: to get LLM-written explanations, add `GEMINI_API_KEY` (and `GEMINI_MODEL`) or
-`NVIDIA_API_KEY` (and `NVIDIA_MODEL`) under the Space's *Settings → Variables and secrets*.
-Without keys the app uses its built-in templates, and all numbers are unchanged.
+Optional: to get LLM-written explanations and chat replies, set `GEMINI_API_KEY` and
+`GEMINI_MODEL` in the service's *Environment* tab. Without them the app uses its built-in
+templates, and all numbers are unchanged.
 
-To test the container locally: `docker build -t prism . && docker run -p 7860:7860 prism`.
+To test the container locally: `docker build -t prism . && docker run -p 10000:10000 prism`.
