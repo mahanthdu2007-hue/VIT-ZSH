@@ -4,7 +4,7 @@ Career decision-support platform for Indian students (Class 9–12 and college) 
 parents. It combines student psychometrics, family financial constraints and labour-market
 data into ranked, explainable career pathways. Built for the DataQuest 3.0 final round.
 
-**Live demo:** https://prism-engine.onrender.com
+**Live demo:** https://prism-engine-3d2t.onrender.com
 (hosted free on [Render](https://render.com); after 15 idle minutes the server sleeps, so the
 first visit can take about a minute to wake it up).
 
@@ -73,10 +73,11 @@ of memory, well inside the free 512 MB.
 One-time setup:
 
 1. Sign in at https://dashboard.render.com with GitHub.
-2. *New → Blueprint* → connect this repository → Render reads [render.yaml](render.yaml)
-   → *Apply*. The first build takes about 5 minutes.
-3. Open `https://prism-engine.onrender.com` (Render shows the exact address on the
-   service page). Every push to `main` redeploys automatically.
+2. *New → Blueprint* → paste this repository's GitHub URL under *Public Git Repository*
+   → Render reads [render.yaml](render.yaml) → *Deploy Blueprint*. The first build takes about 5 minutes.
+3. Open `https://prism-engine-3d2t.onrender.com` (Render shows the exact address on the
+   service page). After pushing new commits, click *Manual Deploy → Deploy latest commit*
+   (or connect your GitHub account in Render to redeploy on every push).
 
 Optional: to get LLM-written explanations and chat replies, set `GEMINI_API_KEY` and
 `GEMINI_MODEL` in the service's *Environment* tab. Without them the app uses its built-in
