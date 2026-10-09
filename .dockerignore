@@ -1,0 +1,13 @@
+.git
+.env
+**/.venv
+**/venv
+**/__pycache__
+**/.pytest_cache
+**/.hypothesis
+**/node_modules
+frontend/dist
+backend/chroma
+backend/cache
+*.db
+.claude
